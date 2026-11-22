@@ -1,0 +1,125 @@
+---
+/**
+ * Sfida finale di una stanza. Superata ogni domanda, la lezione risulta completata;
+ * se `guardiano` è indicato (solo nel Cammino) fa salire di grado.
+ */
+export type Domanda = { testo: string; opzioni?: string[]; risposta: string | number; spiegazione: string; tolleranza?: number };
+interface Props { domande: Domanda[]; titolo?: string; }
+const { domande, titolo } = Astro.props;
+// slug e guardiano arrivano dalla pagina (data-lezione / data-guardiano sull'articolo)
+const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
+---
+<section class="box sfida" data-sfida>
+  <p class="box-titolo">
+    <span aria-hidden="true">⚔️</span>
+    <span class="solo-cammino">{titolo ?? 'La sfida della stanza'}</span>
+    <span class="solo-libro">Mettiti alla prova</span>
+  </p>
+  <noscript><p>Per giocare la sfida serve JavaScript attivo.</p></noscript>
+  <form>
+    <ol class="domande">
+      {domande.map((d, i) => (
+        <li class="domanda" data-risposta={String(d.risposta)} data-tolleranza={d.tolleranza ?? 0} data-tipo={d.opzioni ? 'scelta' : 'numero'}>
+          <fieldset>
+            <legend set:html={d.testo} />
+            {d.opzioni ? (
+              <div class="opzioni">
+                {d.opzioni.map((o, j) => (
+                  <label class="opzione"><input type="radio" name={`${id}-d${i}`} value={String(j)} /> <span set:html={o} /></label>
+                ))}
+              </div>
+            ) : (
+              <label class="numero">La tua risposta: <input type="text" inputmode="decimal" name={`${id}-d${i}`} autocomplete="off" /></label>
+            )}
+            <p class="esito" aria-live="polite" hidden></p>
+            <p class="spiegazione" hidden set:html={d.spiegazione} />
+          </fieldset>
+        </li>
+      ))}
+    </ol>
+    <div class="riga-azioni">
+      <button class="btn" type="submit">Verifica</button>
+      <p class="risultato" aria-live="polite"></p>
+    </div>
+  </form>
+</section>
+
+<script>
+  import { carica, salva, completa, battiGuardiano, gradoAttuale } from '../../lib/progresso';
+  import { grado } from '../../lib/mondo';
+
+  const numero = (s: string) => Number(s.trim().replace(/\s/g, '').replace(',', '.'));
+
+  for (const box of document.querySelectorAll<HTMLElement>('[data-sfida]')) {
+    const form = box.querySelector('form')!;
+    const art = box.closest<HTMLElement>('[data-lezione]');
+    const slug = art?.dataset.lezione ?? location.pathname;
+    const guardiano = Number(art?.dataset.guardiano) || 0;
+    if (carica().completate.includes(slug)) box.classList.add('superata');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let giuste = 0;
+      const domande = [...box.querySelectorAll<HTMLElement>('.domanda')];
+      for (const d of domande) {
+        const atteso = d.dataset.risposta!;
+        const tol = Number(d.dataset.tolleranza) || 0;
+        let ok = false;
+        if (d.dataset.tipo === 'scelta') {
+          const sel = d.querySelector<HTMLInputElement>('input:checked');
+          ok = !!sel && sel.value === atteso;
+        } else {
+          const v = numero(d.querySelector<HTMLInputElement>('input')!.value);
+          ok = Number.isFinite(v) && Math.abs(v - Number(atteso)) <= tol + 1e-9;
+        }
+        const esito = d.querySelector<HTMLElement>('.esito')!;
+        esito.hidden = false;
+        esito.textContent = ok ? '✅ Esatto!' : '❌ Non ancora. Riprova: ogni errore è un indizio.';
+        esito.className = 'esito ' + (ok ? 'ok' : 'no');
+        d.querySelector<HTMLElement>('.spiegazione')!.hidden = !ok;
+        if (ok) giuste++;
+      }
+      const ris = box.querySelector<HTMLElement>('.risultato')!;
+      if (giuste === domande.length) {
+        let p = carica();
+        const gradoPrima = gradoAttuale(p);
+        p = completa(p, slug);
+        const inCammino = !!box.closest('[data-contesto="cammino"]');
+        if (guardiano && inCammino) p = battiGuardiano(p, guardiano);
+        const salvato = salva(p);
+        box.classList.add('superata');
+        const gradoDopo = gradoAttuale(p);
+        let msg = '🏆 Sfida superata! La Nebbia si dirada.';
+        if (gradoDopo > gradoPrima) {
+          msg = `🎉 Guardiano sconfitto! Ora sei ${grado(gradoDopo).nome}.`;
+          document.dispatchEvent(new CustomEvent('friendlymath:grado', { detail: { grado: gradoDopo } }));
+        } else if (guardiano && !inCammino) {
+          msg += ' Per salire di grado affronta il Guardiano nel Cammino.';
+        }
+        if (!salvato) msg += ' (Il tuo browser non permette di salvare: scarica la Pergamena dallo Zaino.)';
+        ris.textContent = msg;
+        document.dispatchEvent(new CustomEvent('friendlymath:progresso'));
+      } else {
+        ris.textContent = `${giuste} su ${domande.length}. Coraggio, la Civetta crede in te.`;
+      }
+    });
+  }
+</script>
+
+<style>
+  .domande { padding-left: 1.2rem; margin: 0; }
+  .domanda { margin: .8rem 0 1.1rem; }
+  fieldset { border: 0; padding: 0; margin: 0; }
+  legend { font-weight: 800; margin-bottom: .4rem; }
+  .opzioni { display: grid; gap: .4rem; }
+  .opzione { display: flex; gap: .5rem; align-items: center; background: var(--superficie); border: 2px solid var(--bordo); border-radius: var(--raggio-s); padding: .45rem .7rem; cursor: pointer; }
+  .opzione:has(input:checked) { border-color: var(--fiducia); }
+  .numero input { font: inherit; padding: .35rem .6rem; border-radius: var(--raggio-s); border: 2px solid var(--bordo); width: 8rem; background: var(--superficie); color: var(--testo); }
+  .esito { font-weight: 800; margin: .4rem 0 0; }
+  .esito.ok { color: var(--successo); }
+  .esito.no { color: var(--pericolo); }
+  .spiegazione { margin: .3rem 0 0; font-size: .95rem; }
+  .riga-azioni { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; }
+  .risultato { font-weight: 800; margin: 0; }
+  :global(.sfida.superata) { border-color: var(--successo); }
+</style>

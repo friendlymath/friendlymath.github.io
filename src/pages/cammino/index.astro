@@ -1,0 +1,107 @@
+---
+import Base from '../../layouts/Base.astro';
+import { stanzeDelCammino, riferimentiStanze } from '../../lib/contenuti';
+import { GRADI } from '../../lib/mondo';
+
+const stanze = await stanzeDelCammino();
+const rif = riferimentiStanze(stanze);
+const regioni = GRADI.map((g) => ({ ...g, stanze: stanze.filter((s) => s.data.regione === g.numero) }));
+const guardianoDi = (n: number) => stanze.find((s) => s.data.regione === n && s.data.guardiano);
+const partenze = regioni.filter((r) => r.numero > 1 && guardianoDi(r.numero - 1));
+---
+<Base titolo="Il Cammino" descrizione="Il viaggio dell'eroe nel Regno di Numeria: sei regioni, stanze da conquistare, Guardiani da sconfiggere.">
+  <section class="contenitore">
+    <header class="intro">
+      <p class="pillola">🗺️ Il viaggio dell'eroe</p>
+      <h1>Il Cammino</h1>
+      <p class="stretto">Il Regno di Numeria è invaso dalla <b>Nebbia</b>: dove passa, la gente dimentica come si conta, si misura, si ragiona.
+      E comincia a ripetere una frase terribile: <i>«non sono portato»</i>. Tu sei l'eroe (sì, proprio tu, con quel bastone).
+      Attraversa le regioni, conquista le stanze, sconfiggi i Guardiani. Ottavia la Civetta ti accompagna. Quasi sempre nella direzione giusta.</p>
+    </header>
+
+    {partenze.length > 0 && (
+      <details class="scheda partenza">
+        <summary><b>Sei già avanti?</b> Scegli da dove partire</summary>
+        <p>Per entrare direttamente in una regione devi battere il <b>Guardiano della regione precedente</b>: è la tua prova d'ingresso. Le regioni saltate restano sempre rigiocabili.</p>
+        <ul>
+          {partenze.map((r) => {
+            const g = guardianoDi(r.numero - 1)!;
+            return <li>Voglio partire da <b>{r.regione}</b> ({r.fase}) → <a href={`/cammino/${g.id}/`}>sfida {g.data.nomeStanza ?? g.data.titolo}</a></li>;
+          })}
+        </ul>
+      </details>
+    )}
+
+    <ol class="sentiero">
+      {regioni.map((r) => (
+        <li class="regione" id={r.slugRegione} data-regione={r.numero} style={`--c:${r.colore}`}>
+          <div class="segno" aria-hidden="true">{r.icona}</div>
+          <div class="corpo scheda">
+            <p class="tenue grado">Grado {r.numero} · {r.nome} · {r.fase}</p>
+            <h2>{r.regione}</h2>
+            <p class="tenue equip">Equipaggiamento: {r.equipaggiamento}</p>
+            {r.stanze.length === 0 ? (
+              <p class="nebbia">🌫️ Questa regione è ancora avvolta nella Nebbia. Le stanze arriveranno presto.</p>
+            ) : (
+              <>
+                <p class="chiusa" data-chiusa hidden>🔒 Per entrare batti il Guardiano della regione precedente.</p>
+                <ol class="stanze">
+                  {r.stanze.map((s) => (
+                    <li data-stanza={s.id} class="stanza">
+                      <a href={`/cammino/${s.id}/`}>
+                        <span class="icona" aria-hidden="true">{s.data.guardiano ? '🐉' : '🚪'}</span>
+                        <span><b>{s.data.nomeStanza ?? s.data.titolo}</b><br /><span class="tenue">{s.data.titolo}</span></span>
+                        <span class="stato pillola" data-stato>…</span>
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </>
+            )}
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+  <script type="application/json" id="stanze-cammino" set:html={JSON.stringify(rif)} />
+</Base>
+
+<script>
+  import { carica, statoStanza, regioneAperta, type StanzaRif } from '../../lib/progresso';
+  const stanze: StanzaRif[] = JSON.parse(document.getElementById('stanze-cammino')!.textContent || '[]');
+  const p = carica();
+  const etichette = { bloccata: '🌫️ Nella Nebbia', aperta: '⚔️ Da conquistare', conquistata: '✅ Conquistata' } as const;
+  document.querySelectorAll<HTMLElement>('[data-stanza]').forEach((li) => {
+    const s = statoStanza(p, stanze, li.dataset.stanza!);
+    li.dataset.statoStanza = s;
+    li.querySelector('[data-stato]')!.textContent = etichette[s];
+  });
+  document.querySelectorAll<HTMLElement>('[data-regione]').forEach((r) => {
+    const n = Number(r.dataset.regione);
+    const chiusa = r.querySelector<HTMLElement>('[data-chiusa]');
+    if (chiusa) chiusa.hidden = regioneAperta(p, n);
+  });
+</script>
+
+<style>
+  .intro { padding: 1.5rem 0 .5rem; }
+  .partenza { margin: 1rem 0 2rem; }
+  .partenza summary { cursor: pointer; }
+  .sentiero { list-style: none; padding: 0; margin: 0; position: relative; }
+  .sentiero::before { content: ''; position: absolute; left: 27px; top: 0; bottom: 0; border-left: 6px dotted var(--bordo); }
+  .regione { display: grid; grid-template-columns: 60px 1fr; gap: .8rem; margin: 0 0 1.4rem; scroll-margin-top: 80px; }
+  .segno { width: 60px; height: 60px; border-radius: 50%; background: var(--c); display: grid; place-items: center; font-size: 1.7rem; position: relative; box-shadow: 0 0 0 5px var(--sfondo); }
+  .corpo { border-top: 6px solid var(--c); min-width: 0; }
+  .corpo h2 { margin: .1rem 0 .2rem; }
+  .grado { margin: 0; font-weight: 800; font-size: .85rem; text-transform: uppercase; letter-spacing: .04em; }
+  .equip { margin-top: 0; font-size: .95rem; }
+  .stanze { list-style: none; padding: 0; margin: .6rem 0 0; display: grid; gap: .5rem; }
+  .stanza a { display: grid; grid-template-columns: auto 1fr auto; gap: .7rem; align-items: center; text-decoration: none; color: var(--testo); background: var(--superficie-2); border-radius: var(--raggio-s); padding: .6rem .8rem; border: 2px solid transparent; }
+  .stanza a:hover { border-color: var(--c); }
+  .stanza .icona { font-size: 1.5rem; }
+  .stanza[data-stato-stanza="bloccata"] a { opacity: .6; filter: grayscale(.6); }
+  .stanza[data-stato-stanza="conquistata"] .stato { background: var(--successo); color: #fff; border: 0; }
+  .stanza[data-stato-stanza="aperta"] .stato { background: var(--gioco); color: #fff; border: 0; }
+  .nebbia, .chiusa { background: var(--superficie-2); border: 2px dashed var(--bordo); border-radius: var(--raggio); padding: .6rem .9rem; margin: .4rem 0 0; }
+  @media (max-width: 480px) { .stanza a { grid-template-columns: auto 1fr; } .stanza .stato { grid-column: 2; justify-self: start; } }
+</style>

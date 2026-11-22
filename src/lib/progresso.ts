@@ -16,7 +16,8 @@ export type Progresso = {
   aggiornato: string;
 };
 
-export type StanzaRif = { slug: string; grado: number; ordine: number };
+/** `grado` qui è il numero della regione; il Guardiano è l'ultima stanza della regione. */
+export type StanzaRif = { slug: string; grado: number; ordine: number; guardiano?: boolean };
 export type StatoStanza = 'bloccata' | 'aperta' | 'conquistata';
 export type EsitoImport = { ok: true; progresso: Progresso } | { ok: false; errore: string };
 
@@ -117,8 +118,11 @@ export function regioneAperta(p: Progresso, grado: number): boolean {
 
 export function statoStanza(p: Progresso, stanze: StanzaRif[], slug: string): StatoStanza {
   const s = stanze.find((x) => x.slug === slug);
-  if (!s || !regioneAperta(p, s.grado)) return 'bloccata';
-  if (p.completate.includes(slug)) return 'conquistata';
+  if (!s) return 'bloccata';
+  if (p.completate.includes(slug) && (s.guardiano || regioneAperta(p, s.grado))) return 'conquistata';
+  // Il Guardiano si può sempre sfidare: è la prova d'ingresso per chi è già avanti.
+  if (s.guardiano) return 'aperta';
+  if (!regioneAperta(p, s.grado)) return 'bloccata';
   const precedenti = stanze.filter((x) => x.grado === s.grado && x.ordine < s.ordine);
   const prec = precedenti.sort((a, b) => b.ordine - a.ordine)[0];
   if (!prec || p.completate.includes(prec.slug)) return 'aperta';

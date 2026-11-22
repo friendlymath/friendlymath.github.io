@@ -1,0 +1,74 @@
+---
+import Base from '../../layouts/Base.astro';
+import { lezioniPubblicate } from '../../lib/contenuti';
+import { MACROARGOMENTI, grado } from '../../lib/mondo';
+
+const lezioni = await lezioniPubblicate();
+const sezioni = MACROARGOMENTI.map((m) => {
+  const proprie = lezioni.filter((l) => l.data.macroargomento === m.slug);
+  const sotto = [...new Set(proprie.map((l) => l.data.sottoargomento))];
+  return { ...m, gruppi: sotto.map((s) => ({ nome: s, lezioni: proprie.filter((l) => l.data.sottoargomento === s) })), totale: proprie.length };
+});
+---
+<Base titolo="Il Libro" descrizione="Tutti gli argomenti di matematica, dalle elementari ai quaternioni, liberi da consultare.">
+  <section class="contenitore">
+    <header class="intro">
+      <p class="pillola">📖 Accesso libero</p>
+      <h1>Il Libro</h1>
+      <p class="tenue">Tutti gli argomenti in ordine, come in un buon manuale. Nessun lucchetto: apri quello che ti serve, quando ti serve.
+      Il colore indica il livello, dalla <b>Recluta</b> (elementari) al <b>Cavaliere alato</b> (matematica avanzata).</p>
+      <nav class="salti" aria-label="Macroargomenti">
+        {sezioni.map((s) => <a class="pillola" href={`#${s.slug}`}>{s.nome} <span class="tenue">({s.totale})</span></a>)}
+      </nav>
+    </header>
+
+    {sezioni.map((s) => (
+      <section class="capitolo" id={s.slug}>
+        <h2>{s.nome}</h2>
+        <p class="tenue">{s.descrizione} · <a href={`/mappe/${s.slug}/`}>🧠 Mappa mentale</a></p>
+        {s.totale === 0 ? (
+          <p class="nebbia">🌫️ Capitolo in scrittura: la Nebbia è ancora fitta, ma lo stiamo diradando.</p>
+        ) : (
+          <div class="griglia">
+            {s.gruppi.map((g) => (
+              <div class="scheda">
+                <h3>{g.nome}</h3>
+                <ul class="elenco">
+                  {g.lezioni.map((l) => {
+                    const gr = grado(l.data.grado);
+                    return (
+                      <li data-lezione-voce={l.id}>
+                        <span class="pallino" style={`background:${gr.colore}`} title={`Grado ${gr.numero}: ${gr.fase}`}></span>
+                        <a href={`/libro/${l.id}/`}>{l.data.titolo}</a>
+                        <span class="sr-only">(grado {gr.numero}, {gr.fase})</span>
+                        <span class="fatto" hidden aria-label="completata">✅</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+    ))}
+  </section>
+</Base>
+<script>
+  import { carica } from '../../lib/progresso';
+  const p = carica();
+  document.querySelectorAll<HTMLElement>('[data-lezione-voce]').forEach((li) => {
+    if (p.completate.includes(li.dataset.lezioneVoce!)) li.querySelector<HTMLElement>('.fatto')!.hidden = false;
+  });
+</script>
+<style>
+  .intro { padding: 1.5rem 0 .5rem; }
+  .salti { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .salti a { text-decoration: none; }
+  .capitolo { scroll-margin-top: 80px; }
+  .scheda h3 { margin: 0 0 .4rem; font-size: 1.1rem; }
+  .elenco { list-style: none; padding: 0; margin: 0; }
+  .elenco li { display: flex; align-items: center; gap: .5rem; padding: .25rem 0; }
+  .pallino { width: .8rem; height: .8rem; border-radius: 50%; flex: none; }
+  .nebbia { background: var(--superficie-2); border: 2px dashed var(--bordo); border-radius: var(--raggio); padding: .8rem 1rem; }
+</style>

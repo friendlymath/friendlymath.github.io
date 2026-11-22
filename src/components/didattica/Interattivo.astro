@@ -1,0 +1,28 @@
+---
+/** Monta un'animazione o un grafico interattivo definito in src/scripts/interattivi/<tipo>.ts */
+interface Props { tipo: string; titolo: string; didascalia?: string; altezza?: number; }
+const { tipo, titolo, didascalia, altezza = 340 } = Astro.props;
+---
+<figure class="interattivo scheda" data-interattivo={tipo}>
+  <figcaption class="box-titolo"><span aria-hidden="true">🎮</span> {titolo}</figcaption>
+  <div class="area" style={`min-height:${altezza}px`} data-area>
+    <noscript><p class="tenue">Questo esperimento interattivo ha bisogno di JavaScript.</p></noscript>
+  </div>
+  {didascalia && <p class="tenue didascalia">{didascalia}</p>}
+  <slot />
+</figure>
+<script>
+  const moduli = import.meta.glob('../../scripts/interattivi/*.ts');
+  for (const fig of document.querySelectorAll<HTMLElement>('[data-interattivo]')) {
+    const tipo = fig.dataset.interattivo;
+    const carica = moduli[`../../scripts/interattivi/${tipo}.ts`];
+    const area = fig.querySelector<HTMLElement>('[data-area]')!;
+    if (!carica) { area.textContent = `Interattivo “${tipo}” non trovato.`; continue; }
+    carica().then((m: any) => m.monta(area)).catch(() => { area.textContent = 'Non sono riuscito a caricare l’esperimento.'; });
+  }
+</script>
+<style>
+  .interattivo { margin: 1.6rem 0; }
+  .area { width: 100%; position: relative; }
+  .didascalia { font-size: .92rem; margin: .5rem 0 0; }
+</style>

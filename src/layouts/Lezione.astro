@@ -1,0 +1,97 @@
+---
+import Base from './Base.astro';
+import { grado, macro, DISTRATTORI } from '../lib/mondo';
+import type { Lezione } from '../lib/contenuti';
+import Fonti from '../components/Fonti.astro';
+
+interface Props {
+  lezione: Lezione;
+  contesto: 'libro' | 'cammino';
+  precedente?: { href: string; titolo: string };
+  successiva?: { href: string; titolo: string };
+  stanze?: { slug: string; grado: number; ordine: number }[];
+}
+const { lezione, contesto, precedente, successiva, stanze } = Astro.props;
+const d = lezione.data;
+const g = grado(d.grado);
+const r = d.regione ? grado(d.regione) : undefined;
+const m = macro(d.macroargomento);
+const altroHref = contesto === 'libro' ? `/cammino/${lezione.id}/` : `/libro/${lezione.id}/`;
+---
+<Base titolo={d.titolo} descrizione={d.descrizione}>
+  <article class="contenitore stretto lezione" data-contesto={contesto} data-lezione={lezione.id} data-guardiano={d.guardiano && d.regione ? d.regione : ''}>
+    <nav class="briciole tenue" aria-label="Percorso">
+      {contesto === 'libro'
+        ? <><a href="/libro/">📖 Libro</a> › <a href={`/libro/#${m.slug}`}>{m.nome}</a> › {d.sottoargomento}</>
+        : <><a href="/cammino/">🗺️ Cammino</a> › <a href={`/cammino/#${r!.slugRegione}`}>{r!.regione}</a> › Stanza {d.stanza}</>}
+    </nav>
+
+    <header class="testa">
+      {contesto === 'cammino' && d.nomeStanza && <p class="nome-stanza">{d.guardiano ? '🐉 ' : '🚪 '}{d.nomeStanza}</p>}
+      <h1>{d.titolo}</h1>
+      <p class="tenue sottotitolo">{d.descrizione}</p>
+      <p class="etichette">
+        <span class="pillola" style={`background:${g.colore};color:#fff;border:0`}>{g.icona} Grado {g.numero} · {g.fase}</span>
+        <span class="pillola">{m.nome}</span>
+        <span class="pillola stato" data-stato hidden>✅ Completata</span>
+      </p>
+      {contesto === 'cammino' && <div class="cancello" data-cancello hidden>
+        <p>🌫️ <b>Questa stanza è ancora avvolta nella Nebbia.</b> Conquista prima la stanza precedente
+        {d.regione! > 1 && <> (o batti il Guardiano della regione precedente)</>}. Nel frattempo puoi leggerla liberamente nel <a href={altroHref}>Libro</a>.</p>
+      </div>}
+    </header>
+
+    <div class="prosa">
+      <slot />
+    </div>
+
+    {d.prerequisiti.length > 0 && <p class="tenue">Prima di questa lezione è utile: {d.prerequisiti.map((p, i) => <>{i > 0 && ', '}<a href={`/${contesto}/${p}/`}>{p.split('/').pop()}</a></>)}</p>}
+
+    {(d.fonti.length > 0 || d.ispirazione.length > 0) && <Fonti fonti={d.fonti} ispirazione={d.ispirazione} />}
+
+    <nav class="naviga" aria-label="Lezioni vicine">
+      {precedente ? <a class="btn vuoto" href={precedente.href}>← {precedente.titolo}</a> : <span />}
+      {successiva && <a class="btn gioco" href={successiva.href} data-successiva>{successiva.titolo} →</a>}
+    </nav>
+    <p class="altro tenue">
+      {contesto === 'libro' && d.regione ? <>Questa lezione è anche una stanza del <a href={altroHref}>Cammino</a>.</> : null}
+      {contesto === 'cammino' ? <>Vuoi solo studiare? Apri questa lezione nel <a href={altroHref}>Libro</a>.</> : null}
+    </p>
+  </article>
+  {stanze && <script type="application/json" id="stanze-cammino" set:html={JSON.stringify(stanze)} />}
+</Base>
+
+<script>
+  import { carica, statoStanza } from '../lib/progresso';
+  function aggiorna() {
+    const art = document.querySelector<HTMLElement>('[data-lezione]');
+    if (!art) return;
+    const p = carica();
+    const slug = art.dataset.lezione!;
+    const stato = document.querySelector<HTMLElement>('[data-stato]');
+    if (stato) stato.hidden = !p.completate.includes(slug);
+    const cancello = document.querySelector<HTMLElement>('[data-cancello]');
+    const datiEl = document.getElementById('stanze-cammino');
+    if (cancello && datiEl) {
+      const stanze = JSON.parse(datiEl.textContent || '[]');
+      const s = statoStanza(p, stanze, slug);
+      cancello.hidden = s !== 'bloccata';
+      art.classList.toggle('bloccata', s === 'bloccata');
+    }
+  }
+  aggiorna();
+  document.addEventListener('friendlymath:progresso', aggiorna);
+</script>
+
+<style>
+  .lezione { padding-top: 1.2rem; }
+  .briciole { font-size: .9rem; }
+  .briciole a { color: inherit; }
+  .nome-stanza { margin: 1rem 0 0; font-weight: 800; color: var(--magia); text-transform: uppercase; letter-spacing: .05em; font-size: .9rem; }
+  .sottotitolo { font-size: 1.15rem; margin-top: 0; }
+  .etichette { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .cancello { background: var(--superficie-2); border: 2px dashed var(--bordo); border-radius: var(--raggio); padding: .8rem 1rem; }
+  :global(.lezione.bloccata .sfida) { opacity: .55; pointer-events: none; }
+  .naviga { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: 2.5rem; }
+  .altro { margin-top: 1rem; }
+</style>

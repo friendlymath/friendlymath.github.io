@@ -1,0 +1,66 @@
+---
+titolo: "Il valore posizionale: perché 23 e 32 non sono la stessa cosa"
+descrizione: "Unità, decine, centinaia: la stessa cifra vale di più o di meno a seconda di dove si siede."
+macroargomento: numeri
+sottoargomento: "Contare e scrivere i numeri"
+grado: 1
+regione: 1
+stanza: 1
+nomeStanza: "La Bottega dei Mattoncini"
+distrattore: mercante
+ispirazione:
+  - "https://www.youmath.it"
+  - "https://matepratica.it"
+---
+
+<Scena personaggio="narratore">
+Il Villaggio delle Cifre è in subbuglio. Il fornaio ha consegnato **32** pagnotte invece di **23**, il mugnaio ha pagato
+**100** monete invece di **10**. Colpa della Nebbia: ha fatto dimenticare a tutti che **conta dove metti una cifra**.
+Ottavia la Civetta atterra sul tuo bastone (sbagliando bastone due volte) e sussurra: «Andiamo alla Bottega dei Mattoncini».
+</Scena>
+
+## Dieci cifre, infiniti numeri
+
+Per scrivere qualunque numero usiamo solo **dieci cifre**: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9.
+Il trucco geniale è che **la posizione cambia il valore**:
+
+- la cifra più a destra conta le **unità** (u);
+- quella subito a sinistra conta le **decine** (da), cioè gruppi da 10;
+- poi vengono le **centinaia** (h), gruppi da 100, e così via.
+
+Ogni volta che ti sposti di un posto verso sinistra, il valore diventa **dieci volte più grande**.
+
+$$
+347 = 3 \times 100 + 4 \times 10 + 7 \times 1
+$$
+
+<Esempio titolo="Esempio pratico: i mattoncini">
+Immagina dei mattoncini: quelli piccoli valgono **1**, le barrette da dieci valgono **10**, le piastre valgono **100**.
+Con **2** barrette e **3** mattoncini hai **23**. Con **3** barrette e **2** mattoncini hai **32**.
+Stesse cifre, mattoncini diversi: il fornaio aveva semplicemente scambiato i posti!
+</Esempio>
+
+<Interattivo tipo="abaco" titolo="La Bottega dei Mattoncini" didascalia="Aggiungi mattoncini: quando arrivi a 10 unità, si fondono in una barretta da 10. Quando arrivi a 10 barrette, diventano una piastra da 100." altezza={260} />
+
+## Lo zero, il guardiano dei posti vuoti
+
+E se non hai decine? Scrivi **0**. In **305** lo zero dice: «qui, al posto delle decine, non c'è niente, ma il posto esiste».
+Senza zero, 305 e 35 sembrerebbero uguali.
+
+<Attenzione distrattore="mercante">
+«Lo zero non vale niente, quindi si può togliere!». Sbagliato: lo zero non aggiunge quantità, ma **tiene il posto**.
+Togliendo lo zero da 305 ottieni 35, cioè quasi dieci volte meno. Il Mercante vende anche l'idea che “più cifre grandi = numero più grande”:
+ma 199 è più piccolo di 200, perché conta prima la posizione più a sinistra.
+</Attenzione>
+
+<Curiosita>
+Il nostro sistema si chiama **posizionale decimale**. Arrivò in Europa dall'India attraverso il mondo arabo; a diffonderlo in Italia fu
+Leonardo Pisano, detto **Fibonacci**, con il *Liber abaci* del 1202. Prima si usavano i numeri romani, comodi per le lapidi ma pessimi per i conti.
+Trovi la storia nella scheda <a href="/storia/al-khwarizmi/">al-Khwarizmi e la nascita dell'algebra</a>.
+</Curiosita>
+
+<Sfida titolo="Sfida della Bottega" domande={[
+  { testo: "Nel numero 472, quanto vale la cifra 7?", opzioni: ["7", "70", "700"], risposta: 1, spiegazione: "Il 7 è nella posizione delle decine: vale 7 × 10 = 70." },
+  { testo: "Scrivi il numero formato da 3 centinaia, 0 decine e 5 unità.", risposta: 305, spiegazione: "3 × 100 + 0 × 10 + 5 = 305. Lo zero tiene il posto delle decine." },
+  { testo: "Quale numero è più grande?", opzioni: ["199", "201", "Sono uguali"], risposta: 1, spiegazione: "Si confronta prima la posizione più a sinistra: 2 centinaia battono 1 centinaio." }
+]} />

@@ -1,0 +1,34 @@
+---
+import '../styles/tema.css';
+import 'katex/dist/katex.min.css';
+import Intestazione from '../components/Intestazione.astro';
+import PiePagina from '../components/PiePagina.astro';
+
+interface Props { titolo: string; descrizione?: string; }
+const { titolo, descrizione = 'La matematica per chiunque: un Libro da sfogliare e un Cammino da eroe per liberare il Regno di Numeria dalla Nebbia.' } = Astro.props;
+const titoloCompleto = titolo === 'FriendlyMath' ? titolo : `${titolo} · FriendlyMath`;
+---
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titoloCompleto}</title>
+    <meta name="description" content={descrizione} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <meta property="og:title" content={titoloCompleto} />
+    <meta property="og:description" content={descrizione} />
+    <script is:inline>
+      try { const t = localStorage.getItem('friendlymath:tema'); if (t) document.documentElement.dataset.theme = t; } catch {}
+    </script>
+  </head>
+  <body>
+    <a class="sr-only" href="#contenuto">Vai al contenuto</a>
+    <Intestazione />
+    <main id="contenuto">
+      <slot />
+    </main>
+    <PiePagina />
+  </body>
+</html>

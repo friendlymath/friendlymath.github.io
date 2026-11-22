@@ -1,0 +1,8 @@
+---
+interface Props { titolo?: string; }
+const { titolo = 'Lo sapevi?' } = Astro.props;
+---
+<aside class="box curiosita">
+  <p class="box-titolo"><span aria-hidden="true">✨</span> {titolo}</p>
+  <slot />
+</aside>

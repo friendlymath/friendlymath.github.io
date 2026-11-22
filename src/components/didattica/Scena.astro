@@ -1,0 +1,9 @@
+---
+import { PERSONAGGI } from '../../lib/mondo';
+interface Props { personaggio?: keyof typeof PERSONAGGI; }
+const p = PERSONAGGI[Astro.props.personaggio ?? 'narratore'];
+---
+<aside class="box scena solo-cammino">
+  <p class="box-titolo"><span aria-hidden="true">{p.icona}</span> {p.nome}</p>
+  <slot />
+</aside>

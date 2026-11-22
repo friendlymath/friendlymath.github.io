@@ -1,0 +1,15 @@
+---
+import { DISTRATTORI, type SlugDistrattore } from '../../lib/mondo';
+interface Props { distrattore?: SlugDistrattore; }
+const d = Astro.props.distrattore ? DISTRATTORI[Astro.props.distrattore] : undefined;
+const nome = d ? d.nome.charAt(0).toUpperCase() + d.nome.slice(1) : undefined;
+---
+<aside class="box attenzione">
+  <p class="box-titolo">
+    <span aria-hidden="true">⚠️</span>
+    {d ? (<><span class="solo-cammino">Arriva {d.nome}!</span><span class="solo-libro">Errore tipico</span></>) : 'Errore tipico'}
+  </p>
+  {d && <p class="solo-cammino motto"><b>{nome}</b>: <i>{d.motto}</i></p>}
+  <slot />
+</aside>
+<style>.motto { margin-top: 0; }</style>

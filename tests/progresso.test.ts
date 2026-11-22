@@ -22,6 +22,7 @@ const stanze = [
   { slug: 'a2', grado: 1, ordine: 2 },
   { slug: 'b1', grado: 2, ordine: 1 },
   { slug: 'b2', grado: 2, ordine: 2 },
+  { slug: 'bG', grado: 2, ordine: 3, guardiano: true },
 ];
 
 describe('carica / salva', () => {
@@ -91,6 +92,10 @@ describe('statoStanza', () => {
     const p = completa(battiGuardiano(progressoVuoto(), 1), 'b1');
     expect(statoStanza(p, stanze, 'b1')).toBe('conquistata');
     expect(statoStanza(p, stanze, 'b2')).toBe('aperta');
+  });
+  it('il Guardiano è sempre sfidabile (prova d’ingresso), anche a regione chiusa', () => {
+    expect(statoStanza(progressoVuoto(), stanze, 'bG')).toBe('aperta');
+    expect(statoStanza(completa(progressoVuoto(), 'bG'), stanze, 'bG')).toBe('conquistata');
   });
   it('slug sconosciuto → bloccata', () => {
     expect(statoStanza(progressoVuoto(), stanze, 'zzz')).toBe('bloccata');
