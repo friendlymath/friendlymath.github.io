@@ -2,7 +2,7 @@ name: Pubblica su GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, claude/amazing-archimedes-18qzsw]
   workflow_dispatch:
 
 permissions:
@@ -30,6 +30,8 @@ jobs:
         with:
           path: dist
   deploy:
+    # GitHub Pages pubblica solo dal branch predefinito del repository: gli altri branch fanno solo la verifica.
+    if: github.ref_name == github.event.repository.default_branch
     needs: build
     runs-on: ubuntu-latest
     environment:
