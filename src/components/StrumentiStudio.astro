@@ -48,7 +48,12 @@ const formulario = FORMULE.map((f) => ({ titolo: f.titolo, slug: f.slug, html: k
   const btnL = dock.querySelector<HTMLButtonElement>('[data-leggimi]')!;
   const testoDaLeggere = () => {
     const radice = document.querySelector('.prosa')?.closest('article') ?? document.querySelector('main')!;
+    // segna ciò che non si vede (versione essenziale, passi del focus, parti chiuse) per non leggerlo
+    const nascosti = [...radice.querySelectorAll<HTMLElement>('*')].filter((el) => getComputedStyle(el).display === 'none' || el.hidden);
+    nascosti.forEach((el) => el.setAttribute('data-non-leggere', ''));
     const copia = radice.cloneNode(true) as HTMLElement;
+    nascosti.forEach((el) => el.removeAttribute('data-non-leggere'));
+    copia.querySelectorAll('[data-non-leggere]').forEach((n) => n.remove());
     copia.querySelectorAll('.katex-html, script, style, svg, .stanza-loci, [aria-hidden="true"], .sr-only, nav, .scena').forEach((n) => n.remove());
     copia.querySelectorAll('input, button').forEach((n) => n.remove());
     return (copia.innerText || copia.textContent || '').replace(/\s+/g, ' ').trim();

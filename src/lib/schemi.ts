@@ -29,6 +29,8 @@ export const schemaLezione = z
     fonti: z.array(schemaFonte).default([]),
     ispirazione: z.array(z.url()).default([]),
     stato: z.enum(['bozza', 'pubblicata']).default('pubblicata'),
+    /** versione essenziale: poche idee chiave e un esempio (testo con $formule$ e **grassetto**) */
+    essenziale: z.object({ idee: z.array(z.string().min(1)).min(2).max(5), esempio: z.string().min(1) }).optional(),
     /** la stanza illustrata del palazzo della memoria: ogni oggetto richiama un concetto */
     scenaStanza: z.object({
       ambiente: z.enum(AMBIENTI),
