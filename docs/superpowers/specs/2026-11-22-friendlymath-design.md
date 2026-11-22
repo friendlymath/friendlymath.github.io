@@ -85,7 +85,18 @@ Pubblicato su GitHub Pages (`https://friendlymath.github.io`), costo zero, nessu
 
 - **Macroargomenti** (lista fissa, determina cartelle, URL e mappe mentali): `numeri` (Numeri e aritmetica), `geometria`, `algebra`, `funzioni-analisi`, `probabilita-statistica`, `logica-insiemi`, `algebra-lineare`, `strutture-avanzate` (complessi, quaternioni, gruppi, topologia). Un macroargomento può attraversare più regioni/gradi (es. geometria va dal grado 1 al 5); il grado è della singola lezione, non del macroargomento.
 - **Stanza = una lezione.** I campi del Cammino (`regione`, `stanza`, `distrattore`) sono **facoltativi**: una lezione senza questi campi compare solo nel Libro. Il Cammino è quindi una selezione curata di lezioni-stanza per regione; `grado` è invece obbligatorio per tutte (serve anche al Libro per indicare il livello).
-- **Libro vs Cammino, stesso file**: nel Libro la `Scena` è nascosta; `Attenzione`/distrattore è mostrato come box neutro "Errore tipico"; la `Sfida` è mostrata come "Mettiti alla prova". Una sfida superata conquista la stanza ovunque la si superi.
+- **Libro vs Cammino, stesso file**: nel Libro la `Scena` è nascosta; `Attenzione`/distrattore è mostrato come box neutro "Errore tipico"; la `Sfida` è mostrata come "Mettiti alla prova".
+
+### 5.2 Accesso e avanzamento (deciso dall'utente)
+
+- **Il Libro è completamente libero**: ogni lezione di ogni grado è sempre accessibile, senza blocchi.
+- **Il Cammino è ordinato, con prova d'ingresso** (opzione B):
+  - dentro ogni regione le stanze si affrontano in ordine (`stanza`); la successiva si apre conquistando la precedente;
+  - l'ultima stanza di ogni regione è il **Guardiano**: una sfida riassuntiva della regione. Batterlo fa salire di grado e apre la regione successiva;
+  - all'inizio chi è già avanti può scegliere la regione di partenza; per entrarvi deve battere il Guardiano della regione precedente. Le regioni saltate risultano "attraversate" ma le loro stanze restano rigiocabili;
+  - il campo `grado` del progresso è il grado più alto il cui Guardiano precedente è stato battuto.
+- **Libro e Cammino si parlano senza scorciatoie** (scelta di Claude): una sfida superata nel Libro segna la lezione come *completata*; quando l'eroe arriva a quella stanza nel Cammino, la trova già conquistata. Il Guardiano esiste solo nel Cammino, quindi il Libro non fa salire di grado.
+- **Unione della Pergamena**: si uniscono le stanze/lezioni completate e i badge; il grado è il massimo dei due.
 - **Esperimenti**: collezione separata `src/content/esperimenti/it/*.mdx` (animazione o simulazione interattiva con breve spiegazione, campo `lezioniCollegate`), stesse regole sulle fonti se riporta fatti.
 - **Prima consegna**: "primi gradi" = gradi 1, 2 e 3 (una stanza completa ciascuno); i gradi 4–6 visibili sulla mappa "nella Nebbia". Almeno 1 esperimento.
 
