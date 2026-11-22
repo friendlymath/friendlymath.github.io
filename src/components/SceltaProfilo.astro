@@ -1,0 +1,54 @@
+---
+/** Scelta rapida del profilo di studio, da usare dentro il percorso (creazione dell'eroe, ingresso del Cammino). */
+import { PROFILI, REGOLAZIONI } from '../lib/studio';
+interface Props { compatta?: boolean }
+const { compatta = false } = Astro.props;
+---
+<div class:list={['scelta-profilo', { compatta }]} data-scelta-profilo>
+  <div class="profili-rapidi">
+    {PROFILI.map((p) => (
+      <label class="profilo-rapido" title={`Attiva: ${p.regolazioni.map((r) => REGOLAZIONI.find((x) => x.id === r)!.nome).join(', ')}`}>
+        <input type="checkbox" data-profilo-rapido={p.id} />
+        <span><b>{p.nome}</b><small>{p.descrizione}</small></span>
+      </label>
+    ))}
+  </div>
+  <p class="effetto tenue" data-effetto aria-live="polite"></p>
+  <p class="privacy-profilo">🔒 <b>Questa scelta resta solo su questo dispositivo.</b> Non viene inviata a nessuno e non finisce nella Pergamena:
+  chi gestisce FriendlyMath non può sapere se hai una neurodivergenza né a che punto sei del percorso. Questi dati li crei e li controlli solo tu.
+  <a href="/studio/">Regola ogni dettaglio o cancella tutto</a>.</p>
+</div>
+
+<script>
+  import { caricaStudio, salvaStudio, cambiaProfilo, applicaStudio, REGOLAZIONI, type Profilo } from '../lib/studio';
+  for (const radice of document.querySelectorAll<HTMLElement>('[data-scelta-profilo]')) {
+    const effetto = radice.querySelector<HTMLElement>('[data-effetto]')!;
+    const caselle = [...radice.querySelectorAll<HTMLInputElement>('[data-profilo-rapido]')];
+    const mostra = () => {
+      const s = caricaStudio();
+      caselle.forEach((c) => (c.checked = s.profili.includes(c.dataset.profiloRapido as Profilo)));
+      effetto.textContent = s.regolazioni.length
+        ? `Attivo ora: ${s.regolazioni.map((r) => REGOLAZIONI.find((x) => x.id === r)!.nome).join(' · ')}.`
+        : 'Nessuna regolazione attiva: il percorso è quello standard.';
+    };
+    caselle.forEach((c) => c.addEventListener('change', () => {
+      const s = cambiaProfilo(caricaStudio(), c.dataset.profiloRapido as Profilo, c.checked);
+      salvaStudio(s); applicaStudio(s); mostra();
+      document.dispatchEvent(new CustomEvent('friendlymath:studio'));
+    }));
+    document.addEventListener('friendlymath:studio', mostra);
+    mostra();
+  }
+</script>
+
+<style>
+  .profili-rapidi { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); gap: .5rem; }
+  .profilo-rapido { display: flex; gap: .55rem; align-items: flex-start; border: 2px solid var(--bordo); border-radius: 12px; padding: .55rem .7rem; cursor: pointer; background: var(--superficie); }
+  .profilo-rapido input { width: 1.2rem; height: 1.2rem; margin-top: .15rem; accent-color: var(--fiducia); flex: none; }
+  .profilo-rapido span { display: grid; }
+  .profilo-rapido small { font-size: .82rem; color: var(--testo-tenue); }
+  .profilo-rapido:has(input:checked) { border-color: var(--fiducia); background: var(--fiducia-chiaro); }
+  .compatta .profilo-rapido small { display: none; }
+  .effetto { font-size: .9rem; margin: .5rem 0 0; }
+  .privacy-profilo { font-size: .88rem; border-left: 5px solid var(--successo); padding: .35rem .7rem; margin: .6rem 0 0; background: var(--scena-bg); border-radius: 8px; }
+</style>

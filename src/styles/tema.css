@@ -224,3 +224,9 @@ input, select, button { font-family: var(--font-ui); }
 
 /* Modalità focus */
 :root[data-a-focus] .prosa > .nascosto-focus { display: none !important; }
+
+/* Tastierino grande (regolazione «tastierino») */
+.tastierino { display: grid; grid-template-columns: repeat(3, 3.4rem); gap: .35rem; margin-top: .5rem; }
+.tastierino button { font: inherit; font-family: var(--font-ui); font-size: 1.4rem; font-weight: 800; padding: .5rem 0; border-radius: 10px; border: 2px solid var(--bordo); background: var(--superficie); color: var(--testo); cursor: pointer; }
+.tastierino button:active { transform: translateY(2px); }
+@media print { .dock, .cassetta, .righello-velo, .tastierino { display: none !important; } }

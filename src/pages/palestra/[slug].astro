@@ -67,6 +67,10 @@ const membri = f.membri.map((m) => ({ ...m, html: k(m.tex), colore: m.nome ? col
 <script>
   import { formula, serie, corretta, type Esercizio } from '../../lib/palestra';
   import { coriandoli } from '../../scripts/coriandoli';
+  import { ha } from '../../lib/studio';
+  import { aggiungiTastierino } from '../../scripts/tastierino';
+  // sfide più brevi: 4 esercizi invece di 6 (stessa formula, meno quantità)
+  const QUANTI = ha('sfideBrevi') ? 4 : 6;
 
   const radice = document.querySelector<HTMLElement>('[data-palestra]')!;
   const f = formula(radice.dataset.palestra!)!;
@@ -94,7 +98,7 @@ const membri = f.membri.map((m) => ({ ...m, html: k(m.tex), colore: m.nome ? col
   let esercizi: Esercizio[] = [];
   const nuovaSerie = (s?: number) => {
     seme = s ?? Math.floor(Math.random() * 90000) + 10000;
-    esercizi = serie(f, seme, 6);
+    esercizi = serie(f, seme, QUANTI);
     radice.querySelector('[data-seme]')!.textContent = String(seme);
     radice.querySelector('[data-punteggio]')!.textContent = '';
     lista.innerHTML = '';
@@ -110,6 +114,7 @@ const membri = f.membri.map((m) => ({ ...m, html: k(m.tex), colore: m.nome ? col
       const ol = li.querySelector('.passaggi ol')!;
       e.passaggi.forEach((p) => { const x = document.createElement('li'); x.textContent = p; ol.appendChild(x); });
       lista.appendChild(li);
+      if (ha('tastierino')) aggiungiTastierino(li.querySelector('input')!, li.querySelector('.risposta')!);
     });
     try { history.replaceState(null, '', `#serie-${seme}`); } catch {}
   };
@@ -211,6 +216,7 @@ const membri = f.membri.map((m) => ({ ...m, html: k(m.tex), colore: m.nome ? col
     .foglio-stampa :global(.intestazione) { font-size: 10pt; border-bottom: 1px solid #000; padding-bottom: 4pt; }
     .foglio-stampa :global(.spazio) { height: 2.2cm; border-bottom: 1px dotted #999; }
     .foglio-stampa :global(li) { margin-bottom: 8pt; }
+    :global(:root[data-a-leggibile]) .foglio-stampa { font-family: Verdana, Arial, sans-serif; font-size: 14pt; letter-spacing: .03em; word-spacing: .15em; line-height: 1.6; }
     .foglio-stampa :global(.passi) { font-family: monospace; font-size: 10pt; }
   }
 </style>

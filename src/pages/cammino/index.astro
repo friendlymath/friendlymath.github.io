@@ -4,6 +4,7 @@ import Stemma from '../../components/arte/Stemma.astro';
 import Ritratto from '../../components/arte/Ritratto.astro';
 import MappaGioco from '../../components/MappaGioco.astro';
 import SegretoPersonaggi from '../../components/SegretoPersonaggi.astro';
+import SceltaProfilo from '../../components/SceltaProfilo.astro';
 import { stanzeDelCammino, riferimentiStanze } from '../../lib/contenuti';
 import { GRADI } from '../../lib/mondo';
 
@@ -16,6 +17,16 @@ const partenze = regioni.filter((r) => r.numero > 1 && guardianoDi(r.numero - 1)
 <Base titolo="Il Cammino" descrizione="Il viaggio dell'eroe nel Regno di Numeria: sei regioni, stanze da conquistare, Guardiani da sconfiggere.">
   <h1 class="sr-only">Il Cammino: la mappa del Regno di Numeria</h1>
   <MappaGioco stanze={stanze} />
+  <dialog class="prima-di-partire" data-prima-di-partire aria-labelledby="pdp-titolo">
+    <h2 id="pdp-titolo">🎒 Prima di partire: com'è il tuo modo di studiare?</h2>
+    <p>Ogni eroe viaggia a modo suo. Se vuoi, scegli un profilo e il Cammino si adatta: testo più leggibile, letture ad alta voce, strumenti di calcolo,
+    sfide più brevi, lezioni a piccoli passi, niente sorprese. Puoi cambiarlo quando vuoi. Non serve una diagnosi.</p>
+    <SceltaProfilo />
+    <div class="pdp-azioni">
+      <button type="button" class="btn vuoto" data-parti>Più tardi</button>
+      <button type="button" class="btn gioco" data-parti>⚔️ Parti per il Cammino</button>
+    </div>
+  </dialog>
   <section class="contenitore">
     <header class="intro">
       <div class="intro-civetta"><Ritratto chi="civetta" taglia={120} alt="Ottavia la Civetta" /></div>
@@ -26,6 +37,11 @@ const partenze = regioni.filter((r) => r.numero > 1 && guardianoDi(r.numero - 1)
       Attraversa le regioni, conquista le stanze, sconfiggi i Guardiani. Ottavia la Civetta ti accompagna. Quasi sempre nella direzione giusta.</p>
       <SegretoPersonaggi breve />
     </header>
+
+    <details class="scheda percorso-studio" data-percorso-studio>
+      <summary><b>⚙️ Il tuo percorso di studio</b> <span class="tenue" data-riassunto-studio></span></summary>
+      <SceltaProfilo compatta />
+    </details>
 
     {partenze.length > 0 && (
       <details class="scheda partenza">
@@ -79,6 +95,24 @@ const partenze = regioni.filter((r) => r.numero > 1 && guardianoDi(r.numero - 1)
 
 <script>
   import { carica, statoStanza, regioneAperta, type StanzaRif } from '../../lib/progresso';
+  import { caricaStudio, PROFILI } from '../../lib/studio';
+  // Al primo ingresso nel Cammino chiediamo (una volta sola) se adattare il percorso
+  const CHIESTO = 'friendlymath:studio-chiesto';
+  const dlg = document.querySelector<HTMLDialogElement>('[data-prima-di-partire]')!;
+  let giaChiesto = true;
+  try { giaChiesto = !!localStorage.getItem(CHIESTO); } catch {}
+  if (!giaChiesto && caricaStudio().profili.length === 0 && typeof dlg.showModal === 'function') dlg.showModal();
+  const segnaChiesto = () => { try { localStorage.setItem(CHIESTO, '1'); } catch {} };
+  dlg.addEventListener('close', segnaChiesto);
+  dlg.querySelectorAll('[data-parti]').forEach((b) => b.addEventListener('click', () => dlg.close()));
+  const riassunto = () => {
+    const s = caricaStudio();
+    document.querySelector('[data-riassunto-studio]')!.textContent = s.profili.length
+      ? `· adattato per ${s.profili.map((p) => PROFILI.find((x) => x.id === p)!.nome).join(', ')}`
+      : s.regolazioni.length ? '· con regolazioni personali' : '· standard';
+  };
+  riassunto();
+  document.addEventListener('friendlymath:studio', riassunto);
   const stanze: StanzaRif[] = JSON.parse(document.getElementById('stanze-cammino')!.textContent || '[]');
   const p = carica();
   const etichette = { bloccata: '🌫️ Nella Nebbia', aperta: '⚔️ Da conquistare', conquistata: '✅ Conquistata' } as const;
@@ -101,6 +135,13 @@ const partenze = regioni.filter((r) => r.numero > 1 && guardianoDi(r.numero - 1)
   .intro-civetta { float: right; margin: 0 0 1rem 1rem; }
   @media (max-width: 600px) { .intro-civetta { display: none; } }
   .partenza { margin: 1rem 0 2rem; }
+  .percorso-studio { margin: 1rem 0; }
+  .percorso-studio summary { cursor: pointer; }
+  .prima-di-partire { max-width: min(46rem, calc(100vw - 24px)); width: 100%; border: 4px solid var(--oro); border-radius: 18px; background: var(--superficie); color: var(--testo); padding: 1.2rem; max-height: 90svh; overflow: auto; }
+  .prima-di-partire::backdrop { background: rgba(20, 12, 6, .6); }
+  .prima-di-partire h2 { margin-top: 0; font-size: clamp(1.25rem, 4vw, 1.7rem); }
+  .pdp-azioni { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
+  .pdp-privacy { font-weight: 700; color: var(--successo); font-size: .95rem; }
   .partenza summary { cursor: pointer; }
   .sentiero { list-style: none; padding: 0; margin: 0; position: relative; }
   .sentiero::before { content: ''; position: absolute; left: 27px; top: 30px; bottom: 30px; border-left: 6px dashed #d9b77a; opacity: .7; }
