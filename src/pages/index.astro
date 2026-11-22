@@ -1,5 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
+import Paesaggio from '../components/arte/Paesaggio.astro';
+import Civetta from '../components/arte/Civetta.astro';
+import Fabbro from '../components/arte/Fabbro.astro';
+import Stemma from '../components/arte/Stemma.astro';
 import { GRADI, MACROARGOMENTI } from '../lib/mondo';
 import { lezioniPubblicate, pubblicati } from '../lib/contenuti';
 const lezioni = await lezioniPubblicate();
@@ -7,11 +11,18 @@ const curiosita = (await pubblicati('curiosita')).slice(0, 3);
 ---
 <Base titolo="FriendlyMath">
   <section class="eroe-home">
-    <div class="contenitore">
-      <p class="pillola">Dalle elementari ai quaternioni</p>
-      <h1>La matematica per <span class="evidenza">chiunque</span>.</h1>
-      <p class="sottotitolo">Il Regno di Numeria è avvolto dalla <b>Nebbia</b>: quella che ti fa dire «non sono portato».
-      Scegli come diradarla: sfogliando il Libro o mettendoti in Cammino.</p>
+    <div class="contenitore eroe-griglia">
+      <div class="eroe-testo">
+        <p class="pillola etichetta-eroe">Dalle elementari ai quaternioni</p>
+        <h1>La matematica per <span class="evidenza">chiunque</span>.</h1>
+        <p class="sottotitolo">Il Regno di Numeria è avvolto dalla <b>Nebbia</b>: quella che ti fa dire «non sono portato».
+        Scegli come diradarla: sfogliando il Libro o mettendoti in Cammino.</p>
+        <div class="saluto">
+          <Civetta taglia={78} />
+          <p class="nuvoletta">Ciao! Sono Ottavia. Ti accompagno io. <span class="tenue">Di solito nella direzione giusta.</span></p>
+        </div>
+      </div>
+      <div class="eroe-arte"><Paesaggio /></div>
     </div>
   </section>
 
@@ -31,7 +42,7 @@ const curiosita = (await pubblicati('curiosita')).slice(0, 3);
       <h2>Il Cammino</h2>
       <p>Un viaggio a tappe: ogni argomento è una <b>stanza</b>, ogni regione ha il suo <b>Guardiano</b>. Parti col bastone, arriva col cavallo alato.</p>
       <ol class="mini-gradi">
-        {GRADI.map((g) => <li style={`--c:${g.colore}`} title={`${g.nome} · ${g.fase}`}><span aria-hidden="true">{g.icona}</span><span class="sr-only">{g.nome}</span></li>)}
+        {GRADI.map((g) => <li title={`${g.nome} · ${g.fase}`}><Stemma numero={g.numero} taglia={40} /><span class="sr-only">{g.nome}</span></li>)}
       </ol>
       <span class="btn gioco">Inizia il Cammino →</span>
     </a>
@@ -50,8 +61,8 @@ const curiosita = (await pubblicati('curiosita')).slice(0, 3);
   <section class="contenitore personaggi">
     <h2>Chi incontrerai</h2>
     <div class="griglia">
-      <div class="scheda"><p class="faccia" aria-hidden="true">🦉</p><h3>Ottavia la Civetta</h3><p class="tenue">La tua guida. Saggia, ma pasticciona: sbaglia, si corregge e ci ride sopra. Come dovremmo fare tutti.</p></div>
-      <div class="scheda"><p class="faccia" aria-hidden="true">🔨</p><h3>Brontolo il Fabbro</h3><p class="tenue">Forgia formule e trucchi. Brontola sempre, ma non ti lascia mai senza strumenti.</p></div>
+      <div class="scheda"><div class="faccia" aria-hidden="true"><Civetta taglia={72} /></div><h3>Ottavia la Civetta</h3><p class="tenue">La tua guida. Saggia, ma pasticciona: sbaglia, si corregge e ci ride sopra. Come dovremmo fare tutti.</p></div>
+      <div class="scheda"><div class="faccia" aria-hidden="true"><Fabbro taglia={72} /></div><h3>Brontolo il Fabbro</h3><p class="tenue">Forgia formule e trucchi. Brontola sempre, ma non ti lascia mai senza strumenti.</p></div>
       <div class="scheda distr"><p class="faccia" aria-hidden="true">🎭</p><h3>I Distrattori</h3><p class="tenue">Il Mercante di Scorciatoie, il Menestrello del «Non sono portato», lo Gnomo Copione, il Barone del Panico, la Sirena del Dopo. Ognuno è un errore tipico travestito: smascheralo e hai capito l'argomento.</p></div>
     </div>
   </section>
@@ -66,14 +77,20 @@ const curiosita = (await pubblicati('curiosita')).slice(0, 3);
   )}
 
   <section class="contenitore privacy scheda">
-    <p>🎒 <b>Nessun account, nessun dato raccolto.</b> I tuoi progressi restano nel tuo browser. Per portarli su un altro dispositivo, salva la tua
+    <p>🎒 <b>Nessun account, nessun dato raccolto.</b> I tuoi progressi restano nel tuo browser. Per portarli su un altro dispositivo, salva la tua{' '}
     <a href="/zaino/">Pergamena</a> dallo Zaino dell'eroe. <span class="tenue">({lezioni.length} lezioni disponibili, e la Nebbia si dirada ogni settimana.)</span></p>
   </section>
 </Base>
 
 <style>
-  .eroe-home { background: linear-gradient(160deg, var(--fiducia-chiaro), var(--sfondo) 70%); padding: 2.5rem 0 1.5rem; }
-  .eroe-home h1 { font-size: clamp(2.2rem, 6vw, 3.6rem); margin: .4rem 0; }
+  .eroe-home { background: radial-gradient(1200px 400px at 80% 0%, var(--fiducia-chiaro), transparent 70%); padding: 2.5rem 0 1.5rem; }
+  .eroe-griglia { display: grid; gap: 2rem; align-items: center; }
+  @media (min-width: 900px) { .eroe-griglia { grid-template-columns: 1fr 1.15fr; } }
+  .eroe-home h1 { font-size: clamp(2.4rem, 6vw, 4rem); margin: .4rem 0; }
+  .etichetta-eroe { background: var(--sole); color: #3a2a00; border: 0; }
+  .saluto { display: flex; align-items: flex-end; gap: .6rem; margin-top: 1rem; }
+  .nuvoletta { position: relative; margin: 0 0 1.4rem; background: var(--superficie); border: 2px solid var(--bordo); border-radius: 18px; padding: .6rem .9rem; box-shadow: var(--ombra); font-weight: 700; max-width: 22rem; }
+  .nuvoletta::before { content: ''; position: absolute; left: -9px; bottom: 14px; width: 14px; height: 14px; background: var(--superficie); border-left: 2px solid var(--bordo); border-bottom: 2px solid var(--bordo); transform: rotate(45deg); }
   .evidenza { background: linear-gradient(transparent 60%, var(--sole) 60%); padding: 0 .1em; }
   .sottotitolo { font-size: 1.2rem; max-width: 40rem; }
   .scelta { display: grid; gap: 1.2rem; grid-template-columns: 1fr; margin-top: 1rem; }
@@ -87,10 +104,12 @@ const curiosita = (await pubblicati('curiosita')).slice(0, 3);
   .porta ul { margin: 0 0 1rem; }
   .emblema { font-size: 3rem; }
   .mini-gradi { list-style: none; display: flex; gap: .3rem; padding: 0; margin: .3rem 0 1rem; flex-wrap: wrap; }
-  .mini-gradi li { width: 2.4rem; height: 2.4rem; border-radius: 50%; background: var(--c); display: grid; place-items: center; font-size: 1.2rem; }
+  .mini-gradi li { display: grid; place-items: center; transition: transform .2s; }
+  .porta:hover .mini-gradi li:nth-child(odd) { transform: translateY(-3px) rotate(-6deg); }
+  .porta:hover .mini-gradi li:nth-child(even) { transform: translateY(-3px) rotate(6deg); }
   .sezione { display: flex; flex-direction: column; gap: .3rem; text-decoration: none; color: var(--testo); border-top: 6px solid var(--c); }
   .sezione:hover { border-color: var(--c); }
-  .faccia { font-size: 2.4rem; margin: 0; }
+  .faccia { font-size: 2.6rem; margin: 0; height: 72px; display: flex; align-items: center; }
   .personaggi h3 { margin: .2rem 0; }
   .privacy { margin-top: 2.5rem; }
 </style>

@@ -1,0 +1,21 @@
+---
+/** Brontolo il Fabbro. Illustrazione originale. */
+interface Props { taglia?: number; }
+const { taglia = 96 } = Astro.props;
+---
+<svg width={taglia} height={taglia} viewBox="0 0 120 120" role="img" aria-label="Brontolo il Fabbro">
+  <ellipse cx="60" cy="112" rx="32" ry="5" fill="rgba(0,0,0,.12)" />
+  <path d="M26 110c0-26 14-40 34-40s34 14 34 40z" fill="#3f7fd8" />
+  <path d="M42 110V82h36v28z" fill="#5b3a26" />
+  <circle cx="60" cy="50" r="24" fill="#f2c29b" />
+  <path d="M36 52c0 18 10 32 24 32s24-14 24-32c-4 6-10 8-12 8-4-6-20-6-24 0-2 0-8-2-12-8z" fill="#b5651d" />
+  <path d="M38 40c2-14 12-22 22-22s20 8 22 22c-6-4-14-6-22-6s-16 2-22 6z" fill="#6b4226" />
+  <path d="M46 46l8 3M74 46l-8 3" stroke="#3a2516" stroke-width="3.5" stroke-linecap="round" />
+  <circle cx="51" cy="53" r="2.8" fill="#1f2333" />
+  <circle cx="69" cy="53" r="2.8" fill="#1f2333" />
+  <path d="M56 60q4 3 8 0" stroke="#a0522d" stroke-width="3" fill="none" stroke-linecap="round" />
+  <g transform="rotate(-25 96 80)">
+    <rect x="92" y="62" width="6" height="38" rx="2" fill="#8a5a3c" />
+    <rect x="82" y="56" width="26" height="12" rx="3" fill="#7a8394" />
+  </g>
+</svg>

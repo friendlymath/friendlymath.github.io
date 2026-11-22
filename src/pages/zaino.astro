@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Stemma from '../components/arte/Stemma.astro';
 import { GRADI } from '../lib/mondo';
 import { lezioniPubblicate } from '../lib/contenuti';
 const lezioni = (await lezioniPubblicate()).map((l) => ({ id: l.id, titolo: l.data.titolo }));
@@ -8,7 +9,7 @@ const lezioni = (await lezioniPubblicate()).map((l) => ({ id: l.id, titolo: l.da
   <section class="contenitore stretto">
     <h1>🎒 Zaino dell'eroe</h1>
     <div class="scheda eroe">
-      <div class="ritratto" data-icona aria-hidden="true">🪵</div>
+      <div class="ritratto" aria-hidden="true">{GRADI.map((g) => <span data-ritratto={g.numero} hidden={g.numero !== 1}><Stemma numero={g.numero} taglia={84} /></span>)}</div>
       <div>
         <p class="tenue grado-riga">Il tuo grado</p>
         <p class="nome-grado" data-nome>Recluta</p>
@@ -17,7 +18,7 @@ const lezioni = (await lezioniPubblicate()).map((l) => ({ id: l.id, titolo: l.da
     </div>
 
     <ol class="scala" aria-label="I sei gradi">
-      {GRADI.map((g) => <li data-scala={g.numero} style={`--c:${g.colore}`} title={`${g.nome} — ${g.regione}`}><span aria-hidden="true">{g.icona}</span><span class="sr-only">{g.nome}</span></li>)}
+      {GRADI.map((g) => <li data-scala={g.numero} title={`${g.nome} — ${g.regione}`}><Stemma numero={g.numero} taglia={46} /><span class="sr-only">{g.nome}</span></li>)}
     </ol>
 
     <h2>📜 La Pergamena</h2>
@@ -64,7 +65,7 @@ const lezioni = (await lezioniPubblicate()).map((l) => ({ id: l.id, titolo: l.da
   function mostra() {
     const p = carica();
     const g = grado(gradoAttuale(p));
-    $('[data-icona]').textContent = g.icona;
+    document.querySelectorAll<HTMLElement>('[data-ritratto]').forEach((el) => (el.hidden = Number(el.dataset.ritratto) !== g.numero));
     $('[data-nome]').textContent = g.nome;
     $('[data-equip]').textContent = `Equipaggiamento: ${g.equipaggiamento} · Regione: ${g.regione}`;
     document.querySelectorAll<HTMLElement>('[data-scala]').forEach((li) => li.classList.toggle('raggiunto', Number(li.dataset.scala) <= g.numero));
@@ -134,12 +135,12 @@ const lezioni = (await lezioniPubblicate()).map((l) => ({ id: l.id, titolo: l.da
 
 <style>
   .eroe { display: flex; gap: 1rem; align-items: center; }
-  .ritratto { font-size: 3rem; width: 5rem; height: 5rem; border-radius: 50%; background: var(--sole); display: grid; place-items: center; flex: none; }
+  .ritratto { flex: none; filter: drop-shadow(0 4px 0 rgba(0,0,0,.12)); }
   .grado-riga { margin: 0; font-size: .85rem; text-transform: uppercase; font-weight: 800; }
   .nome-grado { margin: 0; font-family: var(--font-titoli); font-size: 2rem; font-weight: 800; }
   .scala { list-style: none; display: flex; gap: .4rem; padding: 0; margin: 1rem 0; flex-wrap: wrap; }
-  .scala li { width: 2.6rem; height: 2.6rem; border-radius: 50%; display: grid; place-items: center; background: var(--superficie-2); filter: grayscale(1); opacity: .5; border: 3px solid var(--bordo); }
-  .scala li.raggiunto { filter: none; opacity: 1; border-color: var(--c); }
+  .scala li { filter: grayscale(1); opacity: .4; transition: all .3s; }
+  .scala li.raggiunto { filter: none; opacity: 1; }
   .azioni { display: flex; flex-wrap: wrap; gap: .6rem; }
   .carica { cursor: pointer; }
   .carica:focus-within { outline: 3px solid var(--gioco); }

@@ -47,6 +47,7 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
 <script>
   import { carica, salva, completa, battiGuardiano, gradoAttuale } from '../../lib/progresso';
   import { grado } from '../../lib/mondo';
+  import { coriandoli } from '../../scripts/coriandoli';
 
   const numero = (s: string) => Number(s.trim().replace(/\s/g, '').replace(',', '.'));
 
@@ -88,6 +89,7 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
         if (guardiano && inCammino) p = battiGuardiano(p, guardiano);
         const salvato = salva(p);
         box.classList.add('superata');
+        coriandoli(box);
         const gradoDopo = gradoAttuale(p);
         let msg = '🏆 Sfida superata! La Nebbia si dirada.';
         if (gradoDopo > gradoPrima) {
@@ -113,7 +115,9 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
   legend { font-weight: 800; margin-bottom: .4rem; }
   .opzioni { display: grid; gap: .4rem; }
   .opzione { display: flex; gap: .5rem; align-items: center; background: var(--superficie); border: 2px solid var(--bordo); border-radius: var(--raggio-s); padding: .45rem .7rem; cursor: pointer; }
-  .opzione:has(input:checked) { border-color: var(--fiducia); }
+  .opzione:hover { border-color: var(--sfida-bd); }
+  .opzione:has(input:checked) { border-color: var(--fiducia); background: var(--fiducia-chiaro); }
+  .opzione input { accent-color: var(--fiducia); width: 1.1rem; height: 1.1rem; }
   .numero input { font: inherit; padding: .35rem .6rem; border-radius: var(--raggio-s); border: 2px solid var(--bordo); width: 8rem; background: var(--superficie); color: var(--testo); }
   .esito { font-weight: 800; margin: .4rem 0 0; }
   .esito.ok { color: var(--successo); }

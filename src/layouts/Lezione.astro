@@ -3,6 +3,7 @@ import Base from './Base.astro';
 import { grado, macro, DISTRATTORI } from '../lib/mondo';
 import type { Lezione } from '../lib/contenuti';
 import Fonti from '../components/Fonti.astro';
+import Stemma from '../components/arte/Stemma.astro';
 
 interface Props {
   lezione: Lezione;
@@ -27,6 +28,7 @@ const altroHref = contesto === 'libro' ? `/cammino/${lezione.id}/` : `/libro/${l
     </nav>
 
     <header class="testa">
+      <div class="stemma-testa" aria-hidden="true"><Stemma numero={contesto === 'cammino' && d.regione ? d.regione : d.grado} taglia={70} /></div>
       {contesto === 'cammino' && d.nomeStanza && <p class="nome-stanza">{d.guardiano ? '🐉 ' : '🚪 '}{d.nomeStanza}</p>}
       <h1>{d.titolo}</h1>
       <p class="tenue sottotitolo">{d.descrizione}</p>
@@ -86,6 +88,9 @@ const altroHref = contesto === 'libro' ? `/cammino/${lezione.id}/` : `/libro/${l
 <style>
   .lezione { padding-top: 1.2rem; }
   .briciole { font-size: .9rem; }
+  .testa { position: relative; }
+  .stemma-testa { float: right; margin: .6rem 0 .5rem 1rem; filter: drop-shadow(0 4px 0 rgba(0,0,0,.12)); }
+  @media (max-width: 520px) { .stemma-testa :global(svg) { width: 48px; height: 48px; } }
   .briciole a { color: inherit; }
   .nome-stanza { margin: 1rem 0 0; font-weight: 800; color: var(--magia); text-transform: uppercase; letter-spacing: .05em; font-size: .9rem; }
   .sottotitolo { font-size: 1.15rem; margin-top: 0; }

@@ -1,5 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Stemma from '../../components/arte/Stemma.astro';
+import Civetta from '../../components/arte/Civetta.astro';
 import { stanzeDelCammino, riferimentiStanze } from '../../lib/contenuti';
 import { GRADI } from '../../lib/mondo';
 
@@ -12,6 +14,7 @@ const partenze = regioni.filter((r) => r.numero > 1 && guardianoDi(r.numero - 1)
 <Base titolo="Il Cammino" descrizione="Il viaggio dell'eroe nel Regno di Numeria: sei regioni, stanze da conquistare, Guardiani da sconfiggere.">
   <section class="contenitore">
     <header class="intro">
+      <div class="intro-civetta" aria-hidden="true"><Civetta taglia={110} /></div>
       <p class="pillola">🗺️ Il viaggio dell'eroe</p>
       <h1>Il Cammino</h1>
       <p class="stretto">Il Regno di Numeria è invaso dalla <b>Nebbia</b>: dove passa, la gente dimentica come si conta, si misura, si ragiona.
@@ -35,8 +38,8 @@ const partenze = regioni.filter((r) => r.numero > 1 && guardianoDi(r.numero - 1)
     <ol class="sentiero">
       {regioni.map((r) => (
         <li class="regione" id={r.slugRegione} data-regione={r.numero} style={`--c:${r.colore}`}>
-          <div class="segno" aria-hidden="true">{r.icona}</div>
-          <div class="corpo scheda">
+          <div class="segno" aria-hidden="true"><Stemma numero={r.numero} taglia={60} /></div>
+          <div class={`corpo scheda ${r.stanze.length === 0 ? 'avvolta' : ''}`}>
             <p class="tenue grado">Grado {r.numero} · {r.nome} · {r.fase}</p>
             <h2>{r.regione}</h2>
             <p class="tenue equip">Equipaggiamento: {r.equipaggiamento}</p>
@@ -84,14 +87,22 @@ const partenze = regioni.filter((r) => r.numero > 1 && guardianoDi(r.numero - 1)
 </script>
 
 <style>
-  .intro { padding: 1.5rem 0 .5rem; }
+  .intro { padding: 1.5rem 0 .5rem; position: relative; }
+  .intro-civetta { float: right; margin: 0 0 1rem 1rem; }
+  @media (max-width: 600px) { .intro-civetta { display: none; } }
   .partenza { margin: 1rem 0 2rem; }
   .partenza summary { cursor: pointer; }
   .sentiero { list-style: none; padding: 0; margin: 0; position: relative; }
-  .sentiero::before { content: ''; position: absolute; left: 27px; top: 0; bottom: 0; border-left: 6px dotted var(--bordo); }
+  .sentiero::before { content: ''; position: absolute; left: 27px; top: 30px; bottom: 30px; border-left: 6px dashed #d9b77a; opacity: .7; }
   .regione { display: grid; grid-template-columns: 60px 1fr; gap: .8rem; margin: 0 0 1.4rem; scroll-margin-top: 80px; }
-  .segno { width: 60px; height: 60px; border-radius: 50%; background: var(--c); display: grid; place-items: center; font-size: 1.7rem; position: relative; box-shadow: 0 0 0 5px var(--sfondo); }
-  .corpo { border-top: 6px solid var(--c); min-width: 0; }
+  .segno { width: 60px; height: 64px; display: grid; place-items: center; position: relative; filter: drop-shadow(0 3px 0 rgba(0,0,0,.12)); }
+  .corpo { border-top: 6px solid var(--c); min-width: 0; position: relative; overflow: hidden; }
+  .corpo.avvolta { background: linear-gradient(180deg, var(--superficie), var(--superficie-2)); }
+  .corpo.avvolta::after { content: ''; position: absolute; inset: auto -10% -30px -10%; height: 90px; background: radial-gradient(closest-side, rgba(255,255,255,.9), transparent), radial-gradient(closest-side at 70% 60%, rgba(255,255,255,.8), transparent); filter: blur(6px); pointer-events: none; opacity: .8; }
+  :global(:root[data-theme="dark"]) .corpo.avvolta::after { opacity: .15; }
+  @media (prefers-color-scheme: dark) { :global(:root:not([data-theme="light"])) .corpo.avvolta::after { opacity: .15; } }
+  @media (prefers-reduced-motion: no-preference) { .corpo.avvolta::after { animation: nebbiola 9s ease-in-out infinite alternate; } }
+  @keyframes nebbiola { from { transform: translateX(-20px); } to { transform: translateX(20px); } }
   .corpo h2 { margin: .1rem 0 .2rem; }
   .grado { margin: 0; font-weight: 800; font-size: .85rem; text-transform: uppercase; letter-spacing: .04em; }
   .equip { margin-top: 0; font-size: .95rem; }
@@ -101,7 +112,18 @@ const partenze = regioni.filter((r) => r.numero > 1 && guardianoDi(r.numero - 1)
   .stanza .icona { font-size: 1.5rem; }
   .stanza[data-stato-stanza="bloccata"] a { opacity: .6; filter: grayscale(.6); }
   .stanza[data-stato-stanza="conquistata"] .stato { background: var(--successo); color: #fff; border: 0; }
+  .stanza[data-stato-stanza="conquistata"] a { border-color: var(--successo); }
+  .stanza[data-stato-stanza="aperta"] .icona { animation: pulsa 1.8s ease-in-out infinite; }
+  @keyframes pulsa { 50% { transform: scale(1.15); } }
+  @media (prefers-reduced-motion: reduce) { .stanza .icona { animation: none !important; } }
   .stanza[data-stato-stanza="aperta"] .stato { background: var(--gioco); color: #fff; border: 0; }
   .nebbia, .chiusa { background: var(--superficie-2); border: 2px dashed var(--bordo); border-radius: var(--raggio); padding: .6rem .9rem; margin: .4rem 0 0; }
+  @media (max-width: 520px) {
+    .regione { grid-template-columns: 38px 1fr; gap: .5rem; }
+    .segno { width: 38px; height: 42px; }
+    .segno :global(svg) { width: 38px; height: 38px; }
+    .sentiero::before { left: 16px; }
+    .corpo { padding: .9rem .9rem; }
+  }
   @media (max-width: 480px) { .stanza a { grid-template-columns: auto 1fr; } .stanza .stato { grid-column: 2; justify-self: start; } }
 </style>
