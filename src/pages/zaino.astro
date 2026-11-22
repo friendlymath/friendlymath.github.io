@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Stemma from '../components/arte/Stemma.astro';
+import AvvisoPrivacy from '../components/AvvisoPrivacy.astro';
 import { GRADI } from '../lib/mondo';
 import { lezioniPubblicate } from '../lib/contenuti';
 const lezioni = (await lezioniPubblicate()).map((l) => ({ id: l.id, titolo: l.data.titolo }));
@@ -46,6 +47,7 @@ const lezioni = (await lezioniPubblicate()).map((l) => ({ id: l.id, titolo: l.da
     </div>
     <p class="messaggio" data-messaggio role="status" aria-live="polite"></p>
 
+    <AvvisoPrivacy />
     <h2>🏆 Badge</h2>
     <ul class="badge" data-badge><li class="tenue">Ancora nessun badge: sconfiggi il primo Guardiano!</li></ul>
 

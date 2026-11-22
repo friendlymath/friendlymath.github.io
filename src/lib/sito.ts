@@ -19,6 +19,7 @@ export const SEZIONI = [
     { href: '/guida/', testo: 'Guida del sito', nota: 'come funziona tutto' },
     { href: '/faq/', testo: 'Domande frequenti', nota: 'privacy, salvataggi, gradi' },
     { href: '/fonti/', testo: 'Fonti e crediti', nota: 'tutte le fonti citate' },
+    { href: '/privacy/', testo: 'Privacy', nota: 'i tuoi dati restano sul tuo dispositivo' },
     { href: '/mappa-del-sito/', testo: 'Mappa del sito completa', nota: 'ogni pagina, in un elenco' },
   ] },
 ];

@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import AvvisoPrivacy from '../components/AvvisoPrivacy.astro';
 import { CORPI, CLASSI, CARATTERISTICHE, PELLI, COLORI_CAPELLI, MANTELLI, STILI_CAPELLI, PUNTI_DA_DISTRIBUIRE } from '../lib/eroe';
 ---
 <Base titolo="Crea il tuo eroe" descrizione="Scegli corpo, classe, aspetto e caratteristiche del tuo personaggio per il Cammino di Numeria.">
@@ -8,7 +9,8 @@ import { CORPI, CLASSI, CARATTERISTICHE, PELLI, COLORI_CAPELLI, MANTELLI, STILI_
       <p class="pillola">🎲 Scheda del personaggio</p>
       <h1>Crea il tuo eroe</h1>
       <p class="tenue">Come in un gioco di ruolo: scegli chi sei, che cosa sai fare meglio e come appari. Puoi cambiarlo quando vuoi.
-      Tutto resta nel tuo browser (e nella tua Pergamena, se la salvi).</p>
+      </p>
+      <AvvisoPrivacy cosa="il tuo personaggio e i tuoi progressi" />
     </header>
 
     <div class="impaginato">

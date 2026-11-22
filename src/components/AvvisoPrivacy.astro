@@ -1,0 +1,19 @@
+---
+/** Avviso sulla privacy da mostrare dove si fanno scelte personali (personaggio, profilo di studio, progressi). */
+interface Props { cosa?: string }
+const { cosa = 'il tuo personaggio, i tuoi progressi e le tue scelte di studio' } = Astro.props;
+---
+<aside class="avviso-privacy" role="note">
+  <p class="titolo-privacy">🔒 I tuoi dati restano tuoi</p>
+  <p>{cosa.charAt(0).toUpperCase() + cosa.slice(1)} vengono salvati <b>solo su questo dispositivo</b> (e nella Pergamena, se decidi di scaricarla).
+  Non vengono inviati a nessuno: <b>chi gestisce FriendlyMath non può sapere chi sei, a che punto del percorso sei, né se hai una neurodivergenza.</b>
+  Questi dati li crei e li controlli solo tu.</p>
+  <p class="nota-privacy">Unico dato tecnico: come per ogni sito ospitato su GitHub Pages, GitHub registra l'indirizzo IP dei visitatori per motivi di sicurezza.
+  Il gestore del sito non riceve questi registri. <a href="/privacy/">Leggi la privacy completa</a>.</p>
+</aside>
+<style>
+  .avviso-privacy { border: 2px solid var(--successo); border-left-width: 8px; background: var(--scena-bg); border-radius: var(--raggio); padding: .8rem 1rem; margin: 1rem 0; }
+  .avviso-privacy p { margin: .3rem 0; }
+  .titolo-privacy { font-family: var(--font-titoli); font-weight: 700; color: var(--scena-tx); }
+  .nota-privacy { font-size: .9rem; color: var(--testo-tenue); }
+</style>
