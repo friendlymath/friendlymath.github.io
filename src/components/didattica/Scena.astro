@@ -1,7 +1,6 @@
 ---
 import { PERSONAGGI } from '../../lib/mondo';
-import Civetta from '../arte/Civetta.astro';
-import Fabbro from '../arte/Fabbro.astro';
+import Ritratto from '../arte/Ritratto.astro';
 interface Props { personaggio?: keyof typeof PERSONAGGI; }
 const chi = Astro.props.personaggio ?? 'narratore';
 const p = PERSONAGGI[chi];
@@ -9,9 +8,7 @@ const p = PERSONAGGI[chi];
 <aside class="box scena solo-cammino">
   <div class={`fumetto-riga ${chi}`}>
     <div class="avatar" aria-hidden="true">
-      {chi === 'civetta' && <Civetta taglia={84} />}
-      {chi === 'fabbro' && <Fabbro taglia={84} />}
-      {chi === 'narratore' && <span class="pergamena">📜</span>}
+      {chi === 'narratore' ? <span class="pergamena">📜</span> : <Ritratto chi={chi} taglia={84} alt={p.nome} />}
     </div>
     <div class="fumetto">
       <p class="chi">{p.nome}</p>
@@ -30,5 +27,5 @@ const p = PERSONAGGI[chi];
   .chi { margin: 0 0 .2rem; font-family: var(--font-titoli); font-weight: 800; color: var(--scena-tx); font-style: normal; }
   .narratore .chi { color: var(--storia-tx); }
   .battuta :global(p) { margin: 0; }
-  @media (max-width: 480px) { .avatar { width: 60px; } .avatar :global(svg) { width: 60px; height: 60px; } .pergamena { width: 54px; height: 54px; font-size: 1.9rem; } }
+  @media (max-width: 480px) { .avatar { width: 60px; } .avatar :global(img) { width: 60px; height: 60px; } .pergamena { width: 54px; height: 54px; font-size: 1.9rem; } }
 </style>

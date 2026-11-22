@@ -1,0 +1,14 @@
+---
+/** Ritratto dipinto di un personaggio (immagini generate con Canva), con cornice dorata. Se manca, usa un'icona. */
+interface Props { chi: string; taglia?: number; alt?: string }
+const { chi, taglia = 84, alt = '' } = Astro.props;
+const DISPONIBILI = ['civetta', 'fabbro', 'mercante', 'menestrello', 'gnomo'];
+const ICONE: Record<string, string> = { barone: '🐉', sirena: '🧜', narratore: '📜' };
+---
+{DISPONIBILI.includes(chi)
+  ? <img class="ritratto-dipinto" src={`/ritratti/${chi}.png`} width={taglia} height={taglia} alt={alt} loading="lazy" decoding="async" style={`--t:${taglia}px`} />
+  : <span class="ritratto-icona" style={`--t:${taglia}px`} aria-hidden="true">{ICONE[chi] ?? '🎭'}</span>}
+<style>
+  .ritratto-dipinto, .ritratto-icona { width: var(--t); height: var(--t); border-radius: 50%; border: 4px solid #c9a24a; box-shadow: 0 0 0 3px #5b3a26, 0 6px 14px rgba(0,0,0,.35); object-fit: cover; flex: none; background: #2b1d14; }
+  .ritratto-icona { display: grid; place-items: center; font-size: calc(var(--t) * .5); background: radial-gradient(circle at 40% 35%, #f4e6cc, #c9a24a); }
+</style>

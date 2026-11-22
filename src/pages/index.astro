@@ -2,10 +2,9 @@
 import Base from '../layouts/Base.astro';
 import Paesaggio from '../components/arte/Paesaggio.astro';
 import LibroAperto from '../components/arte/LibroAperto.astro';
-import Civetta from '../components/arte/Civetta.astro';
-import Fabbro from '../components/arte/Fabbro.astro';
 import Stemma from '../components/arte/Stemma.astro';
 import SegretoPersonaggi from '../components/SegretoPersonaggi.astro';
+import Ritratto from '../components/arte/Ritratto.astro';
 import { GRADI, MACROARGOMENTI } from '../lib/mondo';
 import { lezioniPubblicate, pubblicati } from '../lib/contenuti';
 import { AGGIORNATO_GIORNO, AGGIORNATO_ISO } from '../lib/sito';
@@ -50,7 +49,7 @@ const curiosita = (await pubblicati('curiosita')).slice(0, 3);
 
   <section class="contenitore benvenuto" id="scopri">
     <div class="saluto">
-      <Civetta taglia={96} />
+      <Ritratto chi="civetta" taglia={110} alt="Ottavia la Civetta" />
       <div class="nuvoletta">
         <p><b>Ciao! Sono Ottavia, la tua guida.</b> Il Regno di Numeria è avvolto dalla <b>Nebbia</b>: quella che ti fa dire «non sono portato».
         Insieme la diradiamo, un passo alla volta. <span class="tenue">Prima volta qui? Dai un'occhiata alla <a href="/guida/">guida</a>.</span></p>
@@ -75,9 +74,9 @@ const curiosita = (await pubblicati('curiosita')).slice(0, 3);
   <section class="contenitore">
     <h2>Chi incontrerai</h2>
     <div class="griglia g3">
-      <div class="scheda personaggio"><div class="faccia" aria-hidden="true"><Civetta taglia={80} /></div><h3>Ottavia la Civetta</h3><p class="tenue">La tua guida. Saggia, ma pasticciona: sbaglia, si corregge e ci ride sopra. Come dovremmo fare tutti.</p></div>
-      <div class="scheda personaggio"><div class="faccia" aria-hidden="true"><Fabbro taglia={80} /></div><h3>Brontolo il Fabbro</h3><p class="tenue">Forgia formule e trucchi. Brontola sempre, ma non ti lascia mai senza strumenti.</p></div>
-      <div class="scheda personaggio"><div class="faccia emoji" aria-hidden="true">🎭</div><h3>I Distrattori</h3><p class="tenue">Il Mercante di Scorciatoie, il Menestrello del «Non sono portato», lo Gnomo Copione, il Barone del Panico, la Sirena del Dopo: ognuno è un errore tipico travestito.</p></div>
+      <div class="scheda personaggio"><div class="faccia"><Ritratto chi="civetta" taglia={96} alt="Ottavia la Civetta" /></div><h3>Ottavia la Civetta</h3><p class="tenue">La tua guida. Saggia, ma pasticciona: sbaglia, si corregge e ci ride sopra. Come dovremmo fare tutti.</p></div>
+      <div class="scheda personaggio"><div class="faccia"><Ritratto chi="fabbro" taglia={96} alt="Brontolo il Fabbro" /></div><h3>Brontolo il Fabbro</h3><p class="tenue">Forgia formule e trucchi. Brontola sempre, ma non ti lascia mai senza strumenti.</p></div>
+      <div class="scheda personaggio"><div class="faccia trio"><Ritratto chi="mercante" taglia={72} alt="Il Mercante di Scorciatoie" /><Ritratto chi="menestrello" taglia={72} alt="Il Menestrello" /><Ritratto chi="gnomo" taglia={72} alt="Lo Gnomo Copione" /></div><h3>I Distrattori</h3><p class="tenue">Il Mercante di Scorciatoie, il Menestrello del «Non sono portato», lo Gnomo Copione, il Barone del Panico, la Sirena del Dopo: ognuno è un errore tipico travestito.</p></div>
     </div>
     <SegretoPersonaggi breve />
   </section>
@@ -159,7 +158,8 @@ const curiosita = (await pubblicati('curiosita')).slice(0, 3);
   .leggi { margin-top: auto; font-weight: 800; color: var(--fiducia); }
   .personaggio { height: 100%; display: flex; flex-direction: column; }
   .personaggio h3 { margin: .4rem 0 .2rem; }
-  .faccia { height: 84px; display: flex; align-items: center; }
+  .faccia { min-height: 100px; display: flex; align-items: center; gap: .3rem; }
+  .trio :global(img) { margin-right: -14px; }
   .faccia.emoji { font-size: 3.4rem; }
   .privacy { margin-top: 2.5rem; }
 </style>

@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Civetta from '../components/arte/Civetta.astro';
 import Stemma from '../components/arte/Stemma.astro';
 import SegretoPersonaggi from '../components/SegretoPersonaggi.astro';
+import Ritratto from '../components/arte/Ritratto.astro';
 import { GRADI, DISTRATTORI } from '../lib/mondo';
 const indice = [
   ['inizio', '🚀', 'Da dove comincio'], ['libro', '📖', 'Il Libro'], ['cammino', '🗺️', 'Il Cammino'], ['mappa', '🎮', 'Comandi della mappa'],
@@ -134,7 +135,7 @@ const indice = [
         <h2>🎭 I Distrattori</h2>
         <p>Non sono cattivi: sono gli errori e le abitudini che ci bloccano, travestiti. Riconoscerli è metà del lavoro.</p>
         <div class="griglia g3">
-          {Object.values(DISTRATTORI).map((d) => <div class="scheda"><h3>{d.nome.charAt(0).toUpperCase() + d.nome.slice(1)}</h3><p class="tenue">{d.motto}</p></div>)}
+          {Object.entries(DISTRATTORI).map(([k, d]) => <div class="scheda ritratto-scheda"><Ritratto chi={k} taglia={72} alt={d.nome} /><h3>{d.nome.charAt(0).toUpperCase() + d.nome.slice(1)}</h3><p class="tenue">{d.motto}</p></div>)}
         </div>
       </section>
 
@@ -209,5 +210,6 @@ const indice = [
   .grado h3 { margin: 0; }
   .grado p { margin: .1rem 0; }
   .griglia h3 { margin-top: 0; }
+  .ritratto-scheda h3 { margin-top: .5rem; }
   @media (max-width: 560px) { .testa-riga :global(svg) { width: 80px; height: 80px; flex: none; } }
 </style>

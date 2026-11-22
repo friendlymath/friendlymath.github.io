@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Stemma from '../../components/arte/Stemma.astro';
-import Civetta from '../../components/arte/Civetta.astro';
+import Ritratto from '../../components/arte/Ritratto.astro';
 import MappaGioco from '../../components/MappaGioco.astro';
 import SegretoPersonaggi from '../../components/SegretoPersonaggi.astro';
 import { stanzeDelCammino, riferimentiStanze } from '../../lib/contenuti';
@@ -18,7 +18,7 @@ const partenze = regioni.filter((r) => r.numero > 1 && guardianoDi(r.numero - 1)
   <MappaGioco stanze={stanze} />
   <section class="contenitore">
     <header class="intro">
-      <div class="intro-civetta" aria-hidden="true"><Civetta taglia={110} /></div>
+      <div class="intro-civetta"><Ritratto chi="civetta" taglia={120} alt="Ottavia la Civetta" /></div>
       <p class="pillola">📜 Il diario di viaggio</p>
       <h2 class="titolo-diario">La storia e l'elenco delle tappe</h2>
       <p class="stretto">Il Regno di Numeria è invaso dalla <b>Nebbia</b>: dove passa, la gente dimentica come si conta, si misura, si ragiona.

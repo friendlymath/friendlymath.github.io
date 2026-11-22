@@ -1,5 +1,6 @@
 ---
 import { DISTRATTORI, type SlugDistrattore } from '../../lib/mondo';
+import Ritratto from '../arte/Ritratto.astro';
 interface Props { distrattore?: SlugDistrattore; }
 const d = Astro.props.distrattore ? DISTRATTORI[Astro.props.distrattore] : undefined;
 const nome = d ? d.nome.charAt(0).toUpperCase() + d.nome.slice(1) : undefined;
@@ -9,7 +10,7 @@ const nome = d ? d.nome.charAt(0).toUpperCase() + d.nome.slice(1) : undefined;
     <span aria-hidden="true">⚠️</span>
     {d ? (<><span class="solo-cammino">Arriva {d.nome}!</span><span class="solo-libro">Errore tipico</span></>) : 'Errore tipico'}
   </p>
-  {d && <p class="solo-cammino motto"><b>{nome}</b>: <i>{d.motto}</i></p>}
+  {d && <div class="solo-cammino riga-distrattore"><Ritratto chi={Astro.props.distrattore!} taglia={64} alt={nome} /><p class="motto"><b>{nome}</b>: <i>{d.motto}</i></p></div>}
   <slot />
 </aside>
-<style>.motto { margin-top: 0; }</style>
+<style>.motto { margin: 0; } .riga-distrattore { display: flex; gap: .7rem; align-items: center; margin-bottom: .5rem; }</style>
