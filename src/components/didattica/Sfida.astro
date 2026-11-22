@@ -38,6 +38,8 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
       ))}
     </ol>
     <p class="nota-breve" hidden></p>
+    <div class="abilita" data-abilita hidden></div>
+    <div class="aiuto-abilita" data-aiuto aria-live="polite" hidden></div>
     <div class="riga-azioni">
       <button class="btn" type="submit">Verifica</button>
       <p class="risultato" aria-live="polite"></p>
@@ -48,6 +50,48 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
 <script>
   import { carica, salva, completa, battiGuardiano, gradoAttuale, assegnaStelle } from '../../lib/progresso';
   import { ha } from '../../lib/studio';
+  import { caricaEroe, cariche, dono, ABILITA, DONI } from '../../lib/eroe';
+
+  const eroe = caricaEroe();
+  /** la prima frase di un elemento, conservando le formule */
+  const primaFrase = (el: HTMLElement) => {
+    const out = document.createElement('span');
+    for (const n of [...el.childNodes]) {
+      if (n.nodeType === Node.TEXT_NODE) {
+        const t = n.textContent ?? ''; const k = t.search(/[.!?](\s|$)/);
+        if (k >= 0) { out.append(t.slice(0, k + 1)); return out; }
+        out.append(t);
+      } else out.append(n.cloneNode(true));
+    }
+    return out;
+  };
+  /** nasconde la risposta dentro un indizio: un aiuto, non la soluzione */
+  const maschera = (nodo: HTMLElement, d: HTMLElement) => {
+    const scelta = d.dataset.tipo === 'scelta';
+    const parole = scelta
+      ? [d.querySelectorAll<HTMLElement>('.opzione')[Number(d.dataset.risposta)]?.textContent?.trim() ?? '']
+      : [String(Number(d.dataset.risposta)), String(Number(d.dataset.risposta)).replace('.', ',')];
+    const valide = [...new Set(parole.filter((p) => p.length > 0))];
+    const esc = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(`(?<![\\d.,])(${valide.map(esc).join('|')})(?![\\d])`, 'g');
+    nodo.querySelectorAll<HTMLElement>('.katex').forEach((k) => { re.lastIndex = 0; if (re.test(k.querySelector('annotation')?.textContent ?? k.textContent ?? '')) k.replaceWith('❓'); });
+    const w = document.createTreeWalker(nodo, NodeFilter.SHOW_TEXT);
+    const testi: Text[] = []; while (w.nextNode()) testi.push(w.currentNode as Text);
+    testi.forEach((t) => { if (!t.parentElement?.closest('.katex')) t.data = t.data.replace(re, '❓'); });
+    return nodo;
+  };
+
+  // Occhio acuto (elfi): evidenzia i numeri nel testo delle domande
+  const evidenziaNumeri = (el: HTMLElement) => {
+    const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, { acceptNode: (n) => n.parentElement?.closest('.katex') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+    const nodi: Text[] = []; while (w.nextNode()) nodi.push(w.currentNode as Text);
+    for (const t of nodi) {
+      if (!/\d/.test(t.data)) continue;
+      const f = document.createDocumentFragment();
+      t.data.split(/(\d+(?:[.,]\d+)?)/).forEach((pz, i) => { if (i % 2) { const m = document.createElement('mark'); m.className = 'num-elfo'; m.textContent = pz; f.append(m); } else if (pz) f.append(pz); });
+      t.replaceWith(f);
+    }
+  };
   import { grado } from '../../lib/mondo';
   import { coriandoli } from '../../scripts/coriandoli';
 
@@ -60,6 +104,10 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
     const guardiano = Number(art?.dataset.guardiano) || 0;
     if (carica().completate.includes(slug)) box.classList.add('superata');
     let tentativi = 0;
+    let gratis = false;
+    let fortunaUsata = false;
+    const donoEroe = eroe ? dono(eroe) : null;
+    if (donoEroe === 'elfo') box.querySelectorAll<HTMLElement>('legend').forEach(evidenziaNumeri);
 
     // Sfide più brevi: stesso obiettivo, meno domande (misura dispensativa)
     const tutte = [...box.querySelectorAll<HTMLElement>('.domanda')];
@@ -91,11 +139,82 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
       });
     }
 
+    // Abilità di classe
+    const aiuto = box.querySelector<HTMLElement>('[data-aiuto]')!;
+    const mostraAiuto = (titolo: string, contenuto: Node | string) => {
+      aiuto.hidden = false; aiuto.innerHTML = '';
+      const b = document.createElement('b'); b.textContent = titolo + ' '; aiuto.append(b, contenuto);
+    };
+    if (eroe) {
+      const ab = ABILITA[eroe.classe];
+      let n = cariche(eroe, !!guardiano);
+      const barra = box.querySelector<HTMLElement>('[data-abilita]')!;
+      barra.hidden = false;
+      barra.innerHTML = `<button type="button" class="btn vuoto btn-abilita"></button><span class="tenue"></span>`;
+      const btn = barra.querySelector('button')!;
+      barra.querySelector('span')!.textContent = `${ab.spiega}${donoEroe ? ` · Dono: ${DONI[donoEroe].nome}` : ''}`;
+      const etichetta = () => { btn.textContent = `${ab.icona} ${ab.nome} (${n})`; btn.disabled = n <= 0; };
+      etichetta();
+      btn.addEventListener('click', () => {
+        if (n <= 0) return;
+        const bersaglio = [...box.querySelectorAll<HTMLElement>('.domanda:not(.dispensata):not(.giusta)')][0];
+        if (!bersaglio && eroe.classe !== 'guerriero') { mostraAiuto('Tutto risolto!', 'Non serve aiuto: premi Verifica.'); return; }
+        const atteso = Number(bersaglio?.dataset.risposta);
+        const scelta = bersaglio?.dataset.tipo === 'scelta';
+        switch (eroe.classe) {
+          case 'guerriero': gratis = true; form.requestSubmit(); mostraAiuto('🛡️ Secondo assalto:', 'hai controllato senza consumare un tentativo.'); break;
+          case 'mago': mostraAiuto('✨ Indizio arcano:', maschera(primaFrase(bersaglio.querySelector<HTMLElement>('.spiegazione')!), bersaglio)); break;
+          case 'bardo': {
+            const es = document.querySelector<HTMLElement>('.esempio-ess');
+            mostraAiuto('🎶 Racconta di nuovo:', es ? es.cloneNode(true) : maschera(primaFrase(bersaglio.querySelector<HTMLElement>('.spiegazione')!), bersaglio)); break;
+          }
+          case 'esploratore': {
+            const idee = document.querySelector<HTMLElement>('[data-box-essenziale] .idee');
+            if (idee) mostraAiuto('🗺️ Mappa del sapere:', idee.cloneNode(true));
+            else {
+              const ul = document.createElement('ul');
+              document.querySelectorAll<HTMLElement>('.prosa > h2').forEach((h) => { const li = document.createElement('li'); const a = document.createElement('a'); a.href = `#${h.id}`; a.textContent = h.textContent!; li.append(a); ul.append(li); });
+              mostraAiuto('🗺️ Mappa del sapere: rileggi', ul);
+            }
+            break;
+          }
+          case 'veggente': {
+            if (scelta) {
+              const sbagliate = [...bersaglio.querySelectorAll<HTMLInputElement>('input')].filter((i) => i.value !== bersaglio.dataset.risposta && !i.disabled);
+              if (sbagliate.length) { const x = sbagliate[Math.floor(Math.random() * sbagliate.length)]; x.disabled = true; x.checked = false; x.closest('label')!.classList.add('scartata'); }
+              mostraAiuto('🔮 Sguardo del caso:', 'una risposta sbagliata è stata scartata.');
+            } else {
+              const v = numero(bersaglio.querySelector<HTMLInputElement>('input')!.value);
+              if (Number.isFinite(v) && bersaglio.querySelector<HTMLInputElement>('input')!.value.trim()) mostraAiuto('🔮 Sguardo del caso:', v > atteso ? 'il tuo numero è troppo alto.' : v < atteso ? 'il tuo numero è troppo basso.' : 'il tuo numero è giusto!');
+              else { const a = Math.abs(atteso), lo = Math.floor(a * 0.5), hi = Math.ceil(a * 1.5) || 1;
+                mostraAiuto('🔮 Sguardo del caso:', atteso >= 0 ? `la risposta è tra ${lo} e ${hi}.` : `la risposta è negativa, tra −${hi} e −${lo}.`); }
+            }
+            break;
+          }
+          case 'scaltro': {
+            if (scelta) {
+              const tutte = [...bersaglio.querySelectorAll<HTMLInputElement>('input')];
+              const giusta = tutte.find((i) => i.value === bersaglio.dataset.risposta)!;
+              const altre = tutte.filter((i) => i !== giusta);
+              const coppia = [giusta, altre[Math.floor(Math.random() * altre.length)]].sort((a, b) => Number(a.value) - Number(b.value));
+              coppia.forEach((i) => i.closest('label')!.classList.add('candidata'));
+              mostraAiuto('🗝️ Scorciatoia onesta:', 'la risposta giusta è una delle due evidenziate.');
+            } else {
+              const a = Math.abs(atteso); const intera = String(Math.trunc(a));
+              mostraAiuto('🗝️ Scorciatoia onesta:', `${atteso < 0 ? 'è un numero negativo; ' : ''}comincia con la cifra ${String(a).replace(/^0\.0*/, '')[0]} e ha ${a < 1 ? 'parte intera zero' : `${intera.length} cifr${intera.length === 1 ? 'a' : 'e'} prima della virgola`}${Number.isInteger(a) ? '' : ' (non è un numero intero)'}.`);
+            }
+            break;
+          }
+        }
+        n--; etichetta();
+      });
+    }
+
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       let giuste = 0;
       const domande = [...box.querySelectorAll<HTMLElement>('.domanda:not(.dispensata)')];
-      tentativi++;
+      if (gratis) gratis = false; else tentativi++;
       for (const d of domande) {
         const atteso = d.dataset.risposta!;
         const tol = Number(d.dataset.tolleranza) || 0;
@@ -112,6 +231,7 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
         esito.textContent = ok ? '✅ Esatto!' : '❌ Non ancora. Riprova: ogni errore è un indizio.';
         esito.className = 'esito ' + (ok ? 'ok' : 'no');
         d.querySelector<HTMLElement>('.spiegazione')!.hidden = !ok;
+        d.classList.toggle('giusta', ok);
         if (ok) giuste++;
       }
       const ris = box.querySelector<HTMLElement>('.risultato')!;
@@ -119,14 +239,15 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
         let p = carica();
         const gradoPrima = gradoAttuale(p);
         p = completa(p, slug);
-        p = assegnaStelle(p, slug, 4 - Math.min(3, tentativi));
+        p = assegnaStelle(p, slug, 4 - Math.min(3, Math.max(1, tentativi)));
+        if (donoEroe === 'nano' && tentativi > 1 && !p.badge.includes('tenacia')) p = { ...p, badge: [...p.badge, 'tenacia'] };
         const inCammino = !!box.closest('[data-contesto="cammino"]');
         if (guardiano && inCammino) p = battiGuardiano(p, guardiano);
         const salvato = salva(p);
         box.classList.add('superata');
         coriandoli(box);
         const gradoDopo = gradoAttuale(p);
-        const stelle = 4 - Math.min(3, tentativi);
+        const stelle = 4 - Math.min(3, Math.max(1, tentativi));
         let msg = `🏆 Sfida superata! ${'⭐'.repeat(stelle)} La Nebbia si dirada.`;
         if (gradoDopo > gradoPrima) {
           msg = `🎉 Guardiano sconfitto! Ora sei ${grado(gradoDopo).nome}.`;
@@ -134,11 +255,13 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
         } else if (guardiano && !inCammino) {
           msg += ' Per salire di grado affronta il Guardiano nel Cammino.';
         }
+        if (donoEroe === 'nano' && tentativi > 1) msg += ' ⛏️ Tenacia: non ti sei arreso!';
         if (!salvato) msg += ' (Il tuo browser non permette di salvare: scarica la Pergamena dallo Zaino.)';
         ris.textContent = msg;
         document.dispatchEvent(new CustomEvent('friendlymath:progresso'));
       } else {
         ris.textContent = `${giuste} su ${domande.length}. Coraggio, la Civetta crede in te.`;
+        if (donoEroe === 'halfling' && !fortunaUsata && tentativi > 0) { fortunaUsata = true; tentativi--; ris.textContent += ' 🍀 Fortuna: questo errore non ti costa stelle.'; }
       }
     });
   }
@@ -161,6 +284,13 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
   .spiegazione { margin: .3rem 0 0; font-size: .95rem; }
   .riga-azioni { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; }
   .risultato { font-weight: 800; margin: 0; }
+  .abilita { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: 0 0 .6rem; font-size: .9rem; }
+  .btn-abilita { font-size: .95rem; }
+  .aiuto-abilita { background: var(--curiosita-bg); border: 2px dashed var(--oro); border-radius: var(--raggio-s); padding: .5rem .8rem; margin-bottom: .6rem; }
+  .aiuto-abilita :global(ol), .aiuto-abilita :global(ul) { margin: .3rem 0 0; }
+  :global(.opzione.scartata) { opacity: .45; text-decoration: line-through; }
+  :global(.opzione.candidata) { border-color: var(--oro); box-shadow: 0 0 0 3px rgba(201,162,74,.35); }
+  :global(mark.num-elfo) { background: rgba(201,162,74,.35); color: inherit; border-radius: 4px; padding: 0 .15em; font-weight: 800; }
   .nota-breve { font-size: .92rem; margin: 0 0 .6rem; }
   .tastierino { display: grid; grid-template-columns: repeat(3, 3.4rem); gap: .35rem; margin-top: .5rem; }
   .tastierino button { font: inherit; font-family: var(--font-ui); font-size: 1.4rem; font-weight: 800; padding: .5rem 0; border-radius: 10px; border: 2px solid var(--bordo); background: var(--superficie); color: var(--testo); cursor: pointer; }

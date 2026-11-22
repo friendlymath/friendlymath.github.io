@@ -55,3 +55,33 @@ describe('eroe', () => {
     expect(r2.ok && r2.progresso.eroe).toBeUndefined();
   });
 });
+
+import { cariche, dono, nomeStirpe, ABILITA, STIRPI } from '../src/lib/eroe';
+describe('stirpi e abilità', () => {
+  it('un eroe vecchio senza stirpe diventa umano', () => {
+    const { stirpe: _s, ...vecchio } = eroePredefinito();
+    expect(validaEroe(vecchio)!.stirpe).toBe('umano');
+  });
+  it('stirpe sconosciuta → umano; il dono del mezzelfo sopravvive alla Pergamena', () => {
+    expect(validaEroe({ ...eroePredefinito(), stirpe: 'orco' })!.stirpe).toBe('umano');
+    const e = { ...eroePredefinito(), stirpe: 'mezzelfo' as const, donoMezzelfo: 'halfling' as const };
+    expect(dono(validaEroe(e)!)).toBe('halfling');
+    expect(validaEroe({ ...e, donoMezzelfo: 'mezzelfo' })!.donoMezzelfo).toBeUndefined();
+  });
+  it('cariche: base 1, +1 con caratteristica ≥5, +1 umano; Guardiano sempre 1', () => {
+    const base = { ...eroePredefinito(), stirpe: 'elfo' as const, classe: 'mago' as const, car: { logica: 3, intuizione: 3, pazienza: 4, curiosita: 4 } };
+    expect(cariche(base)).toBe(1);
+    expect(cariche({ ...base, car: { ...base.car, logica: 5 } })).toBe(2);
+    expect(cariche({ ...base, stirpe: 'umano', car: { ...base.car, logica: 6 } })).toBe(3);
+    expect(cariche({ ...base, stirpe: 'umano', car: { ...base.car, logica: 6 } }, true)).toBe(1);
+  });
+  it('ogni classe ha la sua abilità e la classe scaltro esiste', () => {
+    expect(nomeClasse({ ...eroePredefinito(), corpo: 'femminile', classe: 'scaltro' })).toBe('Scaltra dei Trucchi');
+    expect(Object.keys(ABILITA).length).toBe(6);
+    expect(nomeStirpe({ ...eroePredefinito(), corpo: 'femminile', stirpe: 'nano' })).toBe('Nana');
+    expect(Object.keys(STIRPI)).toEqual(['umano', 'elfo', 'nano', 'halfling', 'mezzelfo']);
+  });
+  it('avatar valido per ogni stirpe', () => {
+    for (const s of Object.keys(STIRPI)) expect(avatarSvg({ ...eroePredefinito(), stirpe: s as never, corpo: 'maschile' })).toMatch(/<\/g><\/svg>$/);
+  });
+});

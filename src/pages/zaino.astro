@@ -94,7 +94,7 @@ const lezioni = (await lezioniPubblicate()).map((l) => ({ id: l.id, titolo: l.da
         const n = Number(b.replace('grado-', ''));
         const gg = GRADI.find((x) => x.numero === n);
         const li = document.createElement('li');
-        li.textContent = gg ? `${gg.icona} Guardiano di ${gg.regione} sconfitto` : b;
+        li.textContent = gg ? `${gg.icona} Guardiano di ${gg.regione} sconfitto` : b === 'tenacia' ? '⛏️ Tenacia: una sfida superata dopo essere caduti' : b;
         badge.appendChild(li);
       }
     }

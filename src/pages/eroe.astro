@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import AvvisoPrivacy from '../components/AvvisoPrivacy.astro';
-import { CORPI, CLASSI, CARATTERISTICHE, PELLI, COLORI_CAPELLI, MANTELLI, STILI_CAPELLI, PUNTI_DA_DISTRIBUIRE } from '../lib/eroe';
+import { CORPI, CLASSI, STIRPI, DONI, ABILITA, CARATTERISTICHE, PELLI, COLORI_CAPELLI, MANTELLI, STILI_CAPELLI, PUNTI_DA_DISTRIBUIRE } from '../lib/eroe';
 ---
 <Base titolo="Crea il tuo eroe" descrizione="Scegli corpo, classe, aspetto e caratteristiche del tuo personaggio per il Cammino di Numeria.">
   <section class="contenitore creazione" data-creazione>
@@ -18,6 +18,7 @@ import { CORPI, CLASSI, CARATTERISTICHE, PELLI, COLORI_CAPELLI, MANTELLI, STILI_
         <div class="cornice"><div class="ritratto" data-ritratto></div></div>
         <p class="nome-eroe" data-nome-anteprima>Senza nome</p>
         <p class="classe-eroe" data-classe-anteprima></p>
+        <p class="abilita-anteprima" data-abilita-anteprima></p>
         <ul class="statistiche" data-stat-anteprima></ul>
         <button type="button" class="btn vuoto" data-dadi>🎲 Tira i dadi (tutto a caso)</button>
       </aside>
@@ -37,7 +38,27 @@ import { CORPI, CLASSI, CARATTERISTICHE, PELLI, COLORI_CAPELLI, MANTELLI, STILI_
         </fieldset>
 
         <fieldset class="scheda passo">
-          <legend><span class="num">3</span> La tua classe</legend>
+          <legend><span class="num">3</span> La tua stirpe</legend>
+          <p class="tenue">Solo popoli amici: ognuno porta un piccolo dono nelle sfide.</p>
+          <div class="scelte classi">
+            {Object.entries(STIRPI).map(([id, st]) => (
+              <label class="carta classe">
+                <input type="radio" name="stirpe" value={id} />
+                <span class="icona-classe">{st.icona}</span>
+                <b data-nome-stirpe={id}>{st.nomi.neutro}</b>
+                <span class="tenue">{st.descrizione}</span>
+                <span class="affinita">{id === 'mezzelfo' ? 'Dono: a scelta fra gli altri' : `Dono: ${DONI[id as keyof typeof DONI].nome}. ${DONI[id as keyof typeof DONI].effetto}`}</span>
+              </label>
+            ))}
+          </div>
+          <div class="dono-mezzelfo" data-dono-mezzelfo hidden>
+            <p><b>🌗 Quale dono porti dai tuoi due mondi?</b></p>
+            <div class="campioni">{Object.entries(DONI).map(([id, d]) => <label class="pillola-scelta" title={d.effetto}><input type="radio" name="donoMezzelfo" value={id} /><span>{d.nome}</span></label>)}</div>
+          </div>
+        </fieldset>
+
+        <fieldset class="scheda passo">
+          <legend><span class="num">4</span> La tua classe</legend>
           <div class="scelte classi">
             {Object.entries(CLASSI).map(([id, c]) => (
               <label class="carta classe">
@@ -45,6 +66,7 @@ import { CORPI, CLASSI, CARATTERISTICHE, PELLI, COLORI_CAPELLI, MANTELLI, STILI_
                 <span class="icona-classe">{c.icona}</span>
                 <b data-nome-classe={id}>{c.nomi.neutro}</b>
                 <span class="tenue">{c.descrizione}</span>
+                <span class="abilita-classe">{ABILITA[id as keyof typeof ABILITA].icona} <b>{ABILITA[id as keyof typeof ABILITA].nome}</b>: {ABILITA[id as keyof typeof ABILITA].spiega}</span>
                 <span class="affinita">Affinità: {c.affinita}</span>
               </label>
             ))}
@@ -52,7 +74,7 @@ import { CORPI, CLASSI, CARATTERISTICHE, PELLI, COLORI_CAPELLI, MANTELLI, STILI_
         </fieldset>
 
         <fieldset class="scheda passo">
-          <legend><span class="num">4</span> Aspetto</legend>
+          <legend><span class="num">5</span> Aspetto</legend>
           <div class="riga-aspetto"><span>Carnagione</span><div class="campioni">{PELLI.map((c, i) => <label class="campione" style={`--c:${c}`}><input type="radio" name="pelle" value={i} aria-label={`Carnagione ${i + 1}`} /></label>)}</div></div>
           <div class="riga-aspetto"><span>Capelli</span><div class="campioni">{STILI_CAPELLI.map((s, i) => <label class="pillola-scelta"><input type="radio" name="capelli" value={i} /><span>{s}</span></label>)}</div></div>
           <div class="riga-aspetto"><span>Colore capelli</span><div class="campioni">{COLORI_CAPELLI.map((c, i) => <label class="campione" style={`--c:${c}`}><input type="radio" name="coloreCapelli" value={i} aria-label={`Colore capelli ${i + 1}`} /></label>)}</div></div>
@@ -60,8 +82,9 @@ import { CORPI, CLASSI, CARATTERISTICHE, PELLI, COLORI_CAPELLI, MANTELLI, STILI_
         </fieldset>
 
         <fieldset class="scheda passo">
-          <legend><span class="num">5</span> Caratteristiche</legend>
-          <p class="tenue">Hai <b data-punti>{PUNTI_DA_DISTRIBUIRE}</b> punti da distribuire. Non c'è una scelta giusta: è il ritratto di come ti vedi oggi. (E la pazienza si allena.)</p>
+          <legend><span class="num">6</span> Caratteristiche</legend>
+          <p class="tenue">Hai <b data-punti>{PUNTI_DA_DISTRIBUIRE}</b> punti da distribuire. Non c'è una scelta giusta: è il ritratto di come ti vedi oggi. (E la pazienza si allena.)<br />
+          Se la caratteristica della tua abilità arriva a <b>5</b>, nelle sfide hai una carica in più. <span data-car-abilita></span></p>
           <div class="car">
             {CARATTERISTICHE.map((c) => (
               <div class="car-riga">
@@ -85,7 +108,7 @@ import { CORPI, CLASSI, CARATTERISTICHE, PELLI, COLORI_CAPELLI, MANTELLI, STILI_
 </Base>
 
 <script>
-  import { eroePredefinito, caricaEroe, salvaEroe, cambiaCar, puntiRimasti, avatarSvg, nomeClasse, eroeCasuale, CARATTERISTICHE, CLASSI, type Eroe, type Caratteristica } from '../lib/eroe';
+  import { eroePredefinito, caricaEroe, salvaEroe, cambiaCar, puntiRimasti, avatarSvg, nomeClasse, nomeStirpe, eroeCasuale, cariche, dono, CARATTERISTICHE, CLASSI, STIRPI, ABILITA, DONI, type Eroe, type Caratteristica } from '../lib/eroe';
   import { carica, gradoAttuale } from '../lib/progresso';
 
   const r = document.querySelector<HTMLElement>('[data-creazione]')!;
@@ -96,7 +119,12 @@ import { CORPI, CLASSI, CARATTERISTICHE, PELLI, COLORI_CAPELLI, MANTELLI, STILI_
   const disegna = () => {
     r.querySelector('[data-ritratto]')!.innerHTML = avatarSvg(e, g, 180);
     r.querySelector('[data-nome-anteprima]')!.textContent = e.nome || 'Senza nome';
-    r.querySelector('[data-classe-anteprima]')!.textContent = `${CLASSI[e.classe].icona} ${nomeClasse(e)}`;
+    r.querySelector('[data-classe-anteprima]')!.textContent = `${STIRPI[e.stirpe].icona} ${nomeStirpe(e)} · ${CLASSI[e.classe].icona} ${nomeClasse(e)}`;
+    const ab = ABILITA[e.classe];
+    r.querySelector('[data-abilita-anteprima]')!.textContent = `${ab.icona} ${ab.nome}: ${cariche(e)} ${cariche(e) === 1 ? 'carica' : 'cariche'} per sfida · Dono: ${DONI[dono(e)].nome}`;
+    r.querySelector('[data-car-abilita]')!.textContent = `La tua abilità usa: ${CARATTERISTICHE.find((c) => c.id === ab.car)!.nome}.`;
+    r.querySelector<HTMLElement>('[data-dono-mezzelfo]')!.hidden = e.stirpe !== 'mezzelfo';
+    r.querySelectorAll<HTMLElement>('[data-nome-stirpe]').forEach((b) => (b.textContent = STIRPI[b.dataset.nomeStirpe as keyof typeof STIRPI].nomi[e.corpo]));
     r.querySelector('[data-stat-anteprima]')!.innerHTML = CARATTERISTICHE.map((c) => `<li><span>${c.icona} ${c.nome}</span><b>${e.car[c.id]}</b></li>`).join('');
     r.querySelector('[data-punti]')!.textContent = String(puntiRimasti(e));
     for (const c of CARATTERISTICHE) {
@@ -106,16 +134,17 @@ import { CORPI, CLASSI, CARATTERISTICHE, PELLI, COLORI_CAPELLI, MANTELLI, STILI_
   };
   const sincronizzaForm = () => {
     (r.querySelector('[data-nome]') as HTMLInputElement).value = e.nome;
-    for (const k of ['corpo', 'classe', 'pelle', 'capelli', 'coloreCapelli', 'mantello'] as const) {
-      const el = form.querySelector<HTMLInputElement>(`input[name="${k}"][value="${e[k]}"]`);
+    for (const k of ['corpo', 'stirpe', 'donoMezzelfo', 'classe', 'pelle', 'capelli', 'coloreCapelli', 'mantello'] as const) {
+      const el = form.querySelector<HTMLInputElement>(`input[name="${k}"][value="${e[k] ?? 'umano'}"]`);
       if (el) el.checked = true;
     }
   };
   form.addEventListener('change', (ev) => {
     const t = ev.target as HTMLInputElement;
     if (t.type !== 'radio') return;
-    const k = t.name as 'corpo' | 'classe' | 'pelle' | 'capelli' | 'coloreCapelli' | 'mantello';
-    e = { ...e, [k]: ['corpo', 'classe'].includes(k) ? t.value : Number(t.value) } as Eroe;
+    const k = t.name as 'corpo' | 'stirpe' | 'donoMezzelfo' | 'classe' | 'pelle' | 'capelli' | 'coloreCapelli' | 'mantello';
+    e = { ...e, [k]: ['corpo', 'stirpe', 'donoMezzelfo', 'classe'].includes(k) ? t.value : Number(t.value) } as Eroe;
+    if (k === 'stirpe' && e.stirpe === 'mezzelfo' && !e.donoMezzelfo) { e = { ...e, donoMezzelfo: 'umano' }; sincronizzaForm(); }
     disegna();
   });
   r.querySelector<HTMLInputElement>('[data-nome]')!.addEventListener('input', (ev) => { e = { ...e, nome: (ev.target as HTMLInputElement).value.replace(/[<>]/g, '').slice(0, 24) }; disegna(); });
@@ -158,6 +187,9 @@ import { CORPI, CLASSI, CARATTERISTICHE, PELLI, COLORI_CAPELLI, MANTELLI, STILI_
   .carta:has(input:focus-visible) { outline: 3px solid var(--gioco); }
   .classe { text-align: left; }
   .icona-classe { font-size: 1.8rem; }
+  .abilita-classe { font-size: .85rem; background: var(--superficie-2); border-radius: 8px; padding: .3rem .45rem; }
+  .abilita-anteprima { font-size: .9rem; font-weight: 700; margin: 0 0 .8rem; }
+  .dono-mezzelfo { margin-top: .8rem; }
   .affinita { margin-top: auto; font-size: .8rem; font-weight: 800; color: var(--magia); }
   .riga-aspetto { display: grid; grid-template-columns: 8rem 1fr; gap: .6rem; align-items: center; margin: .5rem 0; }
   @media (max-width: 520px) { .riga-aspetto { grid-template-columns: 1fr; } .scelte.tre { grid-template-columns: 1fr; } }
