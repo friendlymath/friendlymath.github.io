@@ -1,0 +1,71 @@
+---
+titolo: "Equazioni di primo grado: la bilancia che non mente"
+descrizione: "Trovare il numero misterioso x togliendo e dividendo, sempre da entrambe le parti."
+macroargomento: algebra
+sottoargomento: "Equazioni"
+grado: 3
+regione: 3
+stanza: 1
+nomeStanza: "Il Rifugio della Bilancia"
+distrattore: mercante
+fonti:
+  - titolo: "Abu Ja'far Muhammad ibn Musa Al-Khwarizmi"
+    url: "https://mathshistory.st-andrews.ac.uk/Biographies/Al-Khwarizmi/"
+    editore: "MacTutor History of Mathematics, University of St Andrews"
+    autore: "J J O'Connor, E F Robertson"
+    consultato: "2026-11-22"
+ispirazione:
+  - "https://www.youmath.it"
+  - "https://matepratica.it"
+---
+
+<Scena personaggio="fabbro">
+«Bah! Un altro che vuole salire sulle Montagne dell'Algebra con una spada corta» brontola il Fabbro.
+«Lassù le cose non hanno nome: si chiamano tutte **x**. Ti forgio uno strumento, ma solo uno: la **bilancia**.
+Regola unica, scritta col fuoco: *quello che fai a un piatto, lo fai anche all'altro*».
+</Scena>
+
+## Che cos'è un'equazione
+
+Un'equazione è un'**uguaglianza con un numero sconosciuto**, che di solito chiamiamo $x$. Per esempio:
+
+$$
+3x + 2 = 11
+$$
+
+Si legge: "tre volte un numero, più due, fa undici". **Risolverla** vuol dire trovare quel numero.
+
+## Il principio della bilancia
+
+Pensa all'uguale come a una bilancia in equilibrio. Puoi fare quello che vuoi, **purché lo faccia su entrambi i piatti**:
+
+1. **Togli** 2 da entrambe le parti: $3x + 2 - 2 = 11 - 2$, cioè $3x = 9$.
+2. **Dividi** entrambe le parti per 3: $x = 3$.
+3. **Verifica**: $3 \cdot 3 + 2 = 11$. ✔️
+
+<Interattivo tipo="bilancia" titolo="La bilancia del Fabbro" didascalia="Viola = una x, arancione = un'unità. Togli lo stesso peso da entrambi i piatti, poi dividi: la bilancia resta sempre in equilibrio." altezza={320} />
+
+<Attenzione distrattore="mercante">
+«Il 2 passa dall'altra parte e **resta +2**!» grida il Mercante. No: quando "sposti" un termine dall'altra parte dell'uguale, in realtà
+lo stai **togliendo da entrambi i piatti**, quindi cambia segno: $3x + 2 = 11 \Rightarrow 3x = 11 - 2$.
+Seconda scorciatoia avariata: «Il 3 passa dall'altra parte e diventa −3!». Il 3 moltiplica la $x$: per toglierlo si **divide**, $x = 9 \div 3$.
+</Attenzione>
+
+<Esempio titolo="Esempio pratico: il taxi">
+Un taxi costa **3 €** di partenza più **2 €** per ogni chilometro. Hai pagato **19 €**. Quanti chilometri hai fatto?
+$2x + 3 = 19 \Rightarrow 2x = 16 \Rightarrow x = 8$. Hai percorso **8 km**.
+</Esempio>
+
+<Storia titolo="Da dove viene la parola «algebra»">
+Nel IX secolo, a Baghdad, alla corte del califfo al-Mamun, il matematico **al-Khwarizmi** scrisse un trattato sulle equazioni il cui titolo contiene la parola
+*al-jabr*, "completamento": l'operazione con cui si eliminano i termini negativi da un'equazione. Da lì viene **algebra**.
+L'altra operazione, *al-muqabala*, "bilanciamento", toglie le quantità uguali da entrambi i lati: proprio la nostra bilancia.
+Dal suo nome, latinizzato in *Algoritmi*, viene anche la parola **algoritmo**. Leggi la sua <a href="/storia/al-khwarizmi/">scheda storica</a>.
+</Storia>
+
+<Sfida titolo="Sfida del Rifugio" domande={[
+  { testo: "Risolvi: x + 7 = 12", risposta: 5, spiegazione: "Togli 7 da entrambe le parti: x = 5." },
+  { testo: "Risolvi: 4x = 28", risposta: 7, spiegazione: "Dividi entrambe le parti per 4: x = 7." },
+  { testo: "Risolvi: 5x − 3 = 22", risposta: 5, spiegazione: "Aggiungi 3: 5x = 25. Dividi per 5: x = 5." },
+  { testo: "In 2x + 6 = 10, qual è il primo passo corretto?", opzioni: ["Togliere 6 da entrambe le parti", "Togliere 6 solo a sinistra", "Dividere solo la x per 2"], risposta: 0, spiegazione: "Ogni operazione va fatta su entrambi i piatti: 2x = 4, poi x = 2." }
+]} />

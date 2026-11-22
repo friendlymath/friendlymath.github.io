@@ -1,0 +1,27 @@
+---
+import Base from '../../layouts/Base.astro';
+import { pubblicati } from '../../lib/contenuti';
+const voci = (await pubblicati('esperimenti')).sort((a: any, b: any) => (a.data.ordine ?? 0) - (b.data.ordine ?? 0) || a.data.titolo.localeCompare(b.data.titolo, 'it'));
+---
+<Base titolo="Esperimenti" descrizione="Simulazioni e animazioni da provare con le tue mani: la matematica si vede, si tocca, si misura.">
+  <section class="contenitore">
+    <h1>🧪 Esperimenti</h1>
+    <p class="tenue stretto">Simulazioni e animazioni da provare con le tue mani: la matematica si vede, si tocca, si misura.</p>
+    <div class="griglia">
+      {voci.map((v: any) => (
+        <a class="scheda voce" href={`/esperimenti/${v.id}/`}>
+          <p class="icona" aria-hidden="true">{v.data.icona ?? '🧪'}</p>
+          <h2>{v.data.titolo}</h2>
+          <p class="tenue">{v.data.descrizione}</p>
+          {v.data.epoca && <span class="pillola">{v.data.epoca}</span>}
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>
+<style>
+  .voce { text-decoration: none; color: var(--testo); display: block; border-top: 6px solid var(--gioco); }
+  .voce:hover { transform: translateY(-2px); }
+  .voce h2 { font-size: 1.15rem; margin: .2rem 0; }
+  .icona { font-size: 2rem; margin: 0; }
+</style>

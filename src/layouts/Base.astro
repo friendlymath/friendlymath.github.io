@@ -3,6 +3,7 @@ import '../styles/tema.css';
 import 'katex/dist/katex.min.css';
 import Intestazione from '../components/Intestazione.astro';
 import PiePagina from '../components/PiePagina.astro';
+import Promemoria from '../components/Promemoria.astro';
 
 interface Props { titolo: string; descrizione?: string; }
 const { titolo, descrizione = 'La matematica per chiunque: un Libro da sfogliare e un Cammino da eroe per liberare il Regno di Numeria dalla Nebbia.' } = Astro.props;
@@ -30,5 +31,6 @@ const titoloCompleto = titolo === 'FriendlyMath' ? titolo : `${titolo} · Friend
       <slot />
     </main>
     <PiePagina />
+    <Promemoria />
   </body>
 </html>

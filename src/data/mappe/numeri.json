@@ -1,0 +1,32 @@
+{
+  "meta": { "name": "Numeri e aritmetica", "author": "FriendlyMath", "version": "1" },
+  "format": "node_tree",
+  "data": {
+    "id": "root", "topic": "🔢 Numeri e aritmetica",
+    "children": [
+      { "id": "naturali", "topic": "Numeri naturali ℕ", "direction": "right", "expanded": true, "children": [
+        { "id": "posizionale", "topic": "Valore posizionale", "link": "/libro/numeri/valore-posizionale/" },
+        { "id": "operazioni", "topic": "Le quattro operazioni", "children": [
+          { "id": "add", "topic": "Addizione" }, { "id": "sot", "topic": "Sottrazione" },
+          { "id": "mol", "topic": "Moltiplicazione" }, { "id": "div", "topic": "Divisione" } ] },
+        { "id": "proprieta", "topic": "Proprietà (commutativa, associativa, distributiva)" },
+        { "id": "potenze", "topic": "Potenze" }
+      ]},
+      { "id": "divisibilita", "topic": "Divisibilità", "direction": "right", "expanded": false, "children": [
+        { "id": "multipli", "topic": "Multipli e divisori" },
+        { "id": "primi", "topic": "Numeri primi" },
+        { "id": "mcd", "topic": "MCD e mcm" },
+        { "id": "criteri", "topic": "Criteri di divisibilità" } ] },
+      { "id": "frazioni", "topic": "Frazioni", "direction": "left", "expanded": true, "children": [
+        { "id": "equivalenti", "topic": "Frazioni equivalenti", "link": "/libro/numeri/frazioni-equivalenti/" },
+        { "id": "opfraz", "topic": "Operazioni con le frazioni" },
+        { "id": "decimali", "topic": "Numeri decimali" },
+        { "id": "percentuali", "topic": "Percentuali" } ] },
+      { "id": "insiemi", "topic": "Insiemi numerici", "direction": "left", "expanded": false, "children": [
+        { "id": "interi", "topic": "Interi relativi ℤ" },
+        { "id": "razionali", "topic": "Razionali ℚ" },
+        { "id": "reali", "topic": "Reali ℝ (√2, π…)" },
+        { "id": "complessi", "topic": "Complessi ℂ", "children": [ { "id": "quaternioni", "topic": "…e oltre: quaternioni ℍ", "link": "/storia/hamilton-quaternioni/" } ] } ] }
+    ]
+  }
+}

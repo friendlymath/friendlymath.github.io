@@ -1,0 +1,27 @@
+---
+import Base from './Base.astro';
+import Fonti from '../components/Fonti.astro';
+interface Props {
+  titolo: string; descrizione: string; sezione: { href: string; nome: string; icona: string };
+  fonti: { titolo: string; url: string; editore: string; autore?: string; consultato: string }[];
+  etichetta?: string; colore: string;
+}
+const { titolo, descrizione, sezione, fonti, etichetta, colore } = Astro.props;
+---
+<Base titolo={titolo} descrizione={descrizione}>
+  <article class="contenitore stretto scheda-pagina" data-contesto="libro" style={`--c:${colore}`}>
+    <nav class="tenue briciole"><a href={sezione.href}>{sezione.icona} {sezione.nome}</a></nav>
+    {etichetta && <p class="pillola etichetta">{etichetta}</p>}
+    <h1>{titolo}</h1>
+    <p class="tenue sottotitolo">{descrizione}</p>
+    <div class="prosa"><slot /></div>
+    <Fonti fonti={fonti} />
+  </article>
+</Base>
+<style>
+  .scheda-pagina { padding-top: 1.2rem; }
+  .briciole a { color: inherit; }
+  .etichetta { background: var(--c); color: #fff; border: 0; margin-top: 1rem; }
+  .sottotitolo { font-size: 1.15rem; margin-top: 0; }
+  h1 { text-decoration: underline; text-decoration-color: var(--c); text-decoration-thickness: 6px; text-underline-offset: 10px; }
+</style>

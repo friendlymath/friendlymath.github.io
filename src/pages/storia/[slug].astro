@@ -1,0 +1,16 @@
+---
+import { render } from 'astro:content';
+import Scheda from '../../layouts/Scheda.astro';
+import { pubblicati } from '../../lib/contenuti';
+import { componenti } from '../../components/didattica/indice';
+export async function getStaticPaths() {
+  return (await pubblicati('storia')).map((v) => ({ params: { slug: v.id }, props: { v } }));
+}
+const { v } = Astro.props as any;
+const { Content } = await render(v);
+---
+<Scheda titolo={v.data.titolo} descrizione={v.data.descrizione} fonti={v.data.fonti} colore="var(--storia-bd)"
+  etichetta={v.data.epoca ? `${v.data.personaggio ?? ''} · ${v.data.epoca}` : undefined}
+  sezione={{ href: '/storia/', nome: 'Storia della matematica', icona: '🏛️' }}>
+  <Content components={componenti} />
+</Scheda>

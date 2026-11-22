@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+const domande = [
+  { id: 'cos-e', d: "Che cos'è FriendlyMath?", r: "Un sito gratuito di matematica per chiunque, dalle elementari alla matematica avanzata. Puoi studiare in due modi: il <a href=\"/libro/\">Libro</a>, un indice libero di tutti gli argomenti, oppure il <a href=\"/cammino/\">Cammino</a>, un viaggio a tappe in cui ogni argomento è una stanza da conquistare." },
+  { id: 'differenza', d: 'Che differenza c’è tra Libro e Cammino?', r: "I contenuti sono gli stessi. Il Libro è sempre aperto: leggi quello che vuoi, nell'ordine che vuoi. Il Cammino racconta una storia: le stanze si aprono una dopo l'altra e alla fine di ogni regione c'è un Guardiano. Una sfida superata nel Libro vale anche nel Cammino, ma solo il Guardiano ti fa salire di grado." },
+  { id: 'gradi', d: 'Cosa sono i gradi?', r: "Sono sei, uno per regione: Recluta (elementari), Scudiero (medie), Guerriero (biennio superiori), Cavaliere (triennio e maturità), Paladino (primi anni di università), Cavaliere alato (matematica avanzata). Sali di grado battendo il Guardiano della tua regione." },
+  { id: 'avanti', d: 'Sono già bravo: devo per forza partire dal Villaggio delle Cifre?', r: "No. Nella pagina del <a href=\"/cammino/\">Cammino</a> trovi «Sei già avanti?»: scegli la regione da cui partire e affronta il Guardiano della regione precedente. Se lo batti, entri direttamente." },
+  { id: 'pergamena', d: 'Cos’è la Pergamena e come salvo i miei progressi?', r: "I progressi si salvano da soli <b>nel tuo browser</b>. Però, se cambi dispositivo o browser, o se cancelli i dati di navigazione, li perderesti. La <b>Pergamena</b> è un piccolo file <code>.json</code> che li contiene: nello <a href=\"/zaino/\">Zaino dell'eroe</a> premi «Salva la Pergamena» per scaricarla e «Riprendi il cammino» per ricaricarla, anche su un altro dispositivo. Puoi unirla ai progressi attuali o sostituirli." },
+  { id: 'dati', d: 'Raccogliete dati su di me?', r: "No. Niente account, niente email, niente cookie di profilazione, niente statistiche. La Pergamena contiene solo l'elenco delle lezioni completate, i Guardiani battuti e i badge. Nessuno, oltre a te, la vede." },
+  { id: 'imbrogliare', d: 'Ma se modifico la Pergamena a mano?', r: "Puoi farlo: non ci sono classifiche né premi, quindi imbroglieresti solo te stesso. La Nebbia ringrazia." },
+  { id: 'fonti', d: 'Da dove vengono curiosità e notizie storiche?', r: "Ogni curiosità, scheda storica ed esperimento cita le sue fonti, con link e data di consultazione. Se una fonte non si trova, la notizia non entra. L'elenco completo è nella pagina <a href=\"/fonti/\">Fonti e crediti</a>." },
+  { id: 'siti', d: 'Avete copiato da altri siti di matematica?', r: "No. Siti come <a href=\"https://matepratica.it\">matepratica.it</a>, <a href=\"https://www.youmath.it\">youmath.it</a> e <a href=\"https://www.matematika.it\">matematika.it</a> sono ottimi e li consigliamo come approfondimento: ci ispirano, ma tutti i testi qui sono scritti da zero." },
+  { id: 'inglese', d: 'Il sito sarà anche in inglese?', r: "Sì, è previsto. Per ora i contenuti sono in italiano." },
+  { id: 'js', d: 'Funziona senza JavaScript?', r: "Le lezioni del Libro si leggono anche senza. Sfide, animazioni, mappe mentali e progressi invece hanno bisogno di JavaScript." },
+];
+---
+<Base titolo="Domande frequenti" descrizione="Come funzionano Libro, Cammino, gradi e Pergamena. E perché non raccogliamo nessun dato.">
+  <section class="contenitore stretto">
+    <h1>❓ Domande frequenti</h1>
+    <p class="tenue">Se hai una domanda che non trovi qui, Ottavia la Civetta sta probabilmente cercando la risposta nel posto sbagliato. Ma la troverà.</p>
+    {domande.map((q) => (
+      <details class="scheda faq" id={q.id} open={q.id === 'pergamena'}>
+        <summary>{q.d}</summary>
+        <p set:html={q.r} />
+      </details>
+    ))}
+  </section>
+</Base>
+<style>
+  .faq { margin: .7rem 0; scroll-margin-top: 80px; }
+  .faq summary { cursor: pointer; font-weight: 800; }
+  .faq p { margin-bottom: 0; }
+</style>
+<script>
+  if (location.hash) document.querySelector<HTMLDetailsElement>(location.hash)?.setAttribute('open', '');
+</script>

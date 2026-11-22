@@ -1,0 +1,52 @@
+---
+titolo: "Il Guardiano del Villaggio: il Golem dei Riporti"
+descrizione: "Sfida riassuntiva del Villaggio delle Cifre: valore posizionale, addizioni con riporto e confronto tra numeri."
+macroargomento: numeri
+sottoargomento: "Contare e scrivere i numeri"
+grado: 1
+regione: 1
+stanza: 2
+guardiano: true
+nomeStanza: "Il Golem dei Riporti"
+distrattore: barone
+prerequisiti:
+  - numeri/valore-posizionale
+---
+
+<Scena personaggio="narratore">
+All'uscita del villaggio, un enorme Golem di mattoncini blocca il ponte. Ha una voce profonda e un evidente problema di autostima:
+«Nessuno… sa fare… i riporti!». Ottavia sussurra: «È fatto di unità, decine e centinaia. Se gli rispondi giusto, si ricompone in un numero ordinato».
+</Scena>
+
+## Ripasso lampo: l'addizione con il riporto
+
+Quando sommi in colonna, parti dalle **unità**. Se ottieni 10 o più, **dieci unità diventano una decina**: scrivi le unità e "porti" 1 nella colonna delle decine.
+
+$$
+\begin{array}{r}
+ {}^{1}\,\,\, \\
+ 47 \\
+ +\ 38 \\ \hline
+ 85
+\end{array}
+$$
+
+7 + 8 = 15: scrivo **5**, porto **1**. Poi 4 + 3 + 1 = **8**. Risultato: **85**.
+
+<Attenzione distrattore="barone">
+Il Barone del Panico gonfia il problema: «Numeri a tre cifre? Impossibile!». Ma una somma a tre cifre è solo **tre somme piccole una dopo l'altra**:
+unità, decine, centinaia. Un passo alla volta il drago torna lucertola.
+</Attenzione>
+
+<Esempio titolo="Esempio pratico: la spesa al mercato">
+Compri pane per **136** centesimi e formaggio per **275** centesimi.
+Unità: 6 + 5 = 11, scrivo 1 e porto 1. Decine: 3 + 7 + 1 = 11, scrivo 1 e porto 1. Centinaia: 1 + 2 + 1 = 4.
+Totale: **411** centesimi, cioè 4 euro e 11 centesimi.
+</Esempio>
+
+<Sfida titolo="Il Golem ti sfida!" domande={[
+  { testo: "Quanto fa 58 + 27?", risposta: 85, spiegazione: "8 + 7 = 15: scrivo 5 e porto 1. 5 + 2 + 1 = 8. Totale 85." },
+  { testo: "Quanto fa 349 + 476?", risposta: 825, spiegazione: "9+6=15 (5, porto 1); 4+7+1=12 (2, porto 1); 3+4+1=8. Totale 825." },
+  { testo: "Nel numero 6 054, che cosa indica lo 0?", opzioni: ["Che il numero vale zero", "Che non ci sono centinaia", "Che non ci sono unità"], risposta: 1, spiegazione: "Lo zero è al posto delle centinaia: tiene il posto vuoto." },
+  { testo: "Metti in ordine dal più piccolo: 908, 98, 980", opzioni: ["98, 908, 980", "908, 98, 980", "98, 980, 908"], risposta: 0, spiegazione: "98 ha solo due cifre; tra 908 e 980 si confrontano le decine: 0 < 8." }
+]} />

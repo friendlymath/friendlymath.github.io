@@ -1,0 +1,51 @@
+---
+titolo: "Il teorema di Pitagora, da toccare con mano"
+descrizione: "Nel triangolo rettangolo, il quadrato costruito sull'ipotenusa è grande quanto i quadrati sui due cateti messi insieme."
+macroargomento: geometria
+sottoargomento: "Triangoli"
+grado: 2
+ispirazione:
+  - "https://www.youmath.it"
+  - "https://www.matematika.it"
+---
+
+## L'enunciato
+
+In un **triangolo rettangolo** chiamiamo **cateti** i due lati che formano l'angolo retto e **ipotenusa** il lato opposto, il più lungo.
+Il teorema dice:
+
+$$
+a^2 + b^2 = c^2
+$$
+
+dove $a$ e $b$ sono i cateti e $c$ l'ipotenusa. Detto con le figure: **l'area del quadrato sull'ipotenusa è uguale alla somma delle aree dei quadrati sui cateti**.
+
+<Interattivo tipo="pitagora" titolo="Trascina i vertici A e B" didascalia="Sposta i punti arancioni: le aree dei tre quadrati cambiano, ma la somma dei due piccoli è sempre uguale al grande." altezza={460} />
+
+## Come si usa
+
+**Trovare l'ipotenusa.** Cateti 3 e 4: $c = \sqrt{3^2 + 4^2} = \sqrt{9 + 16} = \sqrt{25} = 5$.
+
+**Trovare un cateto.** Ipotenusa 13 e cateto 5: $b = \sqrt{13^2 - 5^2} = \sqrt{169 - 25} = \sqrt{144} = 12$.
+
+<Esempio titolo="Esempio pratico: la scala contro il muro">
+Una scala lunga **5 m** è appoggiata a un muro, con il piede a **3 m** dalla parete. A che altezza arriva?
+La scala è l'ipotenusa: $h = \sqrt{5^2 - 3^2} = \sqrt{16} = 4$ m.
+Lo stesso conto lo fanno i muratori per controllare che un angolo sia davvero retto: segnano 3 e 4 sui due lati e verificano che la diagonale misuri 5.
+</Esempio>
+
+<Attenzione>
+Errore tipico: pensare che $\sqrt{a^2 + b^2} = a + b$. Con 3 e 4 otterresti 7 invece di 5! La radice di una somma **non** è la somma delle radici.
+E attenzione: il teorema vale **solo** per i triangoli rettangoli.
+</Attenzione>
+
+<Curiosita titolo="Terne pitagoriche">
+Tre numeri interi che soddisfano $a^2 + b^2 = c^2$ si chiamano **terna pitagorica**: (3, 4, 5), (5, 12, 13), (8, 15, 17)…
+Moltiplicando una terna per lo stesso numero ne ottieni un'altra: (6, 8, 10) è (3, 4, 5) raddoppiata.
+</Curiosita>
+
+<Sfida domande={[
+  { testo: "Cateti 6 e 8: quanto misura l'ipotenusa?", risposta: 10, spiegazione: "√(36 + 64) = √100 = 10." },
+  { testo: "Ipotenusa 10 e un cateto 6: quanto misura l'altro cateto?", risposta: 8, spiegazione: "√(100 − 36) = √64 = 8." },
+  { testo: "Un triangolo con lati 5, 6, 8 è rettangolo?", opzioni: ["Sì", "No"], risposta: 1, spiegazione: "25 + 36 = 61, ma 8² = 64: non è rettangolo." }
+]} />

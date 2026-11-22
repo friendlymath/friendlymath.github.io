@@ -1,0 +1,25 @@
+{
+  "meta": { "name": "Geometria", "author": "FriendlyMath", "version": "1" },
+  "format": "node_tree",
+  "data": {
+    "id": "root", "topic": "📐 Geometria",
+    "children": [
+      { "id": "enti", "topic": "Enti fondamentali", "direction": "right", "expanded": true, "children": [
+        { "id": "punto", "topic": "Punto, retta, piano" }, { "id": "angoli", "topic": "Angoli" }, { "id": "segmenti", "topic": "Segmenti e misure" } ] },
+      { "id": "piana", "topic": "Figure piane", "direction": "right", "expanded": true, "children": [
+        { "id": "triangoli", "topic": "Triangoli", "children": [
+          { "id": "pitagora", "topic": "Teorema di Pitagora", "link": "/libro/geometria/teorema-di-pitagora/" },
+          { "id": "simili", "topic": "Triangoli simili" } ] },
+        { "id": "quadrilateri", "topic": "Quadrilateri" },
+        { "id": "cerchio", "topic": "Cerchio e π" },
+        { "id": "aree", "topic": "Perimetri e aree" } ] },
+      { "id": "solida", "topic": "Geometria solida", "direction": "left", "expanded": false, "children": [
+        { "id": "poliedri", "topic": "Poliedri" }, { "id": "rotondi", "topic": "Solidi di rotazione" }, { "id": "volumi", "topic": "Volumi" } ] },
+      { "id": "analitica", "topic": "Geometria analitica", "direction": "left", "expanded": false, "children": [
+        { "id": "piano-cart", "topic": "Piano cartesiano" }, { "id": "retta", "topic": "La retta y = mx + q" }, { "id": "coniche", "topic": "Coniche" } ] },
+      { "id": "trasf", "topic": "Trasformazioni", "direction": "left", "expanded": false, "children": [
+        { "id": "isometrie", "topic": "Isometrie" }, { "id": "omotetie", "topic": "Omotetie" },
+        { "id": "rotazioni3d", "topic": "Rotazioni nello spazio (quaternioni!)", "link": "/storia/hamilton-quaternioni/" } ] }
+    ]
+  }
+}

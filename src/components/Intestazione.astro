@@ -43,8 +43,12 @@ const qui = Astro.url.pathname;
 <script>
   import { carica, gradoAttuale } from '../lib/progresso';
   import { grado } from '../lib/mondo';
-  const el = document.querySelector('[data-grado-attuale]');
-  if (el) el.textContent = grado(gradoAttuale(carica())).nome;
+  const aggiornaGrado = () => {
+    const el = document.querySelector('[data-grado-attuale]');
+    if (el) el.textContent = grado(gradoAttuale(carica())).nome;
+  };
+  aggiornaGrado();
+  document.addEventListener('friendlymath:progresso', aggiornaGrado);
 
   document.querySelector('.tema')?.addEventListener('click', () => {
     const r = document.documentElement;

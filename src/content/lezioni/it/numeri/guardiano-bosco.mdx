@@ -1,0 +1,46 @@
+---
+titolo: "Il Guardiano del Bosco: la Strega delle Fette"
+descrizione: "Sfida riassuntiva del Bosco delle Frazioni: equivalenza, confronto e semplificazione."
+macroargomento: numeri
+sottoargomento: "Frazioni"
+grado: 2
+regione: 2
+stanza: 2
+guardiano: true
+nomeStanza: "La Strega delle Fette"
+distrattore: gnomo
+prerequisiti:
+  - numeri/frazioni-equivalenti
+---
+
+<Scena personaggio="narratore">
+Al centro del bosco, in una casetta a forma di torta, vive la Strega delle Fette. Non è cattiva: è solo stanca che tutti le chiedano
+«ma è più grande 3/4 o 5/8?». Ti lascerà passare se le dimostri che sai rispondere da solo.
+</Scena>
+
+## Confrontare due frazioni
+
+Per capire quale frazione è più grande, portale allo **stesso denominatore** e confronta i numeratori:
+
+$$
+\frac{3}{4} = \frac{6}{8} \quad\text{e}\quad \frac{6}{8} > \frac{5}{8} \quad\Rightarrow\quad \frac{3}{4} > \frac{5}{8}
+$$
+
+Oppure usa il prodotto incrociato: $3 \times 8 = 24$ contro $4 \times 5 = 20$. Vince il lato col prodotto più grande.
+
+<Attenzione distrattore="gnomo">
+Lo Gnomo Copione ti allunga un foglietto con tutte le risposte: «Prendilo, nessuno lo saprà!». Lo saprai tu.
+Il Guardiano esiste proprio per farti scoprire che **ce la fai**. E se sbagli, puoi riprovare quante volte vuoi.
+</Attenzione>
+
+<Esempio titolo="Esempio pratico: lo sconto migliore">
+Negozio A: sconto di **1/4** sul prezzo. Negozio B: sconto di **3/10**. Quale conviene?
+Denominatore comune 20: $\tfrac{1}{4} = \tfrac{5}{20}$ e $\tfrac{3}{10} = \tfrac{6}{20}$. Lo sconto di B è più grande.
+</Esempio>
+
+<Sfida titolo="La Strega ti sfida!" domande={[
+  { testo: "Qual è più grande?", opzioni: ["2/3", "3/5", "Sono uguali"], risposta: 0, spiegazione: "2×5 = 10 contro 3×3 = 9: vince 2/3." },
+  { testo: "Le frazioni 6/9 e 10/15 sono…", opzioni: ["equivalenti", "diverse", "impossibili da confrontare"], risposta: 0, spiegazione: "Entrambe si semplificano in 2/3 (6×15 = 90 = 9×10)." },
+  { testo: "Semplifica 24/36: quanto vale il denominatore ai minimi termini?", risposta: 3, spiegazione: "MCD(24, 36) = 12: 24/36 = 2/3." },
+  { testo: "Quanti dodicesimi fanno 3/4? (scrivi il numeratore)", risposta: 9, spiegazione: "Da 4 a 12 si moltiplica per 3: 3 × 3 = 9, cioè 9/12." }
+]} />

@@ -1,0 +1,66 @@
+---
+titolo: "Frazioni equivalenti: la stessa pizza tagliata in modi diversi"
+descrizione: "Perché 1/2, 2/4 e 3/6 sono lo stesso numero, e come accorgersene in un attimo."
+macroargomento: numeri
+sottoargomento: "Frazioni"
+grado: 2
+regione: 2
+stanza: 1
+nomeStanza: "La Radura delle Pizze"
+distrattore: mercante
+prerequisiti:
+  - numeri/valore-posizionale
+ispirazione:
+  - "https://www.youmath.it"
+  - "https://www.matematika.it"
+---
+
+<Scena personaggio="civetta">
+Nel Bosco delle Frazioni tre gnomi litigano su chi ha mangiato più pizza. Il primo ha preso **1 fetta su 2**, il secondo **2 su 4**,
+il terzo **4 su 8**. «Hanno mangiato lo stesso!» dico io. Poi mi correggo. Poi mi ri-correggo e ho ragione la prima volta. Coraggio, verifichiamo insieme.
+</Scena>
+
+## Che cos'è una frazione
+
+Una frazione $\dfrac{a}{b}$ dice: **dividi l'intero in $b$ parti uguali e prendine $a$**.
+Il numero sotto è il **denominatore** (in quante parti tagli), quello sopra è il **numeratore** (quante parti prendi).
+
+## Frazioni equivalenti
+
+Due frazioni sono **equivalenti** quando indicano **la stessa quantità**, anche se sono scritte in modo diverso.
+Se moltiplichi (o dividi) numeratore e denominatore **per lo stesso numero** ottieni una frazione equivalente:
+
+$$
+\frac{1}{2} = \frac{1 \times 2}{2 \times 2} = \frac{2}{4} = \frac{4}{8}
+$$
+
+È come tagliare ogni fetta a metà: le fette diventano il doppio, ma la pizza mangiata resta quella.
+
+<Interattivo tipo="frazioni" titolo="Il tagliapizza magico" didascalia="Muovi i cursori: quando la tua barretta arancione riempie esattamente quanto quella blu, hai trovato una frazione equivalente." altezza={300} />
+
+## Il trucco del prodotto incrociato
+
+Per controllare se $\dfrac{a}{b}$ e $\dfrac{c}{d}$ sono equivalenti, basta verificare che $a \times d = b \times c$.
+Esempio: $\dfrac{3}{4}$ e $\dfrac{9}{12}$ → $3 \times 12 = 36$ e $4 \times 9 = 36$. Uguali: equivalenti!
+
+<Esempio titolo="Esempio pratico: la ricetta dimezzata">
+Una ricetta chiede **3/4** di litro di latte, ma il tuo misurino ha solo le tacche da **1/8**.
+Quanti ottavi servono? $\dfrac{3}{4} = \dfrac{3 \times 2}{4 \times 2} = \dfrac{6}{8}$: riempi il misurino fino alla **sesta tacca**.
+</Esempio>
+
+<Attenzione distrattore="mercante">
+Il Mercante offre la sua regola preferita: «Per ottenere una frazione equivalente **aggiungi** lo stesso numero sopra e sotto!».
+Prova: $\dfrac{1}{2} \to \dfrac{1+1}{2+1} = \dfrac{2}{3}$. Ma 2/3 è più di metà pizza! Con l'addizione la quantità cambia.
+Funziona solo **moltiplicare o dividere** per lo stesso numero (diverso da zero).
+</Attenzione>
+
+<Curiosita>
+Semplificare una frazione vuol dire trovare la sua "versione più corta": si dividono sopra e sotto per il loro **massimo comune divisore**.
+Per esempio $\dfrac{18}{24}$: il MCD di 18 e 24 è 6, quindi $\dfrac{18}{24} = \dfrac{3}{4}$.
+</Curiosita>
+
+<Sfida titolo="Sfida della Radura" domande={[
+  { testo: "Quale frazione è equivalente a 2/3?", opzioni: ["3/4", "4/6", "2/6"], risposta: 1, spiegazione: "2/3 = (2×2)/(3×2) = 4/6." },
+  { testo: "Completa: 3/5 = ?/20 (scrivi il numeratore)", risposta: 12, spiegazione: "Da 5 a 20 si moltiplica per 4: 3 × 4 = 12." },
+  { testo: "Semplifica 15/25 ai minimi termini. Quale ottieni?", opzioni: ["3/5", "5/3", "1/2"], risposta: 0, spiegazione: "Il MCD di 15 e 25 è 5: 15/5 = 3, 25/5 = 5." }
+]} />

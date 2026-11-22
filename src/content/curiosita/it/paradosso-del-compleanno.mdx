@@ -1,0 +1,37 @@
+---
+titolo: "Il paradosso del compleanno"
+descrizione: "Bastano 23 persone perché sia più probabile che no che due festeggino lo stesso giorno."
+macroargomento: probabilita-statistica
+icona: "🎂"
+fonti:
+  - titolo: "Paradosso del compleanno"
+    url: "https://it.wikipedia.org/wiki/Paradosso_del_compleanno"
+    editore: "Wikipedia, l'enciclopedia libera"
+    consultato: "2026-11-22"
+  - titolo: "Birthday Problem"
+    url: "https://mathworld.wolfram.com/BirthdayProblem.html"
+    editore: "Wolfram MathWorld"
+    autore: "Eric W. Weisstein"
+    consultato: "2026-11-22"
+---
+
+In una classe di **23** persone, quante probabilità ci sono che almeno due compiano gli anni lo stesso giorno? L'istinto dice "pochissime".
+La matematica dice: **circa il 51%**. Con 30 persone si supera il 70%, con 50 si arriva intorno al 97%.
+
+## Perché l'intuito sbaglia
+
+Pensiamo alle **coppie**, non alle persone. Con 23 persone le coppie possibili sono $\tfrac{23 \times 22}{2} = 253$: tante occasioni per una coincidenza.
+
+Il calcolo furbo è quello del **contrario**: la probabilità che tutti i compleanni siano diversi. La seconda persona deve evitare 1 giorno, la terza 2, e così via:
+
+$$
+P(\text{tutti diversi}) = \frac{365}{365} \cdot \frac{364}{365} \cdot \frac{363}{365} \cdots \frac{343}{365} \approx 0{,}49
+$$
+
+Quindi $P(\text{almeno una coppia}) \approx 1 - 0{,}49 = 0{,}51$.
+
+<Esempio titolo="Prova tu">
+Alla prossima festa con più di 23 persone, fai il giro dei compleanni. Non è garantito, ma scommettere sulla coincidenza è (leggermente) conveniente.
+</Esempio>
+
+Il calcolo assume 365 giorni tutti ugualmente probabili. Nella realtà le nascite non sono distribuite in modo perfettamente uniforme, e questo rende le coincidenze un po' più probabili, non meno.

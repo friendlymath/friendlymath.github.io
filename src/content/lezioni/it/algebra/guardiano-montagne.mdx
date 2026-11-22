@@ -1,0 +1,46 @@
+---
+titolo: "Il Guardiano delle Montagne: lo Yeti delle Incognite"
+descrizione: "Sfida riassuntiva delle Montagne dell'Algebra: equazioni con la x da entrambe le parti, parentesi e problemi."
+macroargomento: algebra
+sottoargomento: "Equazioni"
+grado: 3
+regione: 3
+stanza: 2
+guardiano: true
+nomeStanza: "Lo Yeti delle Incognite"
+distrattore: sirena
+prerequisiti:
+  - algebra/equazioni-primo-grado
+---
+
+<Scena personaggio="narratore">
+Sulla vetta, tra le nuvole, uno Yeti peloso scrive equazioni sulla neve con un dito. Quando ti vede sorride (troppi denti) e indica
+la sua ultima creazione: c'è una **x a sinistra e una x a destra**. «Di qui passa solo chi sa radunare le x», dice. Poi starnutisce.
+</Scena>
+
+## Quando la x è da tutte e due le parti
+
+Stessa regola di sempre, la bilancia. Prima **raduna le x** da una parte, poi i numeri dall'altra:
+
+$$
+5x + 1 = 2x + 13 \;\Rightarrow\; 5x - 2x = 13 - 1 \;\Rightarrow\; 3x = 12 \;\Rightarrow\; x = 4
+$$
+
+Con le **parentesi**, prima le sciogli con la proprietà distributiva: $2(x + 3) = 2x + 6$.
+
+<Attenzione distrattore="sirena">
+La Sirena del Dopo canta dolcemente: «La verifica? Ma sì, la fai domani…». La verifica richiede dieci secondi e ti salva da quasi tutti gli errori:
+rimetti il valore trovato al posto di $x$ e controlla che i due lati siano uguali. $5\cdot4+1 = 21$ e $2\cdot4+13 = 21$. ✔️
+</Attenzione>
+
+<Esempio titolo="Esempio pratico: due abbonamenti">
+Palestra A: **20 €** di iscrizione + **5 €** a ingresso. Palestra B: nessuna iscrizione, **9 €** a ingresso.
+Dopo quanti ingressi spendi uguale? $20 + 5x = 9x \Rightarrow 20 = 4x \Rightarrow x = 5$. Dal sesto ingresso in poi conviene la A.
+</Esempio>
+
+<Sfida titolo="Lo Yeti ti sfida!" domande={[
+  { testo: "Risolvi: 7x − 4 = 3x + 8", risposta: 3, spiegazione: "7x − 3x = 8 + 4, quindi 4x = 12 e x = 3." },
+  { testo: "Risolvi: 3(x − 2) = 15", risposta: 7, spiegazione: "3x − 6 = 15, 3x = 21, x = 7." },
+  { testo: "Risolvi: x/2 + 5 = 9", risposta: 8, spiegazione: "x/2 = 4, quindi x = 8." },
+  { testo: "La somma di un numero e del suo doppio è 27. Qual è il numero?", risposta: 9, spiegazione: "x + 2x = 27, 3x = 27, x = 9." }
+]} />

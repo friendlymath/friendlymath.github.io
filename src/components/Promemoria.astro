@@ -1,0 +1,22 @@
+---
+/** Promemoria discreto: al passaggio di grado propone di salvare la Pergamena. */
+---
+<div class="promemoria" data-promemoria role="status" hidden>
+  <p>🎉 <b data-titolo>Nuovo grado!</b> È il momento giusto per <a href="/zaino/">salvare la tua Pergamena</a>.</p>
+  <button type="button" class="chiudi" aria-label="Chiudi" data-chiudi>✕</button>
+</div>
+<script>
+  import { grado } from '../lib/mondo';
+  const box = document.querySelector<HTMLElement>('[data-promemoria]')!;
+  document.addEventListener('friendlymath:grado', (e) => {
+    const g = grado((e as CustomEvent).detail.grado);
+    box.querySelector('[data-titolo]')!.textContent = `Ora sei ${g.nome}!`;
+    box.hidden = false;
+  });
+  box.querySelector('[data-chiudi]')!.addEventListener('click', () => (box.hidden = true));
+</script>
+<style>
+  .promemoria { position: fixed; left: 16px; right: 16px; bottom: 16px; max-width: 30rem; margin: 0 auto; z-index: 30; background: var(--superficie); border: 3px solid var(--sole); border-radius: var(--raggio); box-shadow: var(--ombra); padding: .6rem 2.6rem .6rem 1rem; }
+  .promemoria p { margin: 0; }
+  .chiudi { position: absolute; top: .4rem; right: .5rem; background: none; border: 0; font-size: 1.1rem; cursor: pointer; color: var(--testo); }
+</style>

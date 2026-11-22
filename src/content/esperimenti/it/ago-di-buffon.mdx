@@ -1,0 +1,46 @@
+---
+titolo: "L'ago di Buffon: trovare π lanciando aghi"
+descrizione: "Un pavimento a righe, un mucchio di aghi e un po' di pazienza: il caso diventa geometria."
+icona: "🪡"
+lezioniCollegate: []
+fonti:
+  - titolo: "Ago di Buffon"
+    url: "https://it.wikipedia.org/wiki/Ago_di_Buffon"
+    editore: "Wikipedia, l'enciclopedia libera"
+    consultato: "2026-11-22"
+  - titolo: "Georges Louis Leclerc Comte de Buffon"
+    url: "https://mathshistory.st-andrews.ac.uk/Biographies/Buffon/"
+    editore: "MacTutor History of Mathematics, University of St Andrews"
+    consultato: "2026-11-22"
+---
+
+Nel Settecento il naturalista francese **Georges-Louis Leclerc, conte di Buffon**, si pose una domanda: se lascio cadere a caso un ago su un pavimento
+a strisce parallele, qual è la probabilità che l'ago tocchi una riga? L'esperimento fu descritto nel **1777**.
+
+## La risposta (sorprendente)
+
+Se l'ago è lungo $\ell$ e le righe distano $t$, con $\ell \le t$, la probabilità che l'ago tocchi una riga è
+
+$$
+p = \frac{2\ell}{\pi\, t}
+$$
+
+Compare **π**, anche se non c'è nessun cerchio! Il motivo è che l'ago può cadere con **qualunque angolo**, e gli angoli "girano" come in un cerchio.
+Rigirando la formula, se lanci $n$ aghi e ne contano $m$ che toccano una riga:
+
+$$
+\pi \approx \frac{2\ell\, n}{t\, m}
+$$
+
+<Interattivo tipo="buffon" titolo="Lancia gli aghi" didascalia="Gli aghi arancioni toccano una riga. Qui l'ago è lungo quanto la distanza tra le righe: più lanci, più la stima si avvicina a π (ma lentamente!)." altezza={420} />
+
+<Curiosita titolo="Il trucco di Lazzarini">
+Nel 1901 l'italiano Mario Lazzarini dichiarò di aver ottenuto con 3408 lanci la stima $\pi \approx 355/113$, precisa a più di sei cifre decimali.
+Un risultato *troppo* bello: la scelta di quel numero di lanci e di quel rapporto tra ago e righe fa pensare che il risultato sia stato "aiutato".
+Una lezione utile: in statistica, un esperimento troppo perfetto è un campanello d'allarme.
+</Curiosita>
+
+<Esempio titolo="Perché è importante">
+L'ago di Buffon è uno dei primi esempi di **metodo Monte Carlo**: usare il caso, ripetuto tantissime volte, per calcolare un numero.
+Oggi metodi di questo tipo si usano in fisica, finanza e meteorologia.
+</Esempio>

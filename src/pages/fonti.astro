@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+import { lezioniPubblicate, pubblicati } from '../lib/contenuti';
+const gruppi = [
+  { nome: 'Lezioni', base: '/libro/', voci: await lezioniPubblicate() },
+  { nome: 'Curiosità', base: '/curiosita/', voci: await pubblicati('curiosita') },
+  { nome: 'Storia', base: '/storia/', voci: await pubblicati('storia') },
+  { nome: 'Esperimenti', base: '/esperimenti/', voci: await pubblicati('esperimenti') },
+].map((g) => ({ ...g, voci: g.voci.filter((v: any) => v.data.fonti?.length) }));
+---
+<Base titolo="Fonti e crediti" descrizione="Tutte le fonti citate su FriendlyMath, i siti che ci ispirano e le librerie usate.">
+  <section class="contenitore stretto">
+    <h1>📚 Fonti e crediti</h1>
+    <p>Su FriendlyMath ogni curiosità, scheda storica ed esperimento cita le proprie fonti. Qui le trovi tutte insieme.
+    I testi del sito sono originali.</p>
+
+    <h2>Siti che ci ispirano</h2>
+    <p>Ottime risorse italiane, che consigliamo come approfondimento. Non ne copiamo i contenuti.</p>
+    <ul>
+      <li><a href="https://matepratica.it" rel="noopener">matepratica.it</a></li>
+      <li><a href="https://www.youmath.it" rel="noopener">youmath.it</a></li>
+      <li><a href="https://www.matematika.it" rel="noopener">matematika.it</a></li>
+    </ul>
+
+    {gruppi.map((g) => g.voci.length > 0 && (
+      <>
+        <h2>{g.nome}</h2>
+        {g.voci.map((v: any) => (
+          <div class="voce">
+            <h3><a href={`${g.base}${v.id}/`}>{v.data.titolo}</a></h3>
+            <ul>{v.data.fonti.map((f: any) => <li>{f.autore && <>{f.autore}, </>}<a href={f.url} rel="noopener">{f.titolo}</a>, {f.editore} <span class="tenue">({f.consultato})</span></li>)}</ul>
+          </div>
+        ))}
+      </>
+    ))}
+
+    <h2>Strumenti</h2>
+    <ul>
+      <li><a href="https://astro.build">Astro</a> (MIT) per costruire il sito</li>
+      <li><a href="https://katex.org">KaTeX</a> (MIT) per le formule</li>
+      <li><a href="https://jsxgraph.org">JSXGraph</a> (LGPL/MIT) per la geometria interattiva</li>
+      <li><a href="https://github.com/hizzgdev/jsmind">jsMind</a> (BSD-3-Clause) per le mappe mentali</li>
+    </ul>
+  </section>
+</Base>
+<style>.voce h3 { font-size: 1.05rem; margin-bottom: .2rem; }</style>
