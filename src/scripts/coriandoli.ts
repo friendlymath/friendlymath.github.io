@@ -1,6 +1,8 @@
+import { movimentoRidotto } from '../lib/studio';
+
 /** Coriandoli di festa: piccola animazione su canvas, saltata se l'utente preferisce meno movimento. */
 export function coriandoli(origine?: HTMLElement) {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (movimentoRidotto()) return;
   const cv = document.createElement('canvas');
   cv.setAttribute('aria-hidden', 'true');
   Object.assign(cv.style, { position: 'fixed', inset: '0', width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: '50' });

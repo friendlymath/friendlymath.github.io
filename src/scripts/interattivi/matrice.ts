@@ -1,3 +1,4 @@
+import { movimentoRidotto } from '../../lib/studio';
 /** Una matrice 2×2 come trasformazione del piano: la griglia si deforma con continuità. */
 export function monta(area: HTMLElement) {
   const preset: Record<string, number[]> = { 'Identità': [1, 0, 0, 1], 'Rotazione 90°': [0, -1, 1, 0], 'Taglio': [1, 1, 0, 1], 'Ingrandimento ×2': [2, 0, 0, 2], 'Riflessione': [-1, 0, 0, 1], 'Schiacciamento': [1.5, 0, 0, 0.5] };
@@ -29,7 +30,7 @@ export function monta(area: HTMLElement) {
   };
   const vaiA = (m: number[]) => {
     cancelAnimationFrame(anim);
-    const da = [...cur], t0 = performance.now(), dur = matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 900;
+    const da = [...cur], t0 = performance.now(), dur = movimentoRidotto() ? 1 : 900;
     const passo = (ora: number) => {
       const s = Math.min(1, (ora - t0) / dur), e = s < .5 ? 2 * s * s : 1 - (-2 * s + 2) ** 2 / 2;
       cur = da.map((v, i) => v + (m[i] - v) * e); disegna();

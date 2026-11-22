@@ -274,6 +274,7 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
 <script type="application/json" id="nodi-mappa" set:html={JSON.stringify(nodi.map((n) => ({ id: n.id, x: n.x, y: n.y, regione: n.regione, guardiano: n.guardiano })))} />
 
 <script>
+  import { movimentoRidotto } from '../lib/studio';
   import { carica, statoStanza, regioneAperta, gradoAttuale, type StanzaRif } from '../lib/progresso';
   import { grado } from '../lib/mondo';
   import { caricaEroe, avatarInterno } from '../lib/eroe';
@@ -360,7 +361,7 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
     volo = requestAnimationFrame(passo);
   };
   const giaVisto = (() => { try { return sessionStorage.getItem('friendlymath:volo') === '1'; } catch { return true; } })();
-  if (!giaVisto && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (!giaVisto && !movimentoRidotto()) {
     centra(W / 2, H / 2, Math.max(W, H * proporzione()));
     setTimeout(() => vola(qui.x + 120, qui.y - 120, larghezzaIniziale()), 700);
     try { sessionStorage.setItem('friendlymath:volo', '1'); } catch {}
@@ -404,7 +405,7 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
   svg.addEventListener('pointerup', fine); svg.addEventListener('pointercancel', fine);
   svg.addEventListener('wheel', (e) => { e.preventDefault(); const c = aSvg(e.clientX, e.clientY); zoom(e.deltaY > 0 ? 1.15 : 1 / 1.15, c.x, c.y); }, { passive: false });
   radice.querySelectorAll<HTMLButtonElement>('[data-zoom]').forEach((b) => b.addEventListener('click', () => zoom(Number(b.dataset.zoom) > 0 ? 1 / 1.3 : 1.3)));
-  const ridotto = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ridotto = () => movimentoRidotto();
   radice.querySelector('[data-centra]')!.addEventListener('click', () => ridotto() ? centra(qui.x, qui.y, Math.min(vb.w, 900)) : vola(qui.x, qui.y, Math.min(vb.w, 900), 900));
   radice.querySelector('[data-tutto]')!.addEventListener('click', () => ridotto() ? centra(W / 2, H / 2, Math.max(W, H * proporzione())) : vola(W / 2, H / 2, Math.max(W, H * proporzione()), 900));
   radice.querySelector<SVGSVGElement>('[data-minimappa]')!.addEventListener('click', (e) => {

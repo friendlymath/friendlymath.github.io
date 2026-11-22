@@ -16,6 +16,7 @@ export const SEZIONI = [
     { href: '/esperimenti/', testo: 'Esperimenti', nota: 'simulazioni da provare' },
   ] },
   { gruppo: 'Aiuto', icona: '🧭', voci: [
+    { href: '/studio/', testo: 'Il tuo modo di studiare', nota: 'lettura facilitata, strumenti, focus: adatta il sito a te' },
     { href: '/guida/', testo: 'Guida del sito', nota: 'come funziona tutto' },
     { href: '/faq/', testo: 'Domande frequenti', nota: 'privacy, salvataggi, gradi' },
     { href: '/fonti/', testo: 'Fonti e crediti', nota: 'tutte le fonti citate' },

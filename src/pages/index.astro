@@ -69,6 +69,11 @@ const curiosita = (await pubblicati('curiosita')).slice(0, 3);
       <a class="scheda sezione" href="/palestra/" style="--c:var(--pericolo)"><span class="sez-icona">🏋️</span><b>Vai in palestra</b><span class="tenue">Formule smontate pezzo per pezzo ed esercizi infiniti da stampare.</span></a>
       <a class="scheda sezione" href="/eroe/" style="--c:var(--magia)"><span class="sez-icona">🎲</span><b>Crea il tuo eroe</b><span class="tenue">Corpo, classe e caratteristiche, come in un gioco di ruolo.</span></a>
     </div>
+    <aside class="scheda invito-studio">
+      <p><b>⚙️ Ogni mente impara a modo suo.</b> Dislessia, discalculia, disgrafia, ADHD, autismo, o semplicemente un giorno di stanchezza:
+      in <a href="/studio/">Il tuo modo di studiare</a> puoi ingrandire e distanziare il testo, farti leggere le lezioni, avere calcolatrice e tavola pitagorica sempre a portata,
+      dividere le lezioni in piccoli passi. <span class="tenue">🔒 Le tue scelte restano solo su questo dispositivo: nessuno, nemmeno chi gestisce il sito, può vederle.</span></p>
+    </aside>
   </section>
 
   <section class="contenitore">
@@ -167,4 +172,5 @@ const curiosita = (await pubblicati('curiosita')).slice(0, 3);
   .trio :global(img) { margin-right: -14px; }
   .faccia.emoji { font-size: 3.4rem; }
   .privacy { margin-top: 2.5rem; }
+  .invito-studio { margin-top: 1.2rem; border-left: 8px solid var(--fiducia); }
 </style>

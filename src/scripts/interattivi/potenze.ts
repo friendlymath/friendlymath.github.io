@@ -1,3 +1,4 @@
+import { movimentoRidotto } from '../../lib/studio';
 /** Crescita esplosiva: 2ⁿ contro 2·n, con le colonne che crescono. */
 export function monta(area: HTMLElement) {
   let n = 5;
@@ -23,7 +24,7 @@ export function monta(area: HTMLElement) {
   const inp = area.querySelector<HTMLInputElement>('[data-n]')!;
   inp.addEventListener('input', () => { n = Number(inp.value); disegna(); });
   area.querySelector('[data-anima]')!.addEventListener('click', () => {
-    n = 1; let t = setInterval(() => { inp.value = String(n); disegna(); if (++n > 20) clearInterval(t); }, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 280);
+    n = 1; let t = setInterval(() => { inp.value = String(n); disegna(); if (++n > 20) clearInterval(t); }, movimentoRidotto() ? 0 : 280);
   });
   disegna();
 }

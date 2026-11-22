@@ -48,9 +48,23 @@ const altroHref = contesto === 'libro' ? `/cammino/${lezione.id}/` : `/libro/${l
 
     {d.scenaStanza && <StanzaLoci ambiente={d.scenaStanza.ambiente} loci={d.scenaStanza.loci} nome={d.nomeStanza} contesto={contesto} />}
 
+    <aside class="box cosa-farai" aria-label="Cosa farai">
+      <p class="box-titolo">📋 Cosa farai in questa lezione</p>
+      <ol data-cosa-farai></ol>
+      <p class="tenue">Alla fine c’è una sfida con domande. Puoi riprovare quante volte vuoi.</p>
+    </aside>
+
     <div class="prosa">
       <slot />
     </div>
+    <nav class="passi-focus" data-passi-focus hidden aria-label="Passi della lezione">
+      <div class="barra" aria-hidden="true"><span data-barra></span></div>
+      <div class="pulsanti">
+        <button type="button" class="btn vuoto" data-indietro>← Indietro</button>
+        <span data-conta aria-live="polite"></span>
+        <button type="button" class="btn" data-avanti>Avanti →</button>
+      </div>
+    </nav>
 
     {d.prerequisiti.length > 0 && <p class="tenue">Prima di questa lezione è utile: {d.prerequisiti.map((p, i) => <>{i > 0 && ', '}<a href={`/${contesto}/${p}/`}>{p.split('/').pop()}</a></>)}</p>}
 
@@ -96,6 +110,39 @@ const altroHref = contesto === 'libro' ? `/cammino/${lezione.id}/` : `/libro/${l
   }
   aggiorna();
   document.addEventListener('friendlymath:progresso', aggiorna);
+
+  // «Cosa farai»: l'elenco dei passi, dai titoli della lezione
+  import { ha } from '../lib/studio';
+  const prosa = document.querySelector<HTMLElement>('.prosa');
+  const titoli = prosa ? [...prosa.querySelectorAll<HTMLElement>(':scope > h2')] : [];
+  const elenco = document.querySelector('[data-cosa-farai]');
+  if (elenco) for (const h of titoli) { const li = document.createElement('li'); li.textContent = h.textContent!.replace(/[#¶]/g, '').trim(); elenco.appendChild(li); }
+
+  // Modalità focus: un passo alla volta (diviso ai titoli di secondo livello)
+  if (prosa && ha('focus') && titoli.length > 1) {
+    const passi: HTMLElement[][] = [[]];
+    for (const el of [...prosa.children] as HTMLElement[]) {
+      if (el.tagName === 'H2' && passi[passi.length - 1].length) passi.push([]);
+      passi[passi.length - 1].push(el);
+    }
+    const nav = document.querySelector<HTMLElement>('[data-passi-focus]')!;
+    const conta = nav.querySelector<HTMLElement>('[data-conta]')!;
+    const barra = nav.querySelector<HTMLElement>('[data-barra]')!;
+    const indietro = nav.querySelector<HTMLButtonElement>('[data-indietro]')!;
+    const avanti = nav.querySelector<HTMLButtonElement>('[data-avanti]')!;
+    let i = 0;
+    const mostra = (scorri: boolean) => {
+      passi.forEach((gr, k) => gr.forEach((el) => el.classList.toggle('nascosto-focus', k !== i)));
+      conta.textContent = `Passo ${i + 1} di ${passi.length}`;
+      barra.style.width = `${((i + 1) / passi.length) * 100}%`;
+      indietro.disabled = i === 0; avanti.disabled = i === passi.length - 1;
+      if (scorri) prosa.scrollIntoView({ block: 'start' });
+    };
+    nav.hidden = false;
+    indietro.addEventListener('click', () => { i = Math.max(0, i - 1); mostra(true); });
+    avanti.addEventListener('click', () => { i = Math.min(passi.length - 1, i + 1); mostra(true); });
+    mostra(false);
+  }
 </script>
 
 <style>
@@ -112,4 +159,9 @@ const altroHref = contesto === 'libro' ? `/cammino/${lezione.id}/` : `/libro/${l
   :global(.lezione.bloccata .sfida) { opacity: .55; pointer-events: none; }
   .naviga { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: 2.5rem; }
   .altro { margin-top: 1rem; }
+  .passi-focus { position: sticky; bottom: 60px; z-index: 5; background: var(--superficie); border: 2px solid var(--oro); border-radius: var(--raggio); padding: .6rem .8rem; margin-top: 1rem; box-shadow: 0 6px 18px rgba(0,0,0,.18); }
+  .passi-focus .barra { height: 8px; background: var(--superficie-2); border-radius: 999px; overflow: hidden; margin-bottom: .5rem; }
+  .passi-focus .barra span { display: block; height: 100%; background: var(--successo); }
+  .passi-focus .pulsanti { display: flex; justify-content: space-between; align-items: center; gap: .5rem; font-weight: 800; }
+  .passi-focus button:disabled { opacity: .4; }
 </style>

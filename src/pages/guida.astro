@@ -7,7 +7,7 @@ import Ritratto from '../components/arte/Ritratto.astro';
 import { GRADI, DISTRATTORI } from '../lib/mondo';
 const indice = [
   ['inizio', '🚀', 'Da dove comincio'], ['libro', '📖', 'Il Libro'], ['cammino', '🗺️', 'Il Cammino'], ['mappa', '🎮', 'Comandi della mappa'],
-  ['stanza', '🚪', "Com'è fatta una stanza"], ['loci', '🏛️', 'Il palazzo della memoria'], ['palestra', '🏋️', 'La Palestra'], ['eroe', '🎲', 'Il tuo eroe'], ['gradi', '🛡️', 'Gradi e Guardiani'], ['distrattori', '🎭', 'I Distrattori'],
+  ['stanza', '🚪', "Com'è fatta una stanza"], ['loci', '🏛️', 'Il palazzo della memoria'], ['palestra', '🏋️', 'La Palestra'], ['studio', '⚙️', 'Il tuo modo di studiare'], ['eroe', '🎲', 'Il tuo eroe'], ['gradi', '🛡️', 'Gradi e Guardiani'], ['distrattori', '🎭', 'I Distrattori'],
   ['zaino', '🎒', 'Zaino e Pergamena'], ['legenda', '🔣', 'Legenda dei simboli'], ['adulti', '👩‍🏫', 'Per genitori e insegnanti'],
 ];
 ---
@@ -108,6 +108,20 @@ const indice = [
           <li><b>Stampa la scheda</b>: esercizi con lo spazio per i calcoli e, su un foglio a parte, le soluzioni. Dalla finestra di stampa puoi anche salvarla in PDF.</li>
           <li><b>Scarica (.txt)</b>: esercizi e soluzioni in un file di testo.</li>
         </ul>
+      </section>
+
+      <section id="studio" class="capitolo">
+        <h2>⚙️ Il tuo modo di studiare</h2>
+        <p>Dal pulsante <b>Aa</b> in alto, o dalla pagina <a href="/studio/">Il tuo modo di studiare</a>, adatti il sito a te. Puoi partire da un profilo
+        (dislessia, discalculia, disgrafia e disortografia, ADHD, autismo) che accende le regolazioni consigliate, e poi accendere o spegnere ciascuna regolazione:</p>
+        <ul>
+          <li><b>Testo ad alta leggibilità</b>, <b>Leggimi</b> (🔊 la voce del dispositivo legge la lezione) e <b>righello di lettura</b> (📏).</li>
+          <li><b>Strumenti di calcolo</b> (🧮): calcolatrice, tavola pitagorica e formulario, in basso a sinistra.</li>
+          <li><b>Sfide più brevi</b> e <b>tastierino grande</b> per le risposte numeriche.</li>
+          <li><b>Modalità focus</b>: la lezione si divide in passi, con Avanti e Indietro e una barra di avanzamento.</li>
+          <li><b>Niente movimenti a sorpresa</b> e <b>linguaggio diretto</b>, con l’elenco di cosa farai all’inizio di ogni lezione.</li>
+        </ul>
+        <p>🔒 Il profilo di studio resta solo nel tuo browser e <b>non entra nella Pergamena</b>. Chi gestisce il sito non può sapere se hai una neurodivergenza.</p>
       </section>
 
       <section id="eroe" class="capitolo">

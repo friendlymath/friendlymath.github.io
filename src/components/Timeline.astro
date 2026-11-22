@@ -33,13 +33,14 @@ const tappe = [...TIMELINE].sort((a, b) => a.anno - b.anno);
   </ol>
 </section>
 <script>
+  import { movimentoRidotto } from '../lib/studio';
   const r = document.querySelector<HTMLElement>('[data-linea]')!;
   const tappe = [...r.querySelectorAll<HTMLElement>('.tappa')];
   r.querySelectorAll<HTMLButtonElement>('[data-era]').forEach((b) => b.addEventListener('click', () => {
     r.querySelectorAll('.filtro').forEach((x) => x.classList.toggle('attivo', x === b));
     tappe.forEach((t) => (t.hidden = b.dataset.era !== 'tutte' && t.dataset.eraTappa !== b.dataset.era));
   }));
-  if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if ('IntersectionObserver' in window && !movimentoRidotto()) {
     const io = new IntersectionObserver((voci) => voci.forEach((v) => { if (v.isIntersecting) { v.target.classList.add('vista'); io.unobserve(v.target); } }), { rootMargin: '0px 0px -10% 0px' });
     tappe.forEach((t) => { t.classList.add('nascosta'); io.observe(t); });
   }

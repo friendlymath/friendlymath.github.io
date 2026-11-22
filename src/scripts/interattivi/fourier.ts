@@ -1,3 +1,4 @@
+import { movimentoRidotto } from '../../lib/studio';
 /** Serie di Fourier: un'onda quadra costruita sommando sinusoidi, con gli epicicli che girano. */
 export function monta(area: HTMLElement) {
   let N = 3, t = 0, anim = 0;
@@ -36,7 +37,7 @@ export function monta(area: HTMLElement) {
   };
   inp.addEventListener('input', () => { N = Number(inp.value); scia.length = 0; testo(); });
   testo();
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { for (let i = 0; i < 380; i++) { t += 0.025; disegna(); } }
+  if (movimentoRidotto()) { for (let i = 0; i < 380; i++) { t += 0.025; disegna(); } }
   else {
     const io = new IntersectionObserver(([e]) => { cancelAnimationFrame(anim); if (e.isIntersecting) anim = requestAnimationFrame(ciclo); });
     io.observe(cv);

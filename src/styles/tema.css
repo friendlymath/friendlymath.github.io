@@ -194,3 +194,33 @@ a:hover { color: var(--gioco); }
 :root[data-theme="dark"] a:not(.btn) { color: var(--oro-chiaro); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) a:not(.btn) { color: var(--oro-chiaro); } }
 input, select, button { font-family: var(--font-ui); }
+
+/* ===== Il tuo modo di studiare (regolazioni attivate dall'utente) ===== */
+
+/* Testo ad alta leggibilità (British Dyslexia Association, Style Guide 2023) */
+:root[data-a-leggibile] {
+  --font: "Nunito Variable", Verdana, Tahoma, Arial, sans-serif;
+  --font-titoli: "Nunito Variable", Verdana, Tahoma, Arial, sans-serif;
+  --sfondo: #fbf3df; --superficie: #fffaf0; --superficie-2: #f6ecd4; --testo: #1f2333;
+}
+:root[data-a-leggibile] body { background-image: none; font-size: 1.22rem; line-height: 1.65; letter-spacing: .035em; word-spacing: .16em; }
+:root[data-a-leggibile] h1, :root[data-a-leggibile] h2, :root[data-a-leggibile] h3, :root[data-a-leggibile] .btn,
+:root[data-a-leggibile] .pillola, :root[data-a-leggibile] .box-titolo { font-variant: normal; text-transform: none; letter-spacing: .02em; }
+:root[data-a-leggibile] h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); text-shadow: none; }
+:root[data-a-leggibile] em, :root[data-a-leggibile] i, :root[data-a-leggibile] cite { font-style: normal; font-weight: 700; }
+:root[data-a-leggibile] .prosa, :root[data-a-leggibile] .stretto { max-width: 40rem; }
+:root[data-a-leggibile] .prosa p, :root[data-a-leggibile] .prosa li { text-align: left; margin-bottom: 1em; }
+:root[data-a-leggibile] .scheda, :root[data-a-leggibile] .box:not(.scena) { background-image: none !important; }
+:root[data-a-leggibile] .scena .fumetto { font-style: normal; }
+:root[data-a-leggibile][data-theme="dark"] { --sfondo: #1c1a17; --superficie: #26231e; --superficie-2: #2f2b25; --testo: #f2ead8; }
+
+/* Niente movimenti a sorpresa */
+:root[data-a-calmo] *, :root[data-a-calmo] *::before, :root[data-a-calmo] *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+
+/* Linguaggio diretto: niente scene di storia */
+:root[data-a-letterale] .scena, :root[data-a-letterale] .solo-cammino.motto, :root[data-a-letterale] .riga-distrattore { display: none !important; }
+.cosa-farai { display: none; }
+:root[data-a-letterale] .cosa-farai, :root[data-a-focus] .cosa-farai { display: block; }
+
+/* Modalità focus */
+:root[data-a-focus] .prosa > .nascosto-focus { display: none !important; }

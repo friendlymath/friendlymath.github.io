@@ -1,0 +1,143 @@
+---
+/** Strumenti compensativi a comparsa: Leggimi, righello di lettura, calcolatrice, tavola pitagorica, formulario. */
+import katex from 'katex';
+import { FORMULE } from '../lib/palestra';
+const formulario = FORMULE.map((f) => ({ titolo: f.titolo, slug: f.slug, html: katex.renderToString(f.membri.map((m) => m.tex).join(' '), { throwOnError: false }) }));
+---
+<div class="dock" data-dock aria-label="Strumenti di studio">
+  <button type="button" class="dock-btn solo-leggimi" data-leggimi aria-pressed="false" title="Leggimi ad alta voce">🔊<span> Leggimi</span></button>
+  <button type="button" class="dock-btn solo-righello" data-righello aria-pressed="false" title="Righello di lettura">📏<span> Righello</span></button>
+  <button type="button" class="dock-btn solo-strumenti" data-apri-strumenti aria-expanded="false" title="Calcolatrice, tavola pitagorica, formulario">🧮<span> Strumenti</span></button>
+  <a class="dock-btn" href="/studio/" title="Il tuo modo di studiare">⚙️<span class="sr-only"> Il tuo modo di studiare</span></a>
+</div>
+
+<div class="righello-velo" data-velo aria-hidden="true" hidden><div class="fascia" data-fascia></div></div>
+
+<section class="cassetta" data-cassetta hidden aria-label="Strumenti di calcolo">
+  <div class="cassetta-testa">
+    <div role="tablist" class="schede-cassetta">
+      <button type="button" role="tab" aria-selected="true" data-tab="calc">🧮 Calcolatrice</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="tavola">✖️ Tavola pitagorica</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="formule">📜 Formulario</button>
+    </div>
+    <button type="button" class="chiudi-cassetta" data-chiudi-cassetta aria-label="Chiudi">✕</button>
+  </div>
+  <div data-pannello="calc">
+    <label class="sr-only" for="calc-in">Espressione</label>
+    <input id="calc-in" type="text" inputmode="decimal" autocomplete="off" placeholder="Per esempio: 3,5 × (2 + 4)" data-calc-in />
+    <p class="calc-out" aria-live="polite" data-calc-out>= </p>
+    <div class="tasti" data-tasti>
+      {['7', '8', '9', '÷', '4', '5', '6', '×', '1', '2', '3', '−', '0', ',', '(', ')', '^', 'C', '⌫', '+'].map((t) => <button type="button" data-t={t}>{t}</button>)}
+    </div>
+  </div>
+  <div data-pannello="tavola" hidden>
+    <table class="tavola"><tr><th>×</th>{Array.from({ length: 10 }, (_, i) => <th>{i + 1}</th>)}</tr>
+      {Array.from({ length: 10 }, (_, r) => <tr><th>{r + 1}</th>{Array.from({ length: 10 }, (_, c) => <td class={r === c ? 'quad' : ''}>{(r + 1) * (c + 1)}</td>)}</tr>)}
+    </table>
+  </div>
+  <div data-pannello="formule" hidden>
+    <ul class="formulario">{formulario.map((f) => <li><a href={`/palestra/${f.slug}/`}>{f.titolo}</a><div set:html={f.html} /></li>)}</ul>
+  </div>
+</section>
+
+<script>
+  import { calcola } from '../lib/calcolatrice';
+  const dock = document.querySelector<HTMLElement>('[data-dock]')!;
+
+  // --- Leggimi (sintesi vocale del dispositivo) ---
+  const btnL = dock.querySelector<HTMLButtonElement>('[data-leggimi]')!;
+  const testoDaLeggere = () => {
+    const radice = document.querySelector('.prosa')?.closest('article') ?? document.querySelector('main')!;
+    const copia = radice.cloneNode(true) as HTMLElement;
+    copia.querySelectorAll('.katex-html, script, style, svg, .stanza-loci, [aria-hidden="true"], .sr-only, nav, .scena').forEach((n) => n.remove());
+    copia.querySelectorAll('input, button').forEach((n) => n.remove());
+    return (copia.innerText || copia.textContent || '').replace(/\s+/g, ' ').trim();
+  };
+  let parlando = false;
+  btnL.addEventListener('click', () => {
+    if (!('speechSynthesis' in window)) { alert('Questo browser non ha la sintesi vocale.'); return; }
+    if (parlando) { speechSynthesis.cancel(); return; }
+    const testo = testoDaLeggere();
+    const voce = speechSynthesis.getVoices().find((v) => v.lang?.toLowerCase().startsWith('it'));
+    // spezza in frasi: i browser interrompono le letture troppo lunghe
+    const frasi = testo.match(/[^.!?]+[.!?]*/g) ?? [testo];
+    frasi.forEach((f, i) => {
+      const u = new SpeechSynthesisUtterance(f.trim());
+      u.lang = 'it-IT'; if (voce) u.voice = voce; u.rate = 0.95;
+      if (i === 0) u.onstart = () => { parlando = true; btnL.setAttribute('aria-pressed', 'true'); };
+      if (i === frasi.length - 1) u.onend = () => { parlando = false; btnL.setAttribute('aria-pressed', 'false'); };
+      speechSynthesis.speak(u);
+    });
+  });
+  addEventListener('pagehide', () => { try { speechSynthesis.cancel(); } catch {} });
+
+  // --- Righello di lettura ---
+  const velo = document.querySelector<HTMLElement>('[data-velo]')!;
+  const fascia = velo.querySelector<HTMLElement>('[data-fascia]')!;
+  const btnR = dock.querySelector<HTMLButtonElement>('[data-righello]')!;
+  const muovi = (y: number) => { fascia.style.top = `${y - 28}px`; };
+  btnR.addEventListener('click', () => {
+    velo.hidden = !velo.hidden;
+    btnR.setAttribute('aria-pressed', String(!velo.hidden));
+    muovi(innerHeight / 2);
+  });
+  addEventListener('pointermove', (e) => { if (!velo.hidden) muovi(e.clientY); }, { passive: true });
+  addEventListener('touchmove', (e) => { if (!velo.hidden) muovi(e.touches[0].clientY); }, { passive: true });
+
+  // --- Cassetta degli strumenti ---
+  const cassetta = document.querySelector<HTMLElement>('[data-cassetta]')!;
+  const btnS = dock.querySelector<HTMLButtonElement>('[data-apri-strumenti]')!;
+  const apri = (aperta: boolean) => { cassetta.hidden = !aperta; btnS.setAttribute('aria-expanded', String(aperta)); if (aperta) cassetta.querySelector<HTMLInputElement>('[data-calc-in]')?.focus(); };
+  btnS.addEventListener('click', () => apri(cassetta.hidden));
+  cassetta.querySelector('[data-chiudi-cassetta]')!.addEventListener('click', () => apri(false));
+  cassetta.querySelectorAll<HTMLButtonElement>('[data-tab]').forEach((b) => b.addEventListener('click', () => {
+    cassetta.querySelectorAll('[data-tab]').forEach((x) => x.setAttribute('aria-selected', String(x === b)));
+    cassetta.querySelectorAll<HTMLElement>('[data-pannello]').forEach((p) => (p.hidden = p.dataset.pannello !== b.dataset.tab));
+  }));
+  const inp = cassetta.querySelector<HTMLInputElement>('[data-calc-in]')!;
+  const out = cassetta.querySelector<HTMLElement>('[data-calc-out]')!;
+  const aggiorna = () => {
+    if (!inp.value.trim()) { out.textContent = '= '; return; }
+    const r = calcola(inp.value);
+    out.textContent = r === null ? '= …' : `= ${r.toLocaleString('it-IT', { maximumFractionDigits: 8 })}`;
+  };
+  inp.addEventListener('input', aggiorna);
+  cassetta.querySelectorAll<HTMLButtonElement>('[data-t]').forEach((b) => b.addEventListener('click', () => {
+    const t = b.dataset.t!;
+    if (t === 'C') inp.value = ''; else if (t === '⌫') inp.value = inp.value.slice(0, -1); else inp.value += t;
+    aggiorna();
+  }));
+</script>
+
+<style>
+  .dock { position: fixed; left: 12px; bottom: 12px; z-index: 25; display: flex; gap: .35rem; flex-wrap: wrap; max-width: calc(100vw - 24px); }
+  .dock-btn { font: inherit; font-weight: 800; font-family: var(--font-ui); display: inline-flex; align-items: center; gap: .3rem; padding: .45rem .75rem; border-radius: 999px; border: 2px solid var(--oro); background: #2b1a10; color: #f3e3bd !important; cursor: pointer; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,.3); }
+  .dock-btn[aria-pressed="true"], .dock-btn[aria-expanded="true"] { background: var(--oro); color: #2b1a10 !important; }
+  .solo-leggimi, .solo-righello, .solo-strumenti { display: none; }
+  :global(:root[data-a-leggimi]) .solo-leggimi, :global(:root[data-a-righello]) .solo-righello, :global(:root[data-a-strumenti]) .solo-strumenti { display: inline-flex; }
+  :global(:root:not([data-a-leggimi]):not([data-a-righello]):not([data-a-strumenti])) .dock-btn { opacity: .75; padding: .4rem .55rem; }
+  @media (max-width: 560px) { .dock-btn span:not(.sr-only) { display: none; } }
+
+  .righello-velo { position: fixed; inset: 0; z-index: 24; pointer-events: none; }
+  .fascia { position: absolute; left: 0; right: 0; height: 56px; box-shadow: 0 0 0 100vmax rgba(20,15,10,.45); border-top: 2px solid var(--oro); border-bottom: 2px solid var(--oro); }
+
+  .cassetta { position: fixed; left: 12px; bottom: 64px; z-index: 26; width: min(380px, calc(100vw - 24px)); max-height: min(70svh, 560px); overflow: auto; background: var(--superficie); color: var(--testo); border: 3px solid var(--oro); border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,.35); padding: .8rem; font-family: var(--font-ui); }
+  .cassetta-testa { display: flex; justify-content: space-between; align-items: flex-start; gap: .4rem; }
+  .schede-cassetta { display: flex; flex-wrap: wrap; gap: .25rem; }
+  .schede-cassetta button { font: inherit; font-size: .85rem; font-weight: 800; border: 2px solid var(--bordo); background: var(--superficie-2); color: var(--testo); border-radius: 999px; padding: .25rem .6rem; cursor: pointer; }
+  .schede-cassetta button[aria-selected="true"] { background: var(--fiducia); color: #fff; border-color: var(--fiducia); }
+  .chiudi-cassetta { border: 0; background: none; font-size: 1.1rem; cursor: pointer; color: var(--testo); }
+  [data-calc-in] { width: 100%; font: inherit; font-size: 1.3rem; padding: .5rem .7rem; margin-top: .6rem; border-radius: 10px; border: 2px solid var(--bordo); background: #fff; color: #1f2333; }
+  .calc-out { font-size: 1.6rem; font-weight: 800; text-align: right; margin: .3rem 0; min-height: 1.4em; }
+  .tasti { display: grid; grid-template-columns: repeat(4, 1fr); gap: .3rem; }
+  .tasti button { font: inherit; font-size: 1.25rem; font-weight: 800; padding: .55rem 0; border-radius: 10px; border: 2px solid var(--bordo); background: var(--superficie-2); color: var(--testo); cursor: pointer; }
+  .tasti button:active { transform: translateY(2px); }
+  .tavola { border-collapse: collapse; width: 100%; margin-top: .6rem; font-size: .95rem; text-align: center; }
+  .tavola th, .tavola td { border: 1px solid var(--bordo); padding: .2rem; }
+  .tavola th { background: var(--superficie-2); }
+  .tavola .quad { background: var(--curiosita-bg); font-weight: 800; }
+  .formulario { list-style: none; padding: 0; margin: .6rem 0 0; display: grid; gap: .4rem; }
+  .formulario li { background: var(--superficie-2); border-radius: 10px; padding: .4rem .6rem; }
+  .formulario a { font-weight: 800; }
+  .formulario :global(.katex) { font-size: 1.05em; }
+</style>

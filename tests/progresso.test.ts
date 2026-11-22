@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   progressoVuoto, carica, salva, completa, battiGuardiano, gradoAttuale,
   regioneAperta, statoStanza, esportaPergamena, importaPergamena, unisci,
-  CHIAVE, type Progresso,
+  CHIAVE, assegnaStelle, type Progresso,
 } from '../src/lib/progresso';
 
 function finto(iniziale: Record<string, string> = {}): Storage {
@@ -99,6 +99,23 @@ describe('statoStanza', () => {
   });
   it('slug sconosciuto → bloccata', () => {
     expect(statoStanza(progressoVuoto(), stanze, 'zzz')).toBe('bloccata');
+  });
+});
+
+describe('stelle', () => {
+  it('tiene il risultato migliore e resta tra 1 e 3', () => {
+    let p = assegnaStelle(progressoVuoto(), 'a1', 2);
+    p = assegnaStelle(p, 'a1', 1);
+    expect(p.stelle).toEqual({ a1: 2 });
+    p = assegnaStelle(p, 'a1', 7);
+    expect(p.stelle).toEqual({ a1: 3 });
+  });
+  it('viaggiano nella Pergamena e si uniscono prendendo il massimo', () => {
+    const a = assegnaStelle(progressoVuoto(), 'a1', 1);
+    const r = importaPergamena(esportaPergamena(a));
+    expect(r.ok && r.progresso.stelle).toEqual({ a1: 1 });
+    const u = unisci(a, assegnaStelle(progressoVuoto(), 'a1', 3));
+    expect(u.stelle).toEqual({ a1: 3 });
   });
 });
 

@@ -8,6 +8,7 @@ import 'katex/dist/katex.min.css';
 import Intestazione from '../components/Intestazione.astro';
 import PiePagina from '../components/PiePagina.astro';
 import Promemoria from '../components/Promemoria.astro';
+import StrumentiStudio from '../components/StrumentiStudio.astro';
 import { TEXTURE } from '../lib/texture';
 const varTexture = `:root{${Object.entries(TEXTURE).map(([k, v]) => `--tx-${k}:url("${v}")`).join(';')}}`;
 
@@ -29,6 +30,10 @@ const titoloCompleto = titolo === 'FriendlyMath' ? titolo : `${titolo} · Friend
     <style is:inline set:html={varTexture}></style>
     <script is:inline>
       try { const t = localStorage.getItem('friendlymath:tema'); if (t) document.documentElement.dataset.theme = t; } catch {}
+      try {
+        const s = JSON.parse(localStorage.getItem('friendlymath:studio') || '{}');
+        (s.regolazioni || []).forEach(function (r) { if (/^[a-zA-Z]+$/.test(r)) document.documentElement.setAttribute('data-a-' + r.toLowerCase(), ''); });
+      } catch {}
     </script>
   </head>
   <body>
@@ -39,5 +44,6 @@ const titoloCompleto = titolo === 'FriendlyMath' ? titolo : `${titolo} · Friend
     </main>
     <PiePagina />
     <Promemoria />
+    <StrumentiStudio />
   </body>
 </html>

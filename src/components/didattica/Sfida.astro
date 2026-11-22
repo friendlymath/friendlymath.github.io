@@ -37,6 +37,7 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
         </li>
       ))}
     </ol>
+    <p class="nota-breve" hidden></p>
     <div class="riga-azioni">
       <button class="btn" type="submit">Verifica</button>
       <p class="risultato" aria-live="polite"></p>
@@ -45,7 +46,8 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
 </section>
 
 <script>
-  import { carica, salva, completa, battiGuardiano, gradoAttuale } from '../../lib/progresso';
+  import { carica, salva, completa, battiGuardiano, gradoAttuale, assegnaStelle } from '../../lib/progresso';
+  import { ha } from '../../lib/studio';
   import { grado } from '../../lib/mondo';
   import { coriandoli } from '../../scripts/coriandoli';
 
@@ -57,11 +59,43 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
     const slug = art?.dataset.lezione ?? location.pathname;
     const guardiano = Number(art?.dataset.guardiano) || 0;
     if (carica().completate.includes(slug)) box.classList.add('superata');
+    let tentativi = 0;
+
+    // Sfide più brevi: stesso obiettivo, meno domande (misura dispensativa)
+    const tutte = [...box.querySelectorAll<HTMLElement>('.domanda')];
+    if (ha('sfideBrevi') && tutte.length >= 3) {
+      const tieni = Math.max(2, Math.ceil(tutte.length * 0.6));
+      tutte.slice(tieni).forEach((d) => { d.hidden = true; d.classList.add('dispensata'); });
+      const nota = box.querySelector<HTMLElement>('.nota-breve')!;
+      nota.hidden = false;
+      nota.innerHTML = `✂️ Sfida breve: ${tieni} domande su ${tutte.length}. <a href="/studio/">Cambia in «Il tuo modo di studiare»</a>`;
+    }
+
+    // Tastierino grande per le risposte numeriche
+    if (ha('tastierino')) {
+      box.querySelectorAll<HTMLInputElement>('.numero input').forEach((inp) => {
+        inp.setAttribute('inputmode', 'none');
+        const t = document.createElement('div');
+        t.className = 'tastierino';
+        for (const k of ['7', '8', '9', '4', '5', '6', '1', '2', '3', '−', '0', ',', '⌫']) {
+          const b = document.createElement('button');
+          b.type = 'button'; b.textContent = k; b.setAttribute('aria-label', k === '⌫' ? 'Cancella' : k === '−' ? 'meno' : k);
+          b.addEventListener('click', () => {
+            if (k === '⌫') inp.value = inp.value.slice(0, -1);
+            else if (k === '−') inp.value = inp.value.startsWith('-') ? inp.value.slice(1) : '-' + inp.value;
+            else inp.value += k;
+          });
+          t.appendChild(b);
+        }
+        inp.closest('label')!.after(t);
+      });
+    }
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       let giuste = 0;
-      const domande = [...box.querySelectorAll<HTMLElement>('.domanda')];
+      const domande = [...box.querySelectorAll<HTMLElement>('.domanda:not(.dispensata)')];
+      tentativi++;
       for (const d of domande) {
         const atteso = d.dataset.risposta!;
         const tol = Number(d.dataset.tolleranza) || 0;
@@ -85,13 +119,15 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
         let p = carica();
         const gradoPrima = gradoAttuale(p);
         p = completa(p, slug);
+        p = assegnaStelle(p, slug, 4 - Math.min(3, tentativi));
         const inCammino = !!box.closest('[data-contesto="cammino"]');
         if (guardiano && inCammino) p = battiGuardiano(p, guardiano);
         const salvato = salva(p);
         box.classList.add('superata');
         coriandoli(box);
         const gradoDopo = gradoAttuale(p);
-        let msg = '🏆 Sfida superata! La Nebbia si dirada.';
+        const stelle = 4 - Math.min(3, tentativi);
+        let msg = `🏆 Sfida superata! ${'⭐'.repeat(stelle)} La Nebbia si dirada.`;
         if (gradoDopo > gradoPrima) {
           msg = `🎉 Guardiano sconfitto! Ora sei ${grado(gradoDopo).nome}.`;
           document.dispatchEvent(new CustomEvent('friendlymath:grado', { detail: { grado: gradoDopo } }));
@@ -125,5 +161,9 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
   .spiegazione { margin: .3rem 0 0; font-size: .95rem; }
   .riga-azioni { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; }
   .risultato { font-weight: 800; margin: 0; }
+  .nota-breve { font-size: .92rem; margin: 0 0 .6rem; }
+  .tastierino { display: grid; grid-template-columns: repeat(3, 3.4rem); gap: .35rem; margin-top: .5rem; }
+  .tastierino button { font: inherit; font-family: var(--font-ui); font-size: 1.4rem; font-weight: 800; padding: .5rem 0; border-radius: 10px; border: 2px solid var(--bordo); background: var(--superficie); color: var(--testo); cursor: pointer; }
+  .tastierino button:active { transform: translateY(2px); }
   :global(.sfida.superata) { border-color: var(--successo); }
 </style>

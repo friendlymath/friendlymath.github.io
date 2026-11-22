@@ -1,3 +1,4 @@
+import { movimentoRidotto } from '../../lib/studio';
 /** Una ruota che rotola: dopo un giro ha percorso π volte il diametro. */
 export function monta(area: HTMLElement) {
   area.innerHTML = `<div class="ru"><svg viewBox="0 0 440 170" data-svg role="img" aria-label="Una ruota di diametro 1 rotola e srotola la sua circonferenza"></svg>
@@ -23,7 +24,7 @@ export function monta(area: HTMLElement) {
   };
   const via = () => {
     cancelAnimationFrame(anim);
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { t = 1; disegna(); return; }
+    if (movimentoRidotto()) { t = 1; disegna(); return; }
     const inizio = performance.now();
     const passo = (ora: number) => { t = Math.min(1, (ora - inizio) / 3000); disegna(); if (t < 1) anim = requestAnimationFrame(passo); };
     anim = requestAnimationFrame(passo);

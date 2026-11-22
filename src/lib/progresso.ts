@@ -18,6 +18,8 @@ export type Progresso = {
   aggiornato: string;
   /** il personaggio: viaggia nella Pergamena, ma vive in una chiave a parte del browser */
   eroe?: Eroe;
+  /** stelle per lezione (1–3): miglior risultato al primo tentativo */
+  stelle?: Record<string, number>;
 };
 
 /** `grado` qui è il numero della regione; il Guardiano è l'ultima stanza della regione. */
@@ -61,8 +63,24 @@ function valida(o: unknown): EsitoImport {
       badge: unici(r.badge),
       aggiornato: typeof r.aggiornato === 'string' ? r.aggiornato : '',
       ...(validaEroe(r.eroe) ? { eroe: validaEroe(r.eroe)! } : {}),
+      ...(validaStelle(r.stelle) ? { stelle: validaStelle(r.stelle)! } : {}),
     },
   };
+}
+
+function validaStelle(x: unknown): Record<string, number> | null {
+  if (typeof x !== 'object' || x === null || Array.isArray(x)) return null;
+  const out: Record<string, number> = {};
+  for (const [k, v] of Object.entries(x)) if (typeof k === 'string' && Number.isInteger(v) && (v as number) >= 1 && (v as number) <= 3) out[k] = v as number;
+  return out;
+}
+
+/** Registra le stelle di una lezione tenendo il risultato migliore. */
+export function assegnaStelle(p: Progresso, slug: string, n: number): Progresso {
+  const v = Math.max(1, Math.min(3, Math.round(n)));
+  const prima = p.stelle?.[slug] ?? 0;
+  if (v <= prima) return p;
+  return { ...p, stelle: { ...(p.stelle ?? {}), [slug]: v }, aggiornato: ora() };
 }
 
 function storageDefault(): Storage | null {
@@ -88,7 +106,7 @@ export function carica(storage: Storage | null = storageDefault()): Progresso {
 export function salva(p: Progresso, storage: Storage | null = storageDefault()): boolean {
   if (!storage) return false;
   try {
-    storage.setItem(CHIAVE, JSON.stringify({ app: 'friendlymath', versione: VERSIONE, ...p }));
+    storage.setItem(CHIAVE, esportaPergamena(p));
     return true;
   } catch {
     return false;
@@ -134,8 +152,15 @@ export function statoStanza(p: Progresso, stanze: StanzaRif[], slug: string): St
   return 'bloccata';
 }
 
+/** Solo i campi previsti: nessun altro dato (per esempio il profilo di studio) può finire nel file. */
 export function esportaPergamena(p: Progresso): string {
-  return JSON.stringify({ app: 'friendlymath', versione: VERSIONE, ...p, aggiornato: p.aggiornato || ora() }, null, 2);
+  const { completate, guardiani, badge, stelle, eroe } = p;
+  return JSON.stringify({
+    app: 'friendlymath', versione: VERSIONE, completate, guardiani, badge,
+    ...(stelle && Object.keys(stelle).length ? { stelle } : {}),
+    ...(eroe ? { eroe } : {}),
+    aggiornato: p.aggiornato || ora(),
+  }, null, 2);
 }
 
 export function importaPergamena(testo: string): EsitoImport {
@@ -150,8 +175,11 @@ export function importaPergamena(testo: string): EsitoImport {
 
 export function unisci(a: Progresso, b: Progresso): Progresso {
   const eroe = b.eroe ?? a.eroe;
+  const stelle: Record<string, number> = { ...(a.stelle ?? {}) };
+  for (const [k, v] of Object.entries(b.stelle ?? {})) stelle[k] = Math.max(stelle[k] ?? 0, v);
   return {
     ...(eroe ? { eroe } : {}),
+    ...(Object.keys(stelle).length ? { stelle } : {}),
     completate: unici([...a.completate, ...b.completate]),
     guardiani: unici([...a.guardiani, ...b.guardiani]),
     badge: unici([...a.badge, ...b.badge]),
