@@ -71,8 +71,8 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
     <g id="mondo-disegno">
       <!-- mare -->
       <rect width={LARGHEZZA} height={ALTEZZA} fill="url(#mare)" />
-      <rect width={LARGHEZZA} height={ALTEZZA} fill="url(#onde)" />
-      <rect width={LARGHEZZA} height={ALTEZZA} fill="url(#tx-acqua)" opacity=".55" />
+      <rect x="-120" width={LARGHEZZA + 240} height={ALTEZZA} fill="url(#onde)" class="onde-anim" />
+      <rect x="-200" width={LARGHEZZA + 400} height={ALTEZZA} fill="url(#tx-acqua)" opacity=".55" class="acqua-anim" />
       <!-- cielo magico in alto a destra -->
       <path d="M1100 0H1600V300C1500 260 1380 250 1260 230S1120 120 1100 0z" fill="url(#cieloTerra)" opacity=".95" />
       {stelle.map(([x, y], i) => <circle cx={x} cy={y} r={i % 3 ? 1.8 : 3} fill="#fff3b0" class={i % 2 ? 'scintilla' : ''} />)}
@@ -202,6 +202,19 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
         </a>
       ))}
 
+      <!-- nuvole in volo, con la loro ombra sul terreno -->
+      <g class="nuvole-volo" pointer-events="none">
+        {[[0, 180, 1, 0], [1, 520, .8, -22], [2, 760, 1.2, -48], [3, 330, .7, -70]].map(([i, y, k, ritardo]) => (
+          <g class={`nuvola-volo nv${i}`} style={`animation-delay:${ritardo}s`}>
+            <ellipse cx="0" cy={y + 70} rx={90 * k} ry={18 * k} fill="#1b1430" opacity=".12" />
+            <g transform={`translate(0 ${y}) scale(${k})`} opacity=".92">
+              <ellipse rx="80" ry="24" fill="#fff" /><ellipse cx="-34" cy="-14" rx="40" ry="26" fill="#fff" /><ellipse cx="22" cy="-20" rx="46" ry="30" fill="#fff" /><ellipse cx="60" cy="-4" rx="30" ry="18" fill="#f3f6ff" />
+            </g>
+          </g>
+        ))}
+        <g class="stormo"><path d="M0 0q8-8 16 0q8-8 16 0M40 18q6-6 12 0q6-6 12 0M-30 26q6-6 12 0q6-6 12 0" stroke="#2b1d14" stroke-width="2.5" fill="none" stroke-linecap="round" /></g>
+      </g>
+
       <!-- l'eroe -->
       <g class="eroe" data-eroe transform="translate(150 880)">
         <g class="salta">
@@ -226,7 +239,7 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
     <div class="hud-risorsa" title="Stanze conquistate"><span aria-hidden="true">🚩</span><span data-hud-stanze>0/0</span></div>
     <div class="hud-risorsa" title="Guardiani sconfitti"><span aria-hidden="true">🐉</span><span data-hud-guardiani>0/6</span></div>
     <a class="hud-btn" href="/eroe/" title="Il tuo personaggio">🎲<span class="hud-testo"> Eroe</span></a>
-    <a class="hud-btn" href="/zaino/" title="Zaino dell'eroe">🎒<span class="hud-testo"> Zaino</span></a>
+    <a class="hud-btn salva-hud" href="/zaino/#pergamena" title="Salva la Pergamena sul tuo dispositivo" data-salva-hud>💾<span class="hud-testo"> Salva</span><span class="ns-hud" data-ns-hud hidden>!</span></a>
     <a class="hud-btn" href="/guida/#mappa" title="Come si gioca">❓<span class="hud-testo"> Guida</span></a>
   </div>
 
@@ -264,6 +277,7 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
   import { carica, statoStanza, regioneAperta, gradoAttuale, type StanzaRif } from '../lib/progresso';
   import { grado } from '../lib/mondo';
   import { caricaEroe, avatarInterno } from '../lib/eroe';
+  import { daSalvare } from '../lib/salvataggio';
 
   const radice = document.querySelector<HTMLElement>('[data-gioco]')!;
   const svg = radice.querySelector<SVGSVGElement>('[data-mondo]')!;
@@ -283,6 +297,8 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
   for (const a of radice.querySelectorAll<SVGAElement>('[data-nodo]')) {
     if (!regioneAperta(p, Number(a.dataset.regioneNodo)) && !a.classList.contains('fortezza')) a.classList.add('sotto-nebbia');
   }
+  const nsHud = radice.querySelector<HTMLElement>('[data-ns-hud]')!;
+  nsHud.hidden = !daSalvare();
   const g = grado(gradoAttuale(p));
   radice.querySelector('[data-hud-grado]')!.textContent = g.nome;
   radice.querySelector('[data-hud-icona]')!.textContent = g.icona;
@@ -327,8 +343,30 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
     const nw = vb.w * f, nh = nw / proporzione();
     vb.x = cx - (cx - vb.x) * (nw / vb.w); vb.y = cy - (cy - vb.y) * (nh / vb.h); vb.w = nw; applica();
   };
-  const iniziale = () => centra(qui.x + 120, qui.y - 120, svg.clientWidth < 700 ? 620 : 1050);
-  iniziale();
+  const larghezzaIniziale = () => (svg.clientWidth < 700 ? 620 : 1050);
+  const iniziale = () => centra(qui.x + 120, qui.y - 120, larghezzaIniziale());
+  /** volo morbido della telecamera verso un punto (easing), interrotto se l'utente tocca la mappa */
+  let volo = 0;
+  const vola = (x: number, y: number, w: number, durata = 2400) => {
+    cancelAnimationFrame(volo);
+    const da = { ...vb }, h = w / proporzione(), a = { x: x - w / 2, y: y - h / 2, w };
+    const t0 = performance.now();
+    const passo = (ora: number) => {
+      const s = Math.min(1, (ora - t0) / durata), e = 1 - Math.pow(1 - s, 3);
+      vb.x = da.x + (a.x - da.x) * e; vb.y = da.y + (a.y - da.y) * e; vb.w = da.w + (a.w - da.w) * e;
+      applica();
+      if (s < 1) volo = requestAnimationFrame(passo);
+    };
+    volo = requestAnimationFrame(passo);
+  };
+  const giaVisto = (() => { try { return sessionStorage.getItem('friendlymath:volo') === '1'; } catch { return true; } })();
+  if (!giaVisto && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    centra(W / 2, H / 2, Math.max(W, H * proporzione()));
+    setTimeout(() => vola(qui.x + 120, qui.y - 120, larghezzaIniziale()), 700);
+    try { sessionStorage.setItem('friendlymath:volo', '1'); } catch {}
+  } else iniziale();
+  svg.addEventListener('pointerdown', () => cancelAnimationFrame(volo));
+  svg.addEventListener('wheel', () => cancelAnimationFrame(volo), { passive: true });
   addEventListener('resize', () => applica());
 
   const aSvg = (cx: number, cy: number) => {
@@ -366,8 +404,9 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
   svg.addEventListener('pointerup', fine); svg.addEventListener('pointercancel', fine);
   svg.addEventListener('wheel', (e) => { e.preventDefault(); const c = aSvg(e.clientX, e.clientY); zoom(e.deltaY > 0 ? 1.15 : 1 / 1.15, c.x, c.y); }, { passive: false });
   radice.querySelectorAll<HTMLButtonElement>('[data-zoom]').forEach((b) => b.addEventListener('click', () => zoom(Number(b.dataset.zoom) > 0 ? 1 / 1.3 : 1.3)));
-  radice.querySelector('[data-centra]')!.addEventListener('click', () => centra(qui.x, qui.y, Math.min(vb.w, 900)));
-  radice.querySelector('[data-tutto]')!.addEventListener('click', () => centra(W / 2, H / 2, Math.max(W, H * proporzione())));
+  const ridotto = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  radice.querySelector('[data-centra]')!.addEventListener('click', () => ridotto() ? centra(qui.x, qui.y, Math.min(vb.w, 900)) : vola(qui.x, qui.y, Math.min(vb.w, 900), 900));
+  radice.querySelector('[data-tutto]')!.addEventListener('click', () => ridotto() ? centra(W / 2, H / 2, Math.max(W, H * proporzione())) : vola(W / 2, H / 2, Math.max(W, H * proporzione()), 900));
   radice.querySelector<SVGSVGElement>('[data-minimappa]')!.addEventListener('click', (e) => {
     const r = (e.currentTarget as SVGSVGElement).getBoundingClientRect();
     centra(((e.clientX - r.left) / r.width) * W, ((e.clientY - r.top) / r.height) * H);
@@ -444,11 +483,21 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
     .scintilla { animation: scintilla 2.4s ease-in-out infinite alternate; }
     @keyframes scintilla { to { opacity: .2; } }
     .nebbia-regione > g { animation: respira 8s ease-in-out infinite alternate; }
+    .nuvola-volo { animation: attraversa 80s linear infinite; }
+    .nv1 { animation-duration: 95s; } .nv2 { animation-duration: 70s; } .nv3 { animation-duration: 110s; }
+    @keyframes attraversa { from { transform: translateX(-260px); } to { transform: translateX(1860px); } }
+    .stormo { animation: stormo 45s linear infinite; }
+    @keyframes stormo { from { transform: translate(-100px, 640px); } to { transform: translate(1700px, 120px); } }
+    .acqua-anim { animation: acqua 14s ease-in-out infinite alternate; }
+    .onde-anim { animation: acqua 9s ease-in-out infinite alternate-reverse; }
+    @keyframes acqua { from { transform: translateX(-60px); } to { transform: translateX(60px); } }
     @keyframes respira { to { transform: translateX(14px); } }
   }
   .nebbia-regione { pointer-events: none; transition: opacity .8s; }
   .nebbia-regione.diradata { opacity: 0; }
   .eroe { pointer-events: none; }
+  .nuvola-volo { transform: translateX(-400px); }
+  .stormo { transform: translate(-200px, 0); }
 
   /* HUD */
   .hud { position: absolute; z-index: 2; }
@@ -465,6 +514,9 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
   .hud-risorsa { padding: .45rem .7rem; display: flex; gap: .35rem; align-items: center; font-variant-numeric: tabular-nums; }
   .hud-btn { padding: .45rem .7rem; text-decoration: none; }
   .hud-btn:hover { color: #ffd66b; }
+  .salva-hud { position: relative; }
+  .ns-hud { position: absolute; top: -8px; right: -8px; width: 20px; height: 20px; border-radius: 50%; background: #d64545; color: #fff; font-size: .8rem; display: grid; place-items: center; border: 2px solid #fff; }
+  .ns-hud[hidden] { display: none; }
   .hud-alto .hud-risorsa + .hud-btn { margin-left: auto; }
   .hud-zoom { right: 12px; top: 50%; transform: translateY(-50%); display: grid; gap: .4rem; }
   .hud-zoom button { width: 2.8rem; height: 2.8rem; font-size: 1.2rem; cursor: pointer; }

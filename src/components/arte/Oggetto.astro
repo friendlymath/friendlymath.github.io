@@ -45,7 +45,7 @@ const { tipo } = Astro.props;
 {tipo === 'clessidra' && <g>
   <rect x="-34" y="-128" width="68" height="10" rx="3" fill="#8a5a3c" /><rect x="-34" y="-10" width="68" height="10" rx="3" fill="#8a5a3c" />
   <path d="M-26 -118h52c0 30 -22 38 -22 54s22 24 22 54h-52c0 -30 22 -38 22 -54s-22 -24 -22 -54z" fill="#e7f3fb" stroke="#8a5a3c" stroke-width="3" />
-  <path d="M-14 -100h28l-14 28z" fill="#ffc93c" /><path d="M-20 -12q20 -24 40 0z" fill="#ffc93c" /><path d="M0 -70v50" stroke="#ffc93c" stroke-width="2" stroke-dasharray="3 4" />
+  <path d="M-14 -100h28l-14 28z" fill="#ffc93c" /><path d="M-20 -12q20 -24 40 0z" fill="#ffc93c" /><path d="M0 -70v50" stroke="#ffc93c" stroke-width="2" stroke-dasharray="3 4" class="sabbia" />
 </g>}
 {tipo === 'pizza' && <g>
   <rect x="-60" y="-50" width="120" height="8" fill="#6e4429" /><rect x="-50" y="-42" width="8" height="42" fill="#6e4429" /><rect x="42" y="-42" width="8" height="42" fill="#6e4429" />
@@ -55,7 +55,7 @@ const { tipo } = Astro.props;
 </g>}
 {tipo === 'forno' && <g>
   <path d="M-62 0v-60a62 62 0 0 1 124 0v60z" fill="#b5651d" /><path d="M-62 0v-60a62 62 0 0 1 124 0v60" fill="none" stroke="#7a3f12" stroke-width="4" />
-  <path d="M-28 0v-34a28 28 0 0 1 56 0v34z" fill="#2b1a12" /><path d="M-14 -4q4 -26 14 -30 -2 14 8 20 2 -8 6 -10 2 14 -6 20z" fill="#ffc93c" />
+  <path d="M-28 0v-34a28 28 0 0 1 56 0v34z" fill="#2b1a12" /><path d="M-14 -4q4 -26 14 -30 -2 14 8 20 2 -8 6 -10 2 14 -6 20z" fill="#ffc93c" class="fiamma" />
   <path d="M-40 -90h10M30 -96h10M-10 -112h12M-50 -60h8M42 -56h8" stroke="#7a3f12" stroke-width="3" />
 </g>}
 {tipo === 'mappa' && <g>
@@ -128,7 +128,7 @@ const { tipo } = Astro.props;
 {tipo === 'calderone' && <g>
   <path d="M-36 -14l-10 14M36 -14l10 14" stroke="#2b2b2b" stroke-width="6" />
   <path d="M-58 -70h116q0 66 -58 66t-58 -66z" fill="#2f3340" /><ellipse cy="-70" rx="58" ry="12" fill="#3c4152" /><ellipse cy="-72" rx="50" ry="8" fill="#4caf50" />
-  <circle cx="-16" cy="-86" r="8" fill="#6fd47a" opacity=".8" /><circle cx="12" cy="-96" r="6" fill="#6fd47a" opacity=".7" /><circle cx="2" cy="-112" r="4" fill="#6fd47a" opacity=".6" />
+  <circle cx="-16" cy="-86" r="8" fill="#6fd47a" opacity=".8" class="bolla" /><circle cx="12" cy="-96" r="6" fill="#6fd47a" opacity=".7" class="bolla" style="animation-delay:-.9s" /><circle cx="2" cy="-112" r="4" fill="#6fd47a" opacity=".6" class="bolla" style="animation-delay:-1.7s" />
   <text x="20" y="-80" font-size="16" font-weight="900" fill="#fff">½</text>
 </g>}
 {tipo === 'trono' && <g>

@@ -1,22 +1,30 @@
 ---
-/** Promemoria discreto: al passaggio di grado propone di salvare la Pergamena. */
+/** Promemoria: i progressi si perdono se non si salva la Pergamena sul proprio dispositivo. */
 ---
 <div class="promemoria" data-promemoria role="status" hidden>
-  <p>🎉 <b data-titolo>Nuovo grado!</b> È il momento giusto per <a href="/zaino/">salvare la tua Pergamena</a>.</p>
+  <p class="titolo-prom">💾 <b data-titolo>Salva i tuoi progressi!</b></p>
+  <p class="testo-prom">I progressi restano solo in questo browser: <b>si perdono</b> se cancelli i dati di navigazione, usi la navigazione in incognito o cambi dispositivo.
+  Scarica la tua <b>Pergamena</b> sul PC o sul telefono per non perderli mai.</p>
+  <p class="azioni-prom"><a class="btn gioco" href="/zaino/#pergamena">⬇️ Salva la Pergamena</a> <button type="button" class="btn vuoto" data-dopo>Più tardi</button></p>
   <button type="button" class="chiudi" aria-label="Chiudi" data-chiudi>✕</button>
 </div>
 <script>
   import { grado } from '../lib/mondo';
+  import { daSalvare } from '../lib/salvataggio';
   const box = document.querySelector<HTMLElement>('[data-promemoria]')!;
-  document.addEventListener('friendlymath:grado', (e) => {
-    const g = grado((e as CustomEvent).detail.grado);
-    box.querySelector('[data-titolo]')!.textContent = `Ora sei ${g.nome}!`;
-    box.hidden = false;
-  });
-  box.querySelector('[data-chiudi]')!.addEventListener('click', () => (box.hidden = true));
+  const mostra = (titolo: string) => { box.querySelector('[data-titolo]')!.textContent = titolo; box.hidden = false; };
+  document.addEventListener('friendlymath:grado', (e) => mostra(`Ora sei ${grado((e as CustomEvent).detail.grado).nome}! Salva i progressi.`));
+  document.addEventListener('friendlymath:progresso', () => { if (daSalvare() && box.hidden) mostra('Sfida superata! Salva i tuoi progressi.'); });
+  const chiudi = () => (box.hidden = true);
+  box.querySelector('[data-chiudi]')!.addEventListener('click', chiudi);
+  box.querySelector('[data-dopo]')!.addEventListener('click', chiudi);
 </script>
 <style>
-  .promemoria { position: fixed; left: 16px; right: 16px; bottom: 16px; max-width: 30rem; margin: 0 auto; z-index: 30; background: var(--superficie); border: 3px solid var(--sole); border-radius: var(--raggio); box-shadow: var(--ombra); padding: .6rem 2.6rem .6rem 1rem; }
-  .promemoria p { margin: 0; }
+  .promemoria { position: fixed; left: 16px; right: 16px; bottom: 16px; max-width: 34rem; margin: 0 auto; z-index: 30; background: var(--superficie); border: 3px solid var(--gioco); border-radius: var(--raggio); box-shadow: 0 16px 40px rgba(0,0,0,.25); padding: .8rem 2.6rem .9rem 1rem; }
+  .promemoria p { margin: .2rem 0; }
+  .titolo-prom { font-size: 1.1rem; }
+  .testo-prom { font-size: .92rem; }
+  .azioni-prom { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .5rem !important; }
   .chiudi { position: absolute; top: .4rem; right: .5rem; background: none; border: 0; font-size: 1.1rem; cursor: pointer; color: var(--testo); }
+  @media (prefers-reduced-motion: no-preference) { .promemoria:not([hidden]) { animation: sale .35s ease-out; } @keyframes sale { from { transform: translateY(30px); opacity: 0; } } }
 </style>

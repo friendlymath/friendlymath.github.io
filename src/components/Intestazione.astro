@@ -38,6 +38,7 @@ const qui = Astro.url.pathname;
       <a href="/zaino/" class="zaino" aria-label="Zaino dell'eroe: progressi e Pergamena">
         <span class="mini-avatar" data-mini-avatar aria-hidden="true">🎒</span>
         <span class="zaino-grado pillola" data-grado-attuale>Recluta</span>
+        <span class="non-salvato" data-non-salvato hidden title="Progressi non salvati nella Pergamena">!</span>
       </a>
     </div>
   </div>
@@ -47,6 +48,7 @@ const qui = Astro.url.pathname;
   import { carica, gradoAttuale } from '../lib/progresso';
   import { grado } from '../lib/mondo';
   import { caricaEroe, avatarInterno } from '../lib/eroe';
+  import { daSalvare } from '../lib/salvataggio';
   const aggiorna = () => {
     const g = gradoAttuale(carica());
     const el = document.querySelector('[data-grado-attuale]');
@@ -54,10 +56,13 @@ const qui = Astro.url.pathname;
     const e = caricaEroe();
     const av = document.querySelector<HTMLElement>('[data-mini-avatar]');
     if (av && e) av.innerHTML = `<svg viewBox="22 16 56 56" width="30" height="30">${avatarInterno(e, g)}</svg>`;
+    const ns = document.querySelector<HTMLElement>('[data-non-salvato]');
+    if (ns) ns.hidden = !daSalvare();
   };
   aggiorna();
   document.addEventListener('friendlymath:progresso', aggiorna);
   document.addEventListener('friendlymath:eroe', aggiorna);
+  document.addEventListener('friendlymath:salvato', aggiorna);
 
   document.querySelector('.tema')?.addEventListener('click', () => {
     const r = document.documentElement;
@@ -82,6 +87,10 @@ const qui = Astro.url.pathname;
   .zaino { display: inline-flex; align-items: center; gap: .35rem; text-decoration: none; font-weight: 800; color: var(--testo); padding: .2em .55em .2em .3em; border-radius: 999px; background: var(--fiducia-chiaro); }
   .mini-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--superficie); display: grid; place-items: center; overflow: hidden; }
   .zaino-grado { background: var(--sole); color: #3a2a00; border: 0; }
+  .zaino { position: relative; }
+  .non-salvato { position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; border-radius: 50%; background: var(--pericolo); color: #fff; font-weight: 900; font-size: .8rem; display: grid; place-items: center; border: 2px solid var(--superficie); }
+  .non-salvato[hidden] { display: none; }
+  @media (prefers-reduced-motion: no-preference) { .non-salvato { animation: pulsaNS 1.4s ease-in-out infinite; } @keyframes pulsaNS { 50% { transform: scale(1.2); } } }
 
   .mappa-sito { position: relative; }
   .mappa-sito summary { list-style: none; cursor: pointer; font-weight: 800; padding: .35em .8em; border-radius: 999px; border: 2px solid var(--bordo); white-space: nowrap; display: flex; align-items: center; gap: .2rem; }

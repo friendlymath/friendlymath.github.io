@@ -24,7 +24,12 @@ const lezioni = (await lezioniPubblicate()).map((l) => ({ id: l.id, titolo: l.da
       {GRADI.map((g) => <li data-scala={g.numero} title={`${g.nome} — ${g.regione}`}><Stemma numero={g.numero} taglia={46} /><span class="sr-only">{g.nome}</span></li>)}
     </ol>
 
-    <h2>📜 La Pergamena</h2>
+    <h2 id="pergamena">📜 La Pergamena</h2>
+    <div class="avviso-salva" data-avviso-salva>
+      <p><b>⚠️ Importante: salva la Pergamena sul tuo PC o telefono.</b> I progressi stanno solo in questo browser e <b>si perdono</b> se cancelli i dati di navigazione,
+      se usi la navigazione in incognito o se cambi dispositivo. Senza Pergamena non c'è modo di recuperarli: noi non conserviamo nulla.</p>
+      <p class="stato-salvataggio" data-stato-salvataggio></p>
+    </div>
     <p>I tuoi progressi restano già salvati in questo browser. La <b>Pergamena</b> è un piccolo file che li contiene: scaricala per non perderli
     se cambi dispositivo o browser, o se cancelli i dati di navigazione. Non contiene nessun dato personale. <a href="/faq/#pergamena">Come funziona?</a></p>
     <div class="azioni">
@@ -60,6 +65,7 @@ const lezioni = (await lezioniPubblicate()).map((l) => ({ id: l.id, titolo: l.da
   import { carica, salva, gradoAttuale, esportaPergamena, importaPergamena, unisci, progressoVuoto, type Progresso } from '../lib/progresso';
   import { grado, GRADI } from '../lib/mondo';
   import { caricaEroe, salvaEroe, avatarSvg, nomeClasse } from '../lib/eroe';
+  import { segnaSalvato, ultimoSalvataggio, daSalvare } from '../lib/salvataggio';
 
   const $ = <T extends HTMLElement>(s: string) => document.querySelector<T>(s)!;
   const titoli: { id: string; titolo: string }[] = JSON.parse($('#titoli-lezioni').textContent || '[]');
@@ -113,7 +119,10 @@ const lezioni = (await lezioniPubblicate()).map((l) => ({ id: l.id, titolo: l.da
     a.download = 'pergamena-friendlymath.json';
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-    msg('📜 Pergamena scaricata. Conservala in un posto sicuro (anche una email a te stesso va benissimo).');
+    segnaSalvato();
+    document.dispatchEvent(new CustomEvent('friendlymath:salvato'));
+    mostraStato();
+    msg('📜 Pergamena scaricata. Conservala in un posto sicuro (la cartella Download, un cloud, o una email a te stesso).');
   });
 
   $<HTMLInputElement>('[data-carica]').addEventListener('change', async (e) => {
@@ -142,6 +151,17 @@ const lezioni = (await lezioniPubblicate()).map((l) => ({ id: l.id, titolo: l.da
   $('[data-azzera]').addEventListener('click', () => {
     if (confirm('Vuoi davvero cancellare i progressi salvati in questo browser?')) { applica(progressoVuoto(), 'Progressi cancellati. Si riparte col bastone!'); location.reload(); }
   });
+  function mostraStato() {
+    const u = ultimoSalvataggio();
+    const el = $('[data-stato-salvataggio]');
+    const box = $('[data-avviso-salva]');
+    const pendente = daSalvare();
+    box.classList.toggle('ok', !pendente);
+    el.textContent = u
+      ? `Ultimo salvataggio: ${u.toLocaleString('it-IT', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}. ${pendente ? 'Da allora hai fatto altri progressi: salva di nuovo!' : 'Tutto salvato ✅'}`
+      : (pendente ? 'Non hai ancora mai salvato la Pergamena.' : 'Ancora nessun progresso da salvare.');
+  }
+  mostraStato();
   mostra();
 </script>
 
@@ -156,6 +176,10 @@ const lezioni = (await lezioniPubblicate()).map((l) => ({ id: l.id, titolo: l.da
   .scala li { filter: grayscale(1); opacity: .4; transition: all .3s; }
   .scala li.raggiunto { filter: none; opacity: 1; }
   .azioni { display: flex; flex-wrap: wrap; gap: .6rem; }
+  .avviso-salva { background: var(--attenzione-bg); border: 3px solid var(--attenzione-bd); border-radius: var(--raggio); padding: .8rem 1rem; margin-bottom: 1rem; }
+  .avviso-salva.ok { background: var(--scena-bg); border-color: var(--scena-bd); }
+  .avviso-salva p { margin: .3rem 0; }
+  .stato-salvataggio { font-weight: 800; }
   .carica { cursor: pointer; }
   .carica:focus-within { outline: 3px solid var(--gioco); }
   .scelta { margin-top: 1rem; }
