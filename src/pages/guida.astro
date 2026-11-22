@@ -1,0 +1,177 @@
+---
+import Base from '../layouts/Base.astro';
+import Civetta from '../components/arte/Civetta.astro';
+import Stemma from '../components/arte/Stemma.astro';
+import { GRADI, DISTRATTORI } from '../lib/mondo';
+const indice = [
+  ['inizio', '🚀', 'Da dove comincio'], ['libro', '📖', 'Il Libro'], ['cammino', '🗺️', 'Il Cammino'], ['mappa', '🎮', 'Comandi della mappa'],
+  ['stanza', '🚪', "Com'è fatta una stanza"], ['gradi', '🛡️', 'Gradi e Guardiani'], ['distrattori', '🎭', 'I Distrattori'],
+  ['zaino', '🎒', 'Zaino e Pergamena'], ['legenda', '🔣', 'Legenda dei simboli'], ['adulti', '👩‍🏫', 'Per genitori e insegnanti'],
+];
+---
+<Base titolo="Guida del sito" descrizione="Come si usa FriendlyMath: Libro, Cammino, mappa, stanze, sfide, gradi e Pergamena.">
+  <section class="testa-guida">
+    <div class="contenitore testa-riga">
+      <Civetta taglia={120} />
+      <div>
+        <p class="pillola">🧭 Guida del sito</p>
+        <h1>Come funziona FriendlyMath</h1>
+        <p class="sottotitolo">Cinque minuti di lettura, e poi via nella Nebbia. Se ti perdi, torna qui: Ottavia lascia sempre la porta aperta.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="contenitore guida">
+    <nav class="indice scheda" aria-label="Indice della guida">
+      <p class="indice-titolo">Indice</p>
+      <ol>{indice.map(([id, i, t]) => <li><a href={`#${id}`}><span aria-hidden="true">{i}</span> {t}</a></li>)}</ol>
+    </nav>
+
+    <div class="capitoli">
+      <section id="inizio" class="capitolo">
+        <h2>🚀 Da dove comincio</h2>
+        <div class="griglia g3 passi">
+          <div class="scheda passo"><span class="num">1</span><h3>Scegli la strada</h3><p>In homepage trovi due porte: il <b>Libro</b> per studiare un argomento preciso, il <b>Cammino</b> per un percorso a tappe con una storia.</p></div>
+          <div class="scheda passo"><span class="num">2</span><h3>Leggi, prova, sbaglia</h3><p>Ogni lezione ha esempi pratici, animazioni da toccare e un errore tipico da smascherare. Sbagliare è previsto: è così che si impara.</p></div>
+          <div class="scheda passo"><span class="num">3</span><h3>Supera la sfida</h3><p>Alla fine c'è una sfida. Superala per conquistare la stanza. I progressi si salvano da soli nel tuo browser.</p></div>
+        </div>
+      </section>
+
+      <section id="libro" class="capitolo">
+        <h2>📖 Il Libro</h2>
+        <p>Il Libro è la biblioteca aperta: <b>nessun lucchetto</b>. Gli argomenti sono divisi in otto grandi capitoli (Numeri, Geometria, Algebra, Funzioni e analisi,
+        Probabilità e statistica, Logica e insiemi, Algebra lineare, Strutture avanzate) e poi in sottoargomenti.</p>
+        <ul>
+          <li>Il <b>pallino colorato</b> accanto a ogni lezione indica il livello, dal giallo della Recluta al viola del Cavaliere alato.</li>
+          <li>La ✅ indica le lezioni che hai già completato.</li>
+          <li>Ogni capitolo ha la sua <a href="/mappe/">mappa mentale</a> per vedere tutto in un colpo d'occhio.</li>
+          <li>Nel Libro la sfida si chiama «Mettiti alla prova»: se la superi, la stanza corrispondente del Cammino risulterà già conquistata.</li>
+        </ul>
+      </section>
+
+      <section id="cammino" class="capitolo">
+        <h2>🗺️ Il Cammino</h2>
+        <p>Il Cammino è un'avventura nel <b>Regno di Numeria</b>. Ogni regione corrisponde a un livello di studio; ogni argomento è una <b>stanza</b>
+        (un accampamento sulla mappa); l'ultima stanza di ogni regione è la <b>fortezza del Guardiano</b>.</p>
+        <ul>
+          <li>Dentro una regione le stanze si affrontano <b>in ordine</b>: conquistata una, si apre la successiva.</li>
+          <li>Le regioni non ancora raggiunte sono coperte dalla <b>Nebbia</b>. Si diradano quando sconfiggi il Guardiano della regione precedente.</li>
+          <li><b>Sei già avanti?</b> Le fortezze dei Guardiani si vedono anche attraverso la Nebbia: sfida quella della regione precedente a quella da cui vuoi partire. È la tua prova d'ingresso.</li>
+        </ul>
+      </section>
+
+      <section id="mappa" class="capitolo">
+        <h2>🎮 Comandi della mappa</h2>
+        <div class="tabella-comandi scheda">
+          <div><b>Trascina</b> con mouse o dito</div><div>Esplora la mappa</div>
+          <div><b>Rotellina</b>, <kbd>+</kbd> <kbd>−</kbd> o pizzico con due dita</div><div>Zoom avanti e indietro</div>
+          <div><b>Frecce</b> della tastiera</div><div>Sposta la vista</div>
+          <div>🎯</div><div>Torna dove si trova il tuo eroe («TU»)</div>
+          <div>🗺️</div><div>Mostra tutta la mappa</div>
+          <div><b>Minimappa</b> in basso a destra</div><div>Clicca un punto per andarci</div>
+          <div><b>Clic</b> su un accampamento o una fortezza</div><div>Apre la scheda della tappa, con il pulsante per entrare</div>
+        </div>
+        <p>In alto vedi la <b>barra dell'eroe</b>: grado, stanze conquistate 🚩 e Guardiani sconfitti 🐉. Sotto la mappa c'è sempre la <b>vista elenco</b>, comoda da tastiera o con un lettore di schermo.</p>
+      </section>
+
+      <section id="stanza" class="capitolo">
+        <h2>🚪 Com'è fatta una stanza</h2>
+        <div class="griglia g3">
+          <div class="box scena-demo"><p class="box-titolo">💬 La scena</p><p>Un personaggio racconta cosa succede. Solo nel Cammino.</p></div>
+          <div class="box esempio"><p class="box-titolo">🍕 Esempio pratico</p><p>La matematica nella vita vera: spesa, ricette, scale, sconti.</p></div>
+          <div class="box sfida"><p class="box-titolo">🎮 Interattivo</p><p>Animazioni ed esperimenti da toccare con mano.</p></div>
+          <div class="box attenzione"><p class="box-titolo">⚠️ Errore tipico</p><p>Un Distrattore prova a ingannarti con l'errore più comune.</p></div>
+          <div class="box curiosita"><p class="box-titolo">✨ Lo sapevi?</p><p>Una curiosità o un collegamento, con la fonte.</p></div>
+          <div class="box storia"><p class="box-titolo">⚔️ La sfida</p><p>Domande a scelta o numeriche, con spiegazione. Riprova quante volte vuoi.</p></div>
+        </div>
+      </section>
+
+      <section id="gradi" class="capitolo">
+        <h2>🛡️ Gradi e Guardiani</h2>
+        <div class="griglia g3">
+          {GRADI.map((g) => (
+            <div class="scheda grado">
+              <Stemma numero={g.numero} taglia={56} />
+              <div><h3>{g.numero}. {g.nome}</h3><p class="tenue">{g.regione} · {g.fase}</p><p>Equipaggiamento: {g.equipaggiamento}</p></div>
+            </div>
+          ))}
+        </div>
+        <p>Sali di grado <b>solo</b> sconfiggendo il Guardiano nel Cammino. Al passaggio di grado compare un promemoria per salvare la Pergamena.</p>
+      </section>
+
+      <section id="distrattori" class="capitolo">
+        <h2>🎭 I Distrattori</h2>
+        <p>Non sono cattivi: sono gli errori e le abitudini che ci bloccano, travestiti. Riconoscerli è metà del lavoro.</p>
+        <div class="griglia g3">
+          {Object.values(DISTRATTORI).map((d) => <div class="scheda"><h3>{d.nome.charAt(0).toUpperCase() + d.nome.slice(1)}</h3><p class="tenue">{d.motto}</p></div>)}
+        </div>
+      </section>
+
+      <section id="zaino" class="capitolo">
+        <h2>🎒 Zaino e Pergamena</h2>
+        <p>Nessun account: i progressi restano nel browser che stai usando. Nello <a href="/zaino/">Zaino dell'eroe</a> trovi grado, badge e tappe completate.</p>
+        <ol>
+          <li><b>Salva la Pergamena</b>: scarica un piccolo file <code>.json</code> con i tuoi progressi (nessun dato personale).</li>
+          <li>Su un altro dispositivo, o dopo aver cancellato i dati del browser, premi <b>Riprendi il cammino</b> e scegli il file.</li>
+          <li>Decidi se <b>unire</b> i progressi a quelli attuali o <b>sostituirli</b>.</li>
+        </ol>
+      </section>
+
+      <section id="legenda" class="capitolo">
+        <h2>🔣 Legenda dei simboli</h2>
+        <div class="tabella-comandi scheda">
+          <div>⛺ arancione con bandiera gialla</div><div>Stanza da conquistare (pulsa)</div>
+          <div>⛺ verde</div><div>Stanza conquistata</div>
+          <div>⛺ grigio</div><div>Stanza ancora chiusa</div>
+          <div>🏰 con 🐉</div><div>Fortezza del Guardiano</div>
+          <div>🌫️</div><div>Nebbia: regione non ancora raggiunta o in costruzione</div>
+          <div>✅</div><div>Lezione completata</div>
+          <div>🔗</div><div>Nelle mappe mentali: porta a una lezione o a una scheda</div>
+        </div>
+      </section>
+
+      <section id="adulti" class="capitolo">
+        <h2>👩‍🏫 Per genitori e insegnanti</h2>
+        <ul>
+          <li>Il <b>Libro</b> va bene per ripassare un argomento preciso o per preparare una lezione; il <b>Cammino</b> per chi ha bisogno di motivazione e di un filo da seguire.</li>
+          <li>Le sfide non danno voti: danno <b>spiegazioni</b>. L'obiettivo è che l'errore diventi un indizio, non una condanna.</li>
+          <li>Ogni curiosità, scheda storica ed esperimento ha le sue <a href="/fonti/">fonti</a> verificabili.</li>
+          <li>Il sito non raccoglie dati: si può usare in classe senza registrazioni.</li>
+        </ul>
+        <p><a class="btn gioco" href="/cammino/">Pronto? Inizia il Cammino →</a> <a class="btn vuoto" href="/libro/">Apri il Libro</a></p>
+      </section>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .testa-guida { background: radial-gradient(900px 300px at 20% 0%, var(--scena-bg), transparent 70%); padding: 2rem 0 1rem; }
+  .testa-riga { display: flex; gap: 1.2rem; align-items: center; }
+  .sottotitolo { font-size: 1.15rem; max-width: 42rem; margin-top: 0; }
+  .guida { display: grid; gap: 2rem; }
+  @media (min-width: 980px) { .guida { grid-template-columns: 16rem 1fr; align-items: start; } .indice { position: sticky; top: 84px; } }
+  .indice ol { list-style: none; padding: 0; margin: 0; display: grid; gap: .15rem; }
+  .indice a { display: block; padding: .3rem .5rem; border-radius: var(--raggio-s); text-decoration: none; color: var(--testo); font-weight: 700; }
+  .indice a:hover { background: var(--fiducia-chiaro); color: var(--fiducia); }
+  .indice-titolo { margin: 0 0 .4rem; font-family: var(--font-titoli); font-weight: 800; font-size: 1.15rem; }
+  .capitolo { scroll-margin-top: 84px; margin-bottom: 2.4rem; }
+  .capitolo h2 { margin-top: .5rem; }
+  .passo { position: relative; padding-top: 1.6rem; }
+  .passo .num { position: absolute; top: -14px; left: 16px; width: 34px; height: 34px; border-radius: 50%; background: var(--gioco); color: #fff; font-weight: 900; display: grid; place-items: center; box-shadow: 0 3px 0 rgba(0,0,0,.15); }
+  .passo h3 { margin: 0 0 .3rem; }
+  .passo p { margin: 0; }
+  .passi { margin-top: 1.4rem; }
+  .tabella-comandi { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 0; padding: 0; overflow: hidden; }
+  .tabella-comandi > div { padding: .55rem .9rem; border-bottom: 1px solid var(--bordo); }
+  .tabella-comandi > div:nth-child(odd) { background: var(--superficie-2); font-weight: 700; }
+  .tabella-comandi > div:nth-last-child(-n+2) { border-bottom: 0; }
+  kbd { font: inherit; font-weight: 800; border: 2px solid var(--bordo); border-bottom-width: 4px; border-radius: 6px; padding: 0 .35rem; background: var(--superficie); }
+  .box { margin: 0; height: 100%; }
+  .scena-demo { background: var(--scena-bg); border-color: var(--scena-bd); }
+  .scena-demo .box-titolo { color: var(--scena-tx); }
+  .grado { display: flex; gap: .8rem; align-items: flex-start; }
+  .grado h3 { margin: 0; }
+  .grado p { margin: .1rem 0; }
+  .griglia h3 { margin-top: 0; }
+  @media (max-width: 560px) { .testa-riga :global(svg) { width: 80px; height: 80px; flex: none; } }
+</style>

@@ -124,7 +124,12 @@ h2 { font-size: clamp(1.4rem, 3vw, 1.8rem); margin-top: 1.8em; }
   transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
 a.scheda:hover { transform: translateY(-3px); box-shadow: 0 3px 0 rgba(31,35,51,.08), 0 14px 32px rgba(31,35,51,.12); }
-.griglia { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); }
+.griglia { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); align-items: stretch; }
+.griglia > * { height: 100%; min-width: 0; }
+.griglia.g3, .griglia.g4 { grid-template-columns: 1fr; }
+@media (min-width: 620px) { .griglia.g3, .griglia.g4 { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 900px) { .griglia.g3 { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1000px) { .griglia.g4 { grid-template-columns: repeat(4, 1fr); } }
 .pillola {
   display: inline-block; padding: .1em .65em; border-radius: 999px; font-size: .8rem; font-weight: 800;
   background: var(--superficie-2); color: var(--testo-tenue); border: 1px solid var(--bordo);

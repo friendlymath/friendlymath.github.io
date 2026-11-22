@@ -8,7 +8,7 @@ const mappe = elencoMappe();
     <h1>🧠 Mappe mentali</h1>
     <p class="tenue stretto">Ogni grande argomento ha la sua mappa: apri i rami, chiudili, segui i collegamenti alle lezioni.
     Sono anche file <b>JSON</b> (formato jsMind) che puoi scaricare e riaprire con altri strumenti.</p>
-    <div class="griglia">
+    <div class="griglia g4">
       {mappe.map((m) => (
         m.mappa
           ? <a class="scheda voce" href={`/mappe/${m.slug}/`}><h2>{m.nome}</h2><p class="tenue">{m.descrizione}</p><span class="pillola">Apri la mappa →</span></a>
@@ -18,7 +18,8 @@ const mappe = elencoMappe();
   </section>
 </Base>
 <style>
-  .voce { text-decoration: none; color: var(--testo); display: block; }
+  .voce { text-decoration: none; color: var(--testo); display: flex; flex-direction: column; gap: .3rem; align-items: flex-start; }
+  .voce .pillola { margin-top: auto; }
   .voce h2 { margin: 0 0 .3rem; font-size: 1.2rem; }
   a.voce:hover { border-color: var(--magia); }
   .nebbia { opacity: .65; border-style: dashed; }

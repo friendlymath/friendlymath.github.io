@@ -1,0 +1,31 @@
+---
+/** Un grande libro aperto con formule che ne escono volando. Illustrazione originale. */
+---
+<svg class="libro-aperto" viewBox="0 0 400 300" role="img" aria-label="Un libro aperto da cui escono formule e figure">
+  <ellipse cx="200" cy="276" rx="170" ry="14" fill="rgba(0,0,0,.18)" />
+  <path d="M30 80q85-30 170 0v190q-85-28-170 0z" fill="#fffdf6" stroke="#1f4e9c" stroke-width="5" stroke-linejoin="round" />
+  <path d="M370 80q-85-30-170 0v190q85-28 170 0z" fill="#fffdf6" stroke="#1f4e9c" stroke-width="5" stroke-linejoin="round" />
+  <path d="M30 270q85-28 170 0 85-28 170 0v12q-85-26-170 0-85-26-170 0z" fill="#1f4e9c" />
+  <g stroke="#c9d6ee" stroke-width="3" stroke-linecap="round">
+    <path d="M55 110q60-16 120 0M55 135q60-16 120 0M55 160q60-16 120 0M55 185q60-16 120 0M55 210q60-16 120 0" fill="none" />
+    <path d="M225 110q60-16 120 0M225 135q60-16 120 0M225 160q60-16 120 0" fill="none" />
+  </g>
+  <g transform="translate(230 178)"><path d="M0 60V0l60 60z" fill="#ffc93c" stroke="#1f2333" stroke-width="3" /><rect x="0" y="48" width="12" height="12" fill="none" stroke="#1f2333" stroke-width="2" /></g>
+  <g class="volano" font-family="serif" font-weight="900" font-style="italic">
+    <text x="70" y="60" font-size="34" fill="#f07a2c" class="v1">π</text>
+    <text x="150" y="30" font-size="26" fill="#7b5cd6" class="v2">a²+b²=c²</text>
+    <text x="300" y="50" font-size="34" fill="#1f9d5c" class="v3">½</text>
+    <text x="330" y="105" font-size="26" fill="#d64545" class="v1">√2</text>
+    <text x="20" y="40" font-size="24" fill="#3f7fd8" class="v3">x</text>
+    <text x="250" y="22" font-size="26" fill="#f07a2c" class="v2">∞</text>
+  </g>
+</svg>
+<style>
+  .libro-aperto { width: 100%; height: auto; max-width: 420px; display: block; margin: 0 auto; }
+  @media (prefers-reduced-motion: no-preference) {
+    .volano text { animation: vola 4s ease-in-out infinite alternate; }
+    .volano .v2 { animation-delay: -1.3s; }
+    .volano .v3 { animation-delay: -2.6s; }
+    @keyframes vola { from { transform: translateY(6px); } to { transform: translateY(-8px); } }
+  }
+</style>

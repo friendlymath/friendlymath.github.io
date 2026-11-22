@@ -1,0 +1,473 @@
+---
+/**
+ * La mappa del Cammino in stile gioco di strategia: terre da esplorare, nebbia sulle regioni non ancora aperte,
+ * stanze come accampamenti, Guardiani come fortezze. Grafica originale.
+ */
+import type { Lezione } from '../lib/contenuti';
+import { REGIONI_MAPPA, SENTIERO, LARGHEZZA, ALTEZZA, regioneMappa } from '../lib/mappa-mondo';
+import { GRADI, DISTRATTORI } from '../lib/mondo';
+
+interface Props { stanze: Lezione[] }
+const { stanze } = Astro.props;
+
+// posizione di ogni stanza sulla mappa
+const nodi = stanze.map((s) => {
+  const r = regioneMappa(s.data.regione!);
+  const normali = stanze.filter((x) => x.data.regione === s.data.regione && !x.data.guardiano);
+  const k = normali.findIndex((x) => x.id === s.id);
+  const [x, y] = s.data.guardiano ? r.porta : r.posti[k % r.posti.length];
+  return {
+    id: s.id, x, y, regione: s.data.regione!, guardiano: s.data.guardiano, numero: s.data.stanza!,
+    nome: s.data.nomeStanza ?? s.data.titolo, titolo: s.data.titolo, descrizione: s.data.descrizione,
+    distrattore: s.data.distrattore ? DISTRATTORI[s.data.distrattore].nome : '',
+  };
+});
+const regioniConStanze = new Set(nodi.map((n) => n.regione));
+
+// generatore pseudo-casuale deterministico per le decorazioni
+let seme = 7;
+const caso = () => ((seme = (seme * 16807) % 2147483647) / 2147483647);
+const sparsi = (cx: number, cy: number, rx: number, ry: number, n: number) =>
+  Array.from({ length: n }, () => { const a = caso() * Math.PI * 2, d = Math.sqrt(caso()); return [cx + Math.cos(a) * rx * d, cy + Math.sin(a) * ry * d] as [number, number]; });
+const occupato = (x: number, y: number) => nodi.some((n) => Math.hypot(n.x - x, n.y - y) < 38);
+
+const alberi = sparsi(590, 680, 190, 150, 70).filter(([x, y]) => !occupato(x, y));
+const alberiSparsi = [...sparsi(270, 800, 190, 120, 14), ...sparsi(1130, 760, 170, 120, 12)].filter(([x, y]) => !occupato(x, y));
+const monti = sparsi(870, 420, 170, 140, 16).filter(([x, y]) => !occupato(x, y + 10)).sort((a, b) => a[1] - b[1]);
+const case_ = sparsi(1340, 400, 130, 90, 18).filter(([x, y]) => !occupato(x, y)).sort((a, b) => a[1] - b[1]);
+const nuvole = sparsi(1420, 110, 190, 70, 9);
+const stelle = sparsi(1400, 100, 230, 100, 22);
+---
+<section class="campo-gioco" aria-label="Mappa del Cammino" data-gioco>
+  <svg class="mondo-svg" viewBox={`0 0 ${LARGHEZZA} ${ALTEZZA}`} preserveAspectRatio="xMidYMid meet" data-mondo role="application" aria-roledescription="mappa esplorabile">
+    <defs>
+      <pattern id="onde" width="60" height="30" patternUnits="userSpaceOnUse">
+        <path d="M0 15 q15 -10 30 0 t30 0" stroke="rgba(255,255,255,.35)" stroke-width="2" fill="none" />
+      </pattern>
+      <radialGradient id="mare" cx="50%" cy="50%" r="75%">
+        <stop offset="0" stop-color="#5fb4d9" /><stop offset="1" stop-color="#2a6f9a" />
+      </radialGradient>
+      <linearGradient id="cieloTerra" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#3a2b7a" /><stop offset="1" stop-color="#6f5cc9" />
+      </linearGradient>
+      <filter id="nebbiaF" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="18" /></filter>
+      <filter id="ombra" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="4" stdDeviation="3" flood-opacity=".35" /></filter>
+      <g id="albero"><rect x="-2.5" y="2" width="5" height="9" fill="#5b3a26" /><path d="M0 -18l11 16h-5l8 10h-28l8-10h-5z" fill="#2f7d32" /><path d="M0 -18l11 16h-5l8 10h-14z" fill="#256628" /></g>
+      <g id="alberoTondo"><rect x="-2.5" y="2" width="5" height="9" fill="#5b3a26" /><circle r="11" cy="-4" fill="#4caf50" /><circle r="7" cx="4" cy="-7" fill="#66bb6a" /></g>
+      <g id="monte"><path d="M-46 22l46-62 46 62z" fill="#9c8a7e" /><path d="M0 -40l46 62h-46z" fill="#7d6b60" /><path d="M0 -40l-14 19 7 -3 7 6 7 -6 7 3z" fill="#fff" /></g>
+      <g id="casa"><path d="M-10 8v-12l10-8 10 8v12z" fill="#f4e6cc" stroke="#6b4226" stroke-width="1.5" /><path d="M-13 -3l13-11 13 11" stroke="#b03a2e" stroke-width="5" fill="none" stroke-linejoin="round" /><rect x="-3" y="1" width="6" height="7" fill="#6b4226" /></g>
+    </defs>
+
+    <g id="mondo-disegno">
+      <!-- mare -->
+      <rect width={LARGHEZZA} height={ALTEZZA} fill="url(#mare)" />
+      <rect width={LARGHEZZA} height={ALTEZZA} fill="url(#onde)" />
+      <!-- cielo magico in alto a destra -->
+      <path d="M1100 0H1600V300C1500 260 1380 250 1260 230S1120 120 1100 0z" fill="url(#cieloTerra)" opacity=".95" />
+      {stelle.map(([x, y], i) => <circle cx={x} cy={y} r={i % 3 ? 1.8 : 3} fill="#fff3b0" class={i % 2 ? 'scintilla' : ''} />)}
+      <!-- terraferma -->
+      <path d="M30 990C20 880 80 760 180 680S330 560 420 520 520 420 640 380 720 220 840 170 1020 150 1080 250 1150 330 1180 300 1300 200 1460 250 1560 360 1590 520 1560 640 1520 760 1450 880 1300 990z"
+        fill="#e9d8a6" stroke="#c9b27c" stroke-width="6" />
+      <path d="M60 980C50 880 100 780 200 700S340 590 430 550 540 450 650 410 740 250 850 205 1010 190 1060 280 1150 360 1190 330 1300 235 1440 280 1530 380 1560 530 1530 640 1490 760 1420 870 1290 980z"
+        fill="#a8d672" />
+      <!-- regione 1: pianure e campi -->
+      <path d="M90 960C80 860 140 760 240 720S420 700 470 760 440 900 380 950z" fill="#bfe38a" />
+      {[[120, 900], [190, 930], [330, 920], [400, 880]].map(([x, y]) => (
+        <g transform={`translate(${x} ${y}) rotate(-12)`}><rect x="-26" y="-14" width="52" height="28" rx="3" fill="#e8d36a" /><path d="M-26 -5h52M-26 4h52" stroke="#cdb748" stroke-width="2" /></g>
+      ))}
+      {[[180, 770], [240, 760], [300, 790], [370, 760], [130, 820]].map(([x, y]) => <use href="#casa" x={x} y={y} />)}
+      <!-- regione 2: bosco -->
+      <path d="M430 760C420 640 470 540 590 520S770 560 780 650 700 820 600 830 440 840 430 760z" fill="#6fae4a" />
+      {alberi.sort((a, b) => a[1] - b[1]).map(([x, y]) => <use href="#albero" x={x} y={y} />)}
+      <!-- regione 3: montagne -->
+      <path d="M690 520C680 400 720 290 830 250S1010 270 1040 380 1000 560 900 580 700 600 690 520z" fill="#c9b79c" />
+      {monti.map(([x, y]) => <use href="#monte" x={x} y={y} />)}
+      <!-- regione 4: valle con fiume -->
+      <path d="M990 700C980 600 1060 560 1150 570S1330 610 1340 700 1270 880 1150 890 1000 820 990 700z" fill="#d8ea8c" />
+      <path d="M980 300C1010 420 960 520 1040 600S1160 700 1150 820 1180 950 1230 1000" stroke="#4aa3d6" stroke-width="16" fill="none" stroke-linecap="round" />
+      <path d="M980 300C1010 420 960 520 1040 600S1160 700 1150 820 1180 950 1230 1000" stroke="#8fd0f0" stroke-width="5" fill="none" stroke-dasharray="10 18" class="corrente" />
+      {alberiSparsi.map(([x, y]) => <use href="#alberoTondo" x={x} y={y} />)}
+      <!-- regione 5: città fortificata -->
+      <path d="M1180 420C1170 330 1240 270 1330 270S1500 300 1510 390 1450 520 1340 530 1190 500 1180 420z" fill="#d9cfc0" />
+      <path d="M1215 470L1205 330 1300 290 1460 320 1480 450 1360 505z" fill="none" stroke="#8d7f6c" stroke-width="9" stroke-linejoin="round" />
+      {[[1215, 470], [1205, 330], [1300, 290], [1460, 320], [1480, 450], [1360, 505]].map(([x, y]) => (
+        <g transform={`translate(${x} ${y})`}><rect x="-11" y="-20" width="22" height="26" fill="#a39380" /><path d="M-13 -20h26v-6h-5v4h-5v-4h-6v4h-5v-4h-5z" fill="#8d7f6c" /></g>
+      ))}
+      {case_.map(([x, y]) => <use href="#casa" x={x} y={y} />)}
+      <!-- regione 6: isole nel cielo -->
+      {[[1320, 175, 70], [1450, 150, 90], [1370, 75, 55], [1530, 95, 60]].map(([x, y, w]) => (
+        <g transform={`translate(${x} ${y})`} class="isola"><path d={`M${-w} 0q${w} 18 ${2 * w} 0l-${w * .35} 34q-${w * .3} 22 -${w * .6} 6z`} fill="#8b6fcf" /><ellipse rx={w} ry="12" fill="#b9e49a" /></g>
+      ))}
+      {nuvole.map(([x, y]) => <g transform={`translate(${x} ${y})`} opacity=".9"><ellipse rx="30" ry="10" fill="#fff" /><ellipse cx="-12" cy="-6" rx="14" ry="10" fill="#fff" /><ellipse cx="10" cy="-8" rx="16" ry="12" fill="#fff" /></g>)}
+      <!-- torre dell'infinito -->
+      <g transform="translate(1250 640)" filter="url(#ombra)">
+        <rect x="-16" y="-80" width="32" height="90" fill="#eef3ff" stroke="#3f7fd8" stroke-width="3" />
+        <path d="M-22 -80h44l-22 -34z" fill="#3f7fd8" />
+        <text y="-34" text-anchor="middle" font-size="22" font-weight="900" fill="#3f7fd8">∞</text>
+      </g>
+      <!-- sentiero -->
+      <path d={SENTIERO} stroke="#8a5a3c" stroke-width="13" fill="none" stroke-linecap="round" opacity=".35" />
+      <path d={SENTIERO} stroke="#f6e3b4" stroke-width="8" fill="none" stroke-linecap="round" />
+      <path d={SENTIERO} stroke="#b08850" stroke-width="2.5" fill="none" stroke-dasharray="3 12" stroke-linecap="round" />
+      <!-- rosa dei venti -->
+      <g transform="translate(100 440)" opacity=".9">
+        <circle r="46" fill="#f4e6cc" stroke="#8a5a3c" stroke-width="3" />
+        <path d="M0 -40l9 31 31 9 -31 9 -9 31 -9 -31 -31 -9 31 -9z" fill="#1f4e9c" />
+        <path d="M0 -40l9 31h-18z" fill="#d64545" />
+        <text y="-50" text-anchor="middle" font-size="16" font-weight="900" fill="#5b3a26">N</text>
+      </g>
+      <!-- titolo nel cartiglio -->
+      <g transform="translate(330 300)">
+        <path d="M-150 -26h300l-14 26 14 26h-300l14 -26z" fill="#f4e6cc" stroke="#8a5a3c" stroke-width="3" />
+        <text y="9" text-anchor="middle" font-size="28" font-weight="900" fill="#5b3a26" font-family="var(--font-titoli)">Regno di Numeria</text>
+      </g>
+      <!-- etichette delle regioni -->
+      {REGIONI_MAPPA.map((r) => {
+        const g = GRADI[r.numero - 1];
+        return (
+          <g transform={`translate(${r.etichetta[0]} ${r.etichetta[1]})`} class="etichetta-regione">
+            <rect x={-g.regione.length * 6.2 - 18} y="-19" width={g.regione.length * 12.4 + 36} height="34" rx="17" fill="rgba(31,35,51,.78)" />
+            <text y="5" text-anchor="middle" font-size="19" font-weight="800" fill="#fff">{g.regione.replace(' e Torre dell\'Infinito', '')}</text>
+          </g>
+        );
+      })}
+
+      <!-- nebbia di guerra -->
+      {REGIONI_MAPPA.map((r) => (
+        <g class="nebbia-regione" data-nebbia={r.numero} data-vuota={regioniConStanze.has(r.numero) ? undefined : ''}>
+          <g filter="url(#nebbiaF)">
+            {[[0, 0, 1], [-.55, -.25, .7], [.55, .2, .75], [.1, .55, .6], [-.3, .5, .55], [.4, -.5, .6]].map(([dx, dy, s]) => (
+              <circle cx={r.centro[0] + dx * r.raggioNebbia} cy={r.centro[1] + dy * r.raggioNebbia * .75} r={r.raggioNebbia * s} fill="#eef0f6" opacity=".93" />
+            ))}
+          </g>
+          <text x={r.testoNebbia[0]} y={r.testoNebbia[1]} text-anchor="middle" font-size="22" font-weight="900" fill="#7a8194">
+            {regioniConStanze.has(r.numero) ? '🔒 Terre nella Nebbia' : 'Terre inesplorate'}
+          </text>
+          <text x={r.testoNebbia[0]} y={r.testoNebbia[1] + 26} text-anchor="middle" font-size="15" font-weight="700" fill="#8a90a2">
+            {regioniConStanze.has(r.numero) ? 'Batti il Guardiano precedente' : 'Presto nuove stanze'}
+          </text>
+        </g>
+      ))}
+
+      <!-- stanze e fortezze -->
+      {[...nodi].sort((a, b) => Number(a.guardiano) - Number(b.guardiano)).map((n) => (
+        <a href={`/cammino/${n.id}/`} class={`nodo ${n.guardiano ? 'fortezza' : 'accampamento'}`} data-nodo={n.id} data-regione-nodo={n.regione}
+          aria-label={`${n.guardiano ? 'Guardiano' : 'Stanza'}: ${n.nome}`}
+          data-nome={n.nome} data-titolo={n.titolo} data-descrizione={n.descrizione} data-distrattore={n.distrattore}>
+          <g transform={`translate(${n.x} ${n.y})`}>
+            <circle r={n.guardiano ? 40 : 30} class="alone" />
+            <ellipse cy={n.guardiano ? 22 : 16} rx={n.guardiano ? 30 : 22} ry="7" fill="rgba(0,0,0,.25)" />
+            {n.guardiano ? (
+              <g class="corpo-nodo" filter="url(#ombra)">
+                <rect x="-24" y="-22" width="48" height="42" fill="#7d6b60" />
+                <path d="M-28 -22h56v-10h-8v6h-8v-6h-8v6h-8v-6h-8v6h-8v-6h-8z" fill="#5d4f46" />
+                <rect x="-7" y="2" width="14" height="18" rx="7" fill="#2b2320" />
+                <path d="M0 -32v-26" stroke="#3a2516" stroke-width="3" />
+                <path d="M0 -58l24 7 -24 7z" class="bandiera" />
+                <text y="-6" text-anchor="middle" font-size="18">🐉</text>
+              </g>
+            ) : (
+              <g class="corpo-nodo" filter="url(#ombra)">
+                <path d="M-20 14l20 -34 20 34z" class="tenda" />
+                <path d="M0 -20l-5 34h10z" fill="rgba(0,0,0,.25)" />
+                <path d="M0 -20v-20" stroke="#3a2516" stroke-width="2.5" />
+                <path d="M0 -40l18 5 -18 5z" class="bandiera" />
+                <circle cx="18" cy="12" r="11" fill="#fff" stroke="#1f2333" stroke-width="2" />
+                <text x="18" y="17" text-anchor="middle" font-size="13" font-weight="900" fill="#1f2333">{n.numero}</text>
+              </g>
+            )}
+            <text class="nome-nodo" y={n.guardiano ? 44 : 36} text-anchor="middle">{n.nome}</text>
+          </g>
+        </a>
+      ))}
+
+      <!-- l'eroe -->
+      <g class="eroe" data-eroe transform="translate(150 880)">
+        <g class="salta">
+          <ellipse cy="14" rx="12" ry="4" fill="rgba(0,0,0,.3)" />
+          <circle cy="-30" r="9" fill="#f2c29b" stroke="#1f2333" stroke-width="2" />
+          <path d="M-9 -38q9 -10 18 0" fill="#6b4226" />
+          <path d="M-10 -21h20l3 24h-26z" fill="#f07a2c" stroke="#1f2333" stroke-width="2" />
+          <path d="M14 -40l4 52" stroke="#8a5a3c" stroke-width="4" stroke-linecap="round" />
+          <path d="M-20 -60h40v-0" />
+          <g transform="translate(0 -58)"><rect x="-22" y="-14" width="44" height="18" rx="9" fill="#ffc93c" stroke="#1f2333" stroke-width="2" /><text y="0" text-anchor="middle" font-size="11" font-weight="900" fill="#1f2333">TU</text></g>
+        </g>
+      </g>
+    </g>
+  </svg>
+
+  <!-- HUD -->
+  <div class="hud hud-alto">
+    <div class="hud-eroe">
+      <span class="hud-icona" data-hud-icona aria-hidden="true">🪵</span>
+      <div><p class="hud-etichetta">Grado</p><p class="hud-valore" data-hud-grado>Recluta</p></div>
+    </div>
+    <div class="hud-risorsa" title="Stanze conquistate"><span aria-hidden="true">🚩</span><span data-hud-stanze>0/0</span></div>
+    <div class="hud-risorsa" title="Guardiani sconfitti"><span aria-hidden="true">🐉</span><span data-hud-guardiani>0/6</span></div>
+    <a class="hud-btn" href="/zaino/" title="Zaino dell'eroe">🎒<span class="hud-testo"> Zaino</span></a>
+    <a class="hud-btn" href="/guida/#mappa" title="Come si gioca">❓<span class="hud-testo"> Guida</span></a>
+  </div>
+
+  <div class="hud hud-zoom" role="group" aria-label="Zoom della mappa">
+    <button type="button" data-zoom="1" aria-label="Avvicina">＋</button>
+    <button type="button" data-zoom="-1" aria-label="Allontana">－</button>
+    <button type="button" data-centra aria-label="Centra sull'eroe">🎯</button>
+    <button type="button" data-tutto aria-label="Mostra tutta la mappa">🗺️</button>
+  </div>
+
+  <div class="hud minimappa" aria-hidden="true">
+    <svg viewBox={`0 0 ${LARGHEZZA} ${ALTEZZA}`} data-minimappa>
+      <use href="#mondo-disegno" />
+      <rect class="vista" data-vista x="0" y="0" width="100" height="100" />
+    </svg>
+  </div>
+
+  <div class="pannello" data-pannello hidden role="dialog" aria-live="polite" aria-label="Dettagli della stanza">
+    <button type="button" class="chiudi" data-chiudi-pannello aria-label="Chiudi">✕</button>
+    <p class="pannello-tipo" data-p-tipo></p>
+    <h2 data-p-nome></h2>
+    <p class="pannello-titolo" data-p-titolo></p>
+    <p class="tenue" data-p-descrizione></p>
+    <p class="pannello-distrattore" data-p-distrattore></p>
+    <p class="pannello-stato" data-p-stato></p>
+    <a class="btn gioco" href="#" data-p-entra>Entra nella stanza ⚔️</a>
+  </div>
+
+  <p class="suggerimento-mappa" data-suggerimento>Trascina per esplorare · rotellina o ＋/－ per lo zoom · tocca un accampamento</p>
+</section>
+
+<script type="application/json" id="nodi-mappa" set:html={JSON.stringify(nodi.map((n) => ({ id: n.id, x: n.x, y: n.y, regione: n.regione, guardiano: n.guardiano })))} />
+
+<script>
+  import { carica, statoStanza, regioneAperta, gradoAttuale, type StanzaRif } from '../lib/progresso';
+  import { grado } from '../lib/mondo';
+
+  const radice = document.querySelector<HTMLElement>('[data-gioco]')!;
+  const svg = radice.querySelector<SVGSVGElement>('[data-mondo]')!;
+  const stanze: StanzaRif[] = JSON.parse(document.getElementById('stanze-cammino')?.textContent || '[]');
+  const nodi: { id: string; x: number; y: number; regione: number; guardiano: boolean }[] = JSON.parse(document.getElementById('nodi-mappa')!.textContent || '[]');
+  const W = 1600, H = 1000;
+
+  // --- stato del gioco ---
+  const p = carica();
+  const etichette = { bloccata: '🌫️ Nella Nebbia', aperta: '⚔️ Da conquistare', conquistata: '🚩 Conquistata' } as const;
+  for (const a of radice.querySelectorAll<SVGAElement>('[data-nodo]')) a.dataset.stato = statoStanza(p, stanze, a.dataset.nodo!);
+  for (const n of radice.querySelectorAll<SVGGElement>('[data-nebbia]')) {
+    const r = Number(n.dataset.nebbia);
+    if (n.dataset.vuota === undefined && regioneAperta(p, r)) n.classList.add('diradata');
+  }
+  // nodi coperti dalla nebbia (ma i Guardiani restano visibili: sono la prova d'ingresso)
+  for (const a of radice.querySelectorAll<SVGAElement>('[data-nodo]')) {
+    if (!regioneAperta(p, Number(a.dataset.regioneNodo)) && !a.classList.contains('fortezza')) a.classList.add('sotto-nebbia');
+  }
+  const g = grado(gradoAttuale(p));
+  radice.querySelector('[data-hud-grado]')!.textContent = g.nome;
+  radice.querySelector('[data-hud-icona]')!.textContent = g.icona;
+  radice.querySelector('[data-hud-stanze]')!.textContent = `${stanze.filter((s) => p.completate.includes(s.slug)).length}/${stanze.length}`;
+  radice.querySelector('[data-hud-guardiani]')!.textContent = `${p.guardiani.length}/6`;
+
+  // posizione dell'eroe: la prima stanza da conquistare, altrimenti l'ultima conquistata
+  const aperta = nodi.find((n) => statoStanza(p, stanze, n.id) === 'aperta' && !n.guardiano && regioneAperta(p, n.regione))
+    ?? nodi.find((n) => statoStanza(p, stanze, n.id) === 'aperta');
+  const ultima = [...nodi].reverse().find((n) => p.completate.includes(n.id));
+  const qui = aperta ?? ultima ?? { x: 150, y: 880 };
+  const eroe = radice.querySelector<SVGGElement>('[data-eroe]')!;
+  eroe.setAttribute('transform', `translate(${qui.x - 34} ${qui.y + 4})`);
+
+  // --- vista: pan e zoom con il viewBox ---
+  let vb = { x: 0, y: 0, w: W, h: H };
+  const vista = radice.querySelector<SVGRectElement>('[data-vista]')!;
+  const proporzione = () => svg.clientWidth / Math.max(1, svg.clientHeight);
+  const limita = () => {
+    const maxW = Math.max(W, H * proporzione());
+    vb.w = Math.min(maxW, Math.max(320, vb.w));
+    vb.h = vb.w / proporzione();
+    if (vb.h > H && vb.w >= W) { vb.h = Math.max(H, W / proporzione()); vb.w = vb.h * proporzione(); }
+    vb.x = Math.min(Math.max(vb.x, Math.min(0, W - vb.w)), Math.max(0, W - vb.w));
+    vb.y = Math.min(Math.max(vb.y, Math.min(0, H - vb.h)), Math.max(0, H - vb.h));
+  };
+  const applica = () => {
+    limita();
+    svg.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.w} ${vb.h}`);
+    vista.setAttribute('x', String(vb.x)); vista.setAttribute('y', String(vb.y));
+    vista.setAttribute('width', String(vb.w)); vista.setAttribute('height', String(vb.h));
+  };
+  const centra = (x: number, y: number, w = vb.w) => { vb.w = w; vb.h = w / proporzione(); vb.x = x - vb.w / 2; vb.y = y - vb.h / 2; applica(); };
+  const zoom = (f: number, cx = vb.x + vb.w / 2, cy = vb.y + vb.h / 2) => {
+    const nw = vb.w * f, nh = nw / proporzione();
+    vb.x = cx - (cx - vb.x) * (nw / vb.w); vb.y = cy - (cy - vb.y) * (nh / vb.h); vb.w = nw; applica();
+  };
+  const iniziale = () => centra(qui.x + 120, qui.y - 120, svg.clientWidth < 700 ? 620 : 1050);
+  iniziale();
+  addEventListener('resize', () => applica());
+
+  const aSvg = (cx: number, cy: number) => {
+    const r = svg.getBoundingClientRect();
+    return { x: vb.x + ((cx - r.left) / r.width) * vb.w, y: vb.y + ((cy - r.top) / r.height) * vb.h };
+  };
+  const puntatori = new Map<number, { x: number; y: number }>();
+  let trascinato = 0, distanza0 = 0;
+  svg.addEventListener('pointerdown', (e) => {
+    puntatori.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    trascinato = 0;
+    if (puntatori.size === 2) { const [a, b] = [...puntatori.values()]; distanza0 = Math.hypot(a.x - b.x, a.y - b.y); }
+  });
+  svg.addEventListener('pointermove', (e) => {
+    const prima = puntatori.get(e.pointerId);
+    if (!prima) return;
+    const ora = { x: e.clientX, y: e.clientY };
+    if (puntatori.size === 1) {
+      const r = svg.getBoundingClientRect();
+      const dx = ora.x - prima.x, dy = ora.y - prima.y;
+      trascinato += Math.abs(dx) + Math.abs(dy);
+      if (trascinato > 6) { svg.setPointerCapture(e.pointerId); radice.classList.add('trascina'); }
+      vb.x -= (dx / r.width) * vb.w; vb.y -= (dy / r.height) * vb.h; applica();
+    } else if (puntatori.size === 2) {
+      puntatori.set(e.pointerId, ora);
+      const [a, b] = [...puntatori.values()];
+      const d = Math.hypot(a.x - b.x, a.y - b.y);
+      if (distanza0) { const c = aSvg((a.x + b.x) / 2, (a.y + b.y) / 2); zoom(distanza0 / d, c.x, c.y); }
+      distanza0 = d; trascinato = 99;
+      return;
+    }
+    puntatori.set(e.pointerId, ora);
+  });
+  const fine = (e: PointerEvent) => { puntatori.delete(e.pointerId); radice.classList.remove('trascina'); if (puntatori.size < 2) distanza0 = 0; };
+  svg.addEventListener('pointerup', fine); svg.addEventListener('pointercancel', fine);
+  svg.addEventListener('wheel', (e) => { e.preventDefault(); const c = aSvg(e.clientX, e.clientY); zoom(e.deltaY > 0 ? 1.15 : 1 / 1.15, c.x, c.y); }, { passive: false });
+  radice.querySelectorAll<HTMLButtonElement>('[data-zoom]').forEach((b) => b.addEventListener('click', () => zoom(Number(b.dataset.zoom) > 0 ? 1 / 1.3 : 1.3)));
+  radice.querySelector('[data-centra]')!.addEventListener('click', () => centra(qui.x, qui.y, Math.min(vb.w, 900)));
+  radice.querySelector('[data-tutto]')!.addEventListener('click', () => centra(W / 2, H / 2, Math.max(W, H * proporzione())));
+  radice.querySelector<SVGSVGElement>('[data-minimappa]')!.addEventListener('click', (e) => {
+    const r = (e.currentTarget as SVGSVGElement).getBoundingClientRect();
+    centra(((e.clientX - r.left) / r.width) * W, ((e.clientY - r.top) / r.height) * H);
+  });
+  addEventListener('keydown', (e) => {
+    if (!radice.matches(':hover, :focus-within')) return;
+    const passo = vb.w * .12;
+    const mosse: Record<string, [number, number]> = { ArrowLeft: [-passo, 0], ArrowRight: [passo, 0], ArrowUp: [0, -passo], ArrowDown: [0, passo] };
+    if (mosse[e.key] && !(e.target as HTMLElement).closest('input,textarea')) { e.preventDefault(); vb.x += mosse[e.key][0]; vb.y += mosse[e.key][1]; applica(); }
+    if (e.key === '+' || e.key === '=') zoom(1 / 1.3);
+    if (e.key === '-') zoom(1.3);
+  });
+
+  // --- pannello della stanza ---
+  const pannello = radice.querySelector<HTMLElement>('[data-pannello]')!;
+  const imposta = (sel: string, t: string) => { const el = pannello.querySelector<HTMLElement>(sel)!; el.textContent = t; el.hidden = !t; };
+  for (const a of radice.querySelectorAll<SVGAElement>('[data-nodo]')) {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (trascinato > 6) return;
+      const stato = a.dataset.stato as keyof typeof etichette;
+      const fortezza = a.classList.contains('fortezza');
+      imposta('[data-p-tipo]', fortezza ? `🐉 Fortezza del Guardiano · ${grado(Number(a.dataset.regioneNodo)).regione}` : `⛺ Accampamento · ${grado(Number(a.dataset.regioneNodo)).regione}`);
+      imposta('[data-p-nome]', a.dataset.nome!);
+      imposta('[data-p-titolo]', a.dataset.titolo!);
+      imposta('[data-p-descrizione]', a.dataset.descrizione!);
+      imposta('[data-p-distrattore]', a.dataset.distrattore ? `Occhio: ti aspetta ${a.dataset.distrattore}.` : '');
+      imposta('[data-p-stato]', etichette[stato] + (fortezza && stato !== 'conquistata' ? ' · Battilo per salire di grado!' : ''));
+      const entra = pannello.querySelector<HTMLAnchorElement>('[data-p-entra]')!;
+      entra.href = a.getAttribute('href')!;
+      entra.textContent = stato === 'bloccata' ? 'Sbircia nel Libro 📖' : stato === 'conquistata' ? 'Rigioca la stanza 🔁' : fortezza ? 'Affronta il Guardiano 🐉' : 'Entra nella stanza ⚔️';
+      if (stato === 'bloccata') entra.href = entra.href.replace('/cammino/', '/libro/');
+      pannello.hidden = false;
+      radice.querySelectorAll('.nodo.scelto').forEach((x) => x.classList.remove('scelto'));
+      a.classList.add('scelto');
+      entra.focus({ preventScroll: true });
+    });
+  }
+  radice.querySelector('[data-chiudi-pannello]')!.addEventListener('click', () => { pannello.hidden = true; radice.querySelectorAll('.nodo.scelto').forEach((x) => x.classList.remove('scelto')); });
+  svg.addEventListener('pointerdown', () => radice.querySelector('[data-suggerimento]')?.classList.add('sparito'), { once: true });
+</script>
+
+<style>
+  .campo-gioco { position: relative; height: calc(100svh - 67px); min-height: 520px; overflow: hidden; background: #2a6f9a; border-bottom: 4px solid #8a5a3c; user-select: none; touch-action: none; }
+  .mondo-svg { width: 100%; height: 100%; display: block; cursor: grab; font-family: var(--font); }
+  .campo-gioco.trascina .mondo-svg { cursor: grabbing; }
+
+  /* nodi */
+  .nodo { cursor: pointer; outline: none; }
+  .nodo .alone { fill: rgba(255, 201, 60, 0); stroke: none; }
+  .nodo .nome-nodo { font-size: 15px; font-weight: 800; fill: #1f2333; paint-order: stroke; stroke: #fffaf0; stroke-width: 5px; stroke-linejoin: round; }
+  .nodo .tenda { fill: #b0b6c4; }
+  .nodo .bandiera { fill: #9aa0ad; }
+  .nodo[data-stato="aperta"] .tenda { fill: #f07a2c; }
+  .nodo[data-stato="aperta"] .bandiera { fill: #ffc93c; }
+  .nodo[data-stato="aperta"] .alone { fill: rgba(255, 201, 60, .45); stroke: #ffc93c; stroke-width: 3; }
+  .nodo[data-stato="conquistata"] .tenda { fill: #1f9d5c; }
+  .nodo[data-stato="conquistata"] .bandiera { fill: #1f9d5c; }
+  .fortezza[data-stato="aperta"] .bandiera { fill: #d64545; }
+  .nodo[data-stato="bloccata"] .corpo-nodo { filter: grayscale(.8); opacity: .75; }
+  .nodo:hover .corpo-nodo, .nodo:focus-visible .corpo-nodo, .nodo.scelto .corpo-nodo { transform: translateY(-4px) scale(1.06); }
+  .corpo-nodo { transition: transform .15s ease; transform-box: fill-box; transform-origin: center bottom; }
+  .nodo:focus-visible .alone, .nodo.scelto .alone { fill: rgba(255, 255, 255, .5); stroke: #1f4e9c; stroke-width: 4; }
+  .nodo.sotto-nebbia { visibility: hidden; }
+  @media (prefers-reduced-motion: no-preference) {
+    .nodo[data-stato="aperta"] .alone { animation: alone 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    @keyframes alone { 50% { transform: scale(1.25); opacity: .5; } }
+    .bandiera { animation: sventola 1.2s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: left center; }
+    @keyframes sventola { to { transform: skewY(8deg) scaleX(.88); } }
+    .eroe .salta { animation: salta 1.4s ease-in-out infinite; }
+    @keyframes salta { 50% { transform: translateY(-6px); } }
+    .corrente { animation: scorre 2s linear infinite; }
+    @keyframes scorre { to { stroke-dashoffset: -56; } }
+    .scintilla { animation: scintilla 2.4s ease-in-out infinite alternate; }
+    @keyframes scintilla { to { opacity: .2; } }
+    .nebbia-regione > g { animation: respira 8s ease-in-out infinite alternate; }
+    @keyframes respira { to { transform: translateX(14px); } }
+  }
+  .nebbia-regione { pointer-events: none; transition: opacity .8s; }
+  .nebbia-regione.diradata { opacity: 0; }
+  .eroe { pointer-events: none; }
+
+  /* HUD */
+  .hud { position: absolute; z-index: 2; }
+  .hud-alto { top: 12px; left: 12px; right: 12px; display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; pointer-events: none; }
+  .hud-alto > * { pointer-events: auto; }
+  .hud-eroe, .hud-risorsa, .hud-btn, .hud-zoom button {
+    background: linear-gradient(#3b3f52, #23263a); color: #fff; border: 3px solid #c9a24a; border-radius: 12px;
+    box-shadow: 0 4px 0 rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.2); font-weight: 800;
+  }
+  .hud-eroe { display: flex; align-items: center; gap: .5rem; padding: .25rem .8rem .25rem .35rem; }
+  .hud-icona { width: 2.2rem; height: 2.2rem; border-radius: 50%; background: #ffc93c; display: grid; place-items: center; font-size: 1.2rem; border: 2px solid #fff3; }
+  .hud-etichetta { margin: 0; font-size: .65rem; text-transform: uppercase; letter-spacing: .08em; color: #ffd66b; line-height: 1; }
+  .hud-valore { margin: 0; font-family: var(--font-titoli); font-size: 1.15rem; line-height: 1.1; }
+  .hud-risorsa { padding: .45rem .7rem; display: flex; gap: .35rem; align-items: center; font-variant-numeric: tabular-nums; }
+  .hud-btn { padding: .45rem .7rem; text-decoration: none; }
+  .hud-btn:hover { color: #ffd66b; }
+  .hud-alto .hud-btn:first-of-type { margin-left: auto; }
+  .hud-zoom { right: 12px; top: 50%; transform: translateY(-50%); display: grid; gap: .4rem; }
+  .hud-zoom button { width: 2.8rem; height: 2.8rem; font-size: 1.2rem; cursor: pointer; }
+  .hud-zoom button:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,.35); }
+  .minimappa { right: 12px; bottom: 12px; width: 200px; border: 3px solid #c9a24a; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 0 rgba(0,0,0,.35); background: #2a6f9a; cursor: pointer; }
+  .minimappa svg { display: block; width: 100%; height: auto; }
+  .minimappa :global(.nome-nodo), .minimappa :global(.etichetta-regione), .minimappa :global(.eroe) { display: none; }
+  .vista { fill: rgba(255,255,255,.18); stroke: #ffc93c; stroke-width: 14; }
+
+  .pannello {
+    position: absolute; z-index: 3; left: 12px; bottom: 12px; width: min(360px, calc(100% - 24px));
+    background: #fdf6e3; color: #1f2333; border: 4px solid #8a5a3c; border-radius: 16px; padding: 1rem 1.1rem 1.1rem;
+    box-shadow: 0 8px 0 rgba(0,0,0,.25), 0 20px 40px rgba(0,0,0,.3);
+    background-image: radial-gradient(circle at 20% 10%, rgba(201,162,74,.15), transparent 50%);
+  }
+  .pannello h2 { margin: .1rem 0 .2rem; font-size: 1.5rem; color: #5b3a26; }
+  .pannello .tenue { color: #555c70; }
+  .pannello-tipo { margin: 0; font-size: .8rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: #8a5a3c; }
+  .pannello-titolo { margin: 0; font-weight: 700; }
+  .pannello-distrattore { margin: .3rem 0; font-size: .92rem; color: #a32525; font-weight: 700; }
+  .pannello-stato { font-weight: 800; }
+  .pannello .chiudi { position: absolute; top: .5rem; right: .6rem; border: 0; background: none; font-size: 1.2rem; cursor: pointer; color: #5b3a26; }
+  .pannello .btn { color: #fff; }
+
+  .suggerimento-mappa { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); margin: 0; background: rgba(31,35,51,.8); color: #fff; padding: .4rem .9rem; border-radius: 999px; font-size: .85rem; font-weight: 700; pointer-events: none; transition: opacity .5s; white-space: nowrap; z-index: 1; }
+  .suggerimento-mappa.sparito { opacity: 0; }
+
+  @media (max-width: 700px) {
+    .hud-testo { display: none; }
+    .minimappa { width: 120px; top: 70px; bottom: auto; }
+    .hud-zoom { top: auto; bottom: 12px; transform: none; }
+    .hud-eroe .hud-etichetta { display: none; }
+    .suggerimento-mappa { white-space: normal; text-align: center; width: calc(100% - 100px); left: 12px; transform: none; bottom: 12px; font-size: .78rem; }
+    .pannello { bottom: 12px; }
+  }
+</style>

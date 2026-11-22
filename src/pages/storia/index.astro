@@ -7,21 +7,23 @@ const voci = (await pubblicati('storia')).sort((a: any, b: any) => (a.data.ordin
   <section class="contenitore">
     <h1>🏛️ Storia della matematica</h1>
     <p class="tenue stretto">Le persone dietro le idee: chi ha inventato cosa, perché, e cosa stava succedendo intorno.</p>
-    <div class="griglia">
+    <div class="griglia g3">
       {voci.map((v: any) => (
         <a class="scheda voce" href={`/storia/${v.id}/`}>
           <p class="icona" aria-hidden="true">{v.data.icona ?? '🏛️'}</p>
           <h2>{v.data.titolo}</h2>
           <p class="tenue">{v.data.descrizione}</p>
           {v.data.epoca && <span class="pillola">{v.data.epoca}</span>}
+          <span class="apri">Apri →</span>
         </a>
       ))}
     </div>
   </section>
 </Base>
 <style>
-  .voce { text-decoration: none; color: var(--testo); display: block; border-top: 6px solid var(--storia-bd); }
+  .voce { text-decoration: none; color: var(--testo); display: flex; flex-direction: column; gap: .3rem; align-items: flex-start; border-top: 6px solid var(--storia-bd); }
   .voce:hover { transform: translateY(-2px); }
   .voce h2 { font-size: 1.15rem; margin: .2rem 0; }
   .icona { font-size: 2rem; margin: 0; }
+  .apri { margin-top: auto; padding-top: .4rem; font-weight: 800; color: var(--fiducia); }
 </style>

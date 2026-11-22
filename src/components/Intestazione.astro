@@ -6,6 +6,7 @@ const voci = [
   { href: '/curiosita/', testo: 'Curiosità', icona: '✨' },
   { href: '/storia/', testo: 'Storia', icona: '🏛️' },
   { href: '/esperimenti/', testo: 'Esperimenti', icona: '🧪' },
+  { href: '/guida/', testo: 'Guida', icona: '🧭' },
   { href: '/faq/', testo: 'FAQ', icona: '❓' },
 ];
 const qui = Astro.url.pathname;
@@ -20,9 +21,12 @@ const qui = Astro.url.pathname;
       </svg>
       <span>Friendly<b>Math</b></span>
     </a>
+    <nav class="nav-desk" aria-label="Principale">
+      {voci.map((v) => <a href={v.href} aria-current={qui.startsWith(v.href) ? 'page' : undefined}><span aria-hidden="true">{v.icona}</span> {v.testo}</a>)}
+    </nav>
     <details class="menu">
       <summary aria-label="Apri il menu"><span aria-hidden="true">☰</span><span class="testo-menu"> Menu</span></summary>
-      <nav aria-label="Principale">
+      <nav aria-label="Menu mobile">
         <ul>
           {voci.map((v) => (
             <li><a href={v.href} aria-current={qui.startsWith(v.href) ? 'page' : undefined}><span aria-hidden="true">{v.icona}</span> {v.testo}</a></li>
@@ -79,12 +83,12 @@ const qui = Astro.url.pathname;
   .riga > * { min-width: 0; }
   @media (max-width: 560px) { .zaino-testo { display: none; } .logo span { font-size: 1.1rem; } .riga { gap: .4rem; } }
   @media (max-width: 400px) { .testo-menu { display: none; } .logo svg { width: 30px; height: 30px; } .tema { width: 2.1rem; height: 2.1rem; } .zaino { padding: .25em .5em; } }
-  @media (min-width: 980px) {
-    .menu { margin-left: 1rem; }
-    .menu summary { display: none; }
-    .menu nav { position: static; display: block; border: 0; box-shadow: none; padding: 0; background: none; min-width: 0; }
-    .menu ul { display: flex; gap: .15rem; }
-    .menu[open] nav, .menu nav { display: block; }
+  .nav-desk { display: none; }
+  @media (min-width: 1100px) {
+    .menu { display: none; }
+    .nav-desk { display: flex; gap: .1rem; margin-left: 1rem; }
+    .nav-desk a { padding: .35em .6em; border-radius: 999px; text-decoration: none; color: var(--testo); font-weight: 700; font-size: .95rem; white-space: nowrap; }
+    .nav-desk a:hover, .nav-desk a[aria-current] { background: var(--fiducia-chiaro); color: var(--fiducia); }
     .azioni { margin-left: auto; }
   }
 </style>

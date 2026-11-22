@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import Stemma from '../../components/arte/Stemma.astro';
 import Civetta from '../../components/arte/Civetta.astro';
+import MappaGioco from '../../components/MappaGioco.astro';
 import { stanzeDelCammino, riferimentiStanze } from '../../lib/contenuti';
 import { GRADI } from '../../lib/mondo';
 
@@ -12,11 +13,13 @@ const guardianoDi = (n: number) => stanze.find((s) => s.data.regione === n && s.
 const partenze = regioni.filter((r) => r.numero > 1 && guardianoDi(r.numero - 1));
 ---
 <Base titolo="Il Cammino" descrizione="Il viaggio dell'eroe nel Regno di Numeria: sei regioni, stanze da conquistare, Guardiani da sconfiggere.">
+  <h1 class="sr-only">Il Cammino: la mappa del Regno di Numeria</h1>
+  <MappaGioco stanze={stanze} />
   <section class="contenitore">
     <header class="intro">
       <div class="intro-civetta" aria-hidden="true"><Civetta taglia={110} /></div>
-      <p class="pillola">🗺️ Il viaggio dell'eroe</p>
-      <h1>Il Cammino</h1>
+      <p class="pillola">📜 Il diario di viaggio</p>
+      <h2 class="titolo-diario">La storia e l'elenco delle tappe</h2>
       <p class="stretto">Il Regno di Numeria è invaso dalla <b>Nebbia</b>: dove passa, la gente dimentica come si conta, si misura, si ragiona.
       E comincia a ripetere una frase terribile: <i>«non sono portato»</i>. Tu sei l'eroe (sì, proprio tu, con quel bastone).
       Attraversa le regioni, conquista le stanze, sconfiggi i Guardiani. Ottavia la Civetta ti accompagna. Quasi sempre nella direzione giusta.</p>
@@ -35,6 +38,8 @@ const partenze = regioni.filter((r) => r.numero > 1 && guardianoDi(r.numero - 1)
       </details>
     )}
 
+    <details class="vista-elenco" open>
+    <summary>📋 Vista elenco di tutte le tappe <span class="tenue">(comoda da tastiera e da lettore di schermo)</span></summary>
     <ol class="sentiero">
       {regioni.map((r) => (
         <li class="regione" id={r.slugRegione} data-regione={r.numero} style={`--c:${r.colore}`}>
@@ -65,6 +70,7 @@ const partenze = regioni.filter((r) => r.numero > 1 && guardianoDi(r.numero - 1)
         </li>
       ))}
     </ol>
+    </details>
   </section>
   <script type="application/json" id="stanze-cammino" set:html={JSON.stringify(rif)} />
 </Base>
@@ -88,6 +94,8 @@ const partenze = regioni.filter((r) => r.numero > 1 && guardianoDi(r.numero - 1)
 
 <style>
   .intro { padding: 1.5rem 0 .5rem; position: relative; }
+  .titolo-diario { margin-top: .4rem; font-size: clamp(1.6rem, 4vw, 2.3rem); }
+  .vista-elenco > summary { cursor: pointer; font-family: var(--font-titoli); font-size: 1.25rem; font-weight: 800; margin: 1rem 0; }
   .intro-civetta { float: right; margin: 0 0 1rem 1rem; }
   @media (max-width: 600px) { .intro-civetta { display: none; } }
   .partenza { margin: 1rem 0 2rem; }
