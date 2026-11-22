@@ -1,0 +1,77 @@
+---
+import { TIMELINE } from '../data/timeline';
+const ere = [...new Set(TIMELINE.map((t) => t.era))];
+const colori: Record<string, string> = {
+  Preistoria: '#8d6e63', Antichità: '#c9a24a', Medioevo: '#1f9d5c', Rinascimento: '#d64545',
+  'Età moderna': '#3f7fd8', Ottocento: '#7b5cd6', Novecento: '#f07a2c', Oggi: '#1f4e9c',
+};
+const tappe = [...TIMELINE].sort((a, b) => a.anno - b.anno);
+---
+<section class="linea-tempo" data-linea aria-labelledby="titolo-linea">
+  <h2 id="titolo-linea">⏳ La linea del tempo: dalle tacche su un osso ai computer</h2>
+  <p class="tenue">Venti millenni di idee in {tappe.length} tappe. Filtra per epoca, scorri, e apri le schede per saperne di più. Ogni tappa ha la sua fonte.</p>
+  <div class="filtri" role="group" aria-label="Filtra per epoca">
+    <button type="button" class="filtro attivo" data-era="tutte">Tutte</button>
+    {ere.map((e) => <button type="button" class="filtro" data-era={e} style={`--c:${colori[e]}`}>{e}</button>)}
+  </div>
+  <ol class="tappe">
+    {tappe.map((t, i) => (
+      <li class={`tappa ${i % 2 ? 'destra' : 'sinistra'}`} data-era-tappa={t.era} style={`--c:${colori[t.era]}`}>
+        <div class="perno" aria-hidden="true"></div>
+        <article class="carta-tempo">
+          <p class="quando"><span class="anno">{t.quando}</span> <span class="era">{t.era}</span></p>
+          <h3>{t.titolo}</h3>
+          <p class="chi">{t.chi && <b>{t.chi}</b>}{t.chi && ' · '}{t.luogo}</p>
+          <p>{t.testo}</p>
+          <p class="link-tappa">
+            {t.link && <a href={t.link}>Approfondisci su FriendlyMath →</a>}
+            <a class="fonte-tappa" href={t.fonte.url} rel="noopener" target="_blank">📚 {t.fonte.titolo}</a>
+          </p>
+        </article>
+      </li>
+    ))}
+  </ol>
+</section>
+<script>
+  const r = document.querySelector<HTMLElement>('[data-linea]')!;
+  const tappe = [...r.querySelectorAll<HTMLElement>('.tappa')];
+  r.querySelectorAll<HTMLButtonElement>('[data-era]').forEach((b) => b.addEventListener('click', () => {
+    r.querySelectorAll('.filtro').forEach((x) => x.classList.toggle('attivo', x === b));
+    tappe.forEach((t) => (t.hidden = b.dataset.era !== 'tutte' && t.dataset.eraTappa !== b.dataset.era));
+  }));
+  if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const io = new IntersectionObserver((voci) => voci.forEach((v) => { if (v.isIntersecting) { v.target.classList.add('vista'); io.unobserve(v.target); } }), { rootMargin: '0px 0px -10% 0px' });
+    tappe.forEach((t) => { t.classList.add('nascosta'); io.observe(t); });
+  }
+</script>
+<style>
+  .linea-tempo { margin: 2rem 0; }
+  .filtri { display: flex; flex-wrap: wrap; gap: .35rem; margin: .8rem 0 1.4rem; }
+  .filtro { --c: var(--fiducia); font: inherit; font-weight: 800; font-size: .9rem; border: 2px solid var(--c); color: var(--c); background: var(--superficie); border-radius: 999px; padding: .3rem .8rem; cursor: pointer; }
+  .filtro.attivo { background: var(--c); color: #fff; }
+  .tappe { list-style: none; margin: 0; padding: 0; position: relative; }
+  .tappe::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 6px; margin-left: -3px; border-radius: 3px;
+    background: linear-gradient(#8d6e63, #c9a24a 15%, #1f9d5c 35%, #d64545 45%, #3f7fd8 60%, #7b5cd6 72%, #f07a2c 85%, #1f4e9c); }
+  .tappa { position: relative; width: 50%; padding: 0 2rem 1.4rem; }
+  .tappa.sinistra { margin-right: 50%; }
+  .tappa.destra { margin-left: 50%; }
+  .perno { position: absolute; top: 1rem; width: 22px; height: 22px; border-radius: 50%; background: var(--c); border: 4px solid var(--sfondo); box-shadow: 0 0 0 3px var(--c); }
+  .sinistra .perno { right: -11px; }
+  .destra .perno { left: -11px; }
+  .carta-tempo { background: var(--superficie); border: 2px solid var(--bordo); border-top: 6px solid var(--c); border-radius: var(--raggio); padding: .9rem 1.1rem; box-shadow: var(--ombra); }
+  .carta-tempo h3 { margin: .1rem 0 .2rem; }
+  .carta-tempo p { margin: .3rem 0; }
+  .quando { display: flex; justify-content: space-between; gap: .5rem; flex-wrap: wrap; }
+  .anno { font-family: var(--font-titoli); font-weight: 800; font-size: 1.15rem; color: var(--c); }
+  .era { font-size: .75rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--testo-tenue); }
+  .chi { color: var(--testo-tenue); font-size: .95rem; }
+  .link-tappa { display: flex; flex-direction: column; gap: .2rem; font-size: .88rem; }
+  .fonte-tappa { color: var(--testo-tenue); }
+  .tappa.nascosta { opacity: 0; transform: translateY(24px); }
+  .tappa.vista { opacity: 1; transform: none; transition: opacity .6s ease, transform .6s ease; }
+  @media (max-width: 760px) {
+    .tappe::before { left: 14px; }
+    .tappa, .tappa.sinistra, .tappa.destra { width: auto; margin: 0; padding: 0 0 1.2rem 2.6rem; }
+    .sinistra .perno, .destra .perno { left: 3px; right: auto; }
+  }
+</style>

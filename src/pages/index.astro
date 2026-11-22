@@ -5,6 +5,7 @@ import LibroAperto from '../components/arte/LibroAperto.astro';
 import Civetta from '../components/arte/Civetta.astro';
 import Fabbro from '../components/arte/Fabbro.astro';
 import Stemma from '../components/arte/Stemma.astro';
+import SegretoPersonaggi from '../components/SegretoPersonaggi.astro';
 import { GRADI, MACROARGOMENTI } from '../lib/mondo';
 import { lezioniPubblicate, pubblicati } from '../lib/contenuti';
 import { AGGIORNATO_GIORNO, AGGIORNATO_ISO } from '../lib/sito';
@@ -78,6 +79,7 @@ const curiosita = (await pubblicati('curiosita')).slice(0, 3);
       <div class="scheda personaggio"><div class="faccia" aria-hidden="true"><Fabbro taglia={80} /></div><h3>Brontolo il Fabbro</h3><p class="tenue">Forgia formule e trucchi. Brontola sempre, ma non ti lascia mai senza strumenti.</p></div>
       <div class="scheda personaggio"><div class="faccia emoji" aria-hidden="true">🎭</div><h3>I Distrattori</h3><p class="tenue">Il Mercante di Scorciatoie, il Menestrello del «Non sono portato», lo Gnomo Copione, il Barone del Panico, la Sirena del Dopo: ognuno è un errore tipico travestito.</p></div>
     </div>
+    <SegretoPersonaggi breve />
   </section>
 
   {curiosita.length > 0 && (

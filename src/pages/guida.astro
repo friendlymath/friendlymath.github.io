@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Civetta from '../components/arte/Civetta.astro';
 import Stemma from '../components/arte/Stemma.astro';
+import SegretoPersonaggi from '../components/SegretoPersonaggi.astro';
 import { GRADI, DISTRATTORI } from '../lib/mondo';
 const indice = [
   ['inizio', '🚀', 'Da dove comincio'], ['libro', '📖', 'Il Libro'], ['cammino', '🗺️', 'Il Cammino'], ['mappa', '🎮', 'Comandi della mappa'],
@@ -135,6 +136,11 @@ const indice = [
         <div class="griglia g3">
           {Object.values(DISTRATTORI).map((d) => <div class="scheda"><h3>{d.nome.charAt(0).toUpperCase() + d.nome.slice(1)}</h3><p class="tenue">{d.motto}</p></div>)}
         </div>
+      </section>
+
+      <section id="segreto" class="capitolo">
+        <h2>🕯️ Chi sono davvero i personaggi</h2>
+        <SegretoPersonaggi />
       </section>
 
       <section id="zaino" class="capitolo">

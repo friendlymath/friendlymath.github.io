@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import Stemma from '../../components/arte/Stemma.astro';
 import Civetta from '../../components/arte/Civetta.astro';
 import MappaGioco from '../../components/MappaGioco.astro';
+import SegretoPersonaggi from '../../components/SegretoPersonaggi.astro';
 import { stanzeDelCammino, riferimentiStanze } from '../../lib/contenuti';
 import { GRADI } from '../../lib/mondo';
 
@@ -23,6 +24,7 @@ const partenze = regioni.filter((r) => r.numero > 1 && guardianoDi(r.numero - 1)
       <p class="stretto">Il Regno di Numeria è invaso dalla <b>Nebbia</b>: dove passa, la gente dimentica come si conta, si misura, si ragiona.
       E comincia a ripetere una frase terribile: <i>«non sono portato»</i>. Tu sei l'eroe (sì, proprio tu, con quel bastone).
       Attraversa le regioni, conquista le stanze, sconfiggi i Guardiani. Ottavia la Civetta ti accompagna. Quasi sempre nella direzione giusta.</p>
+      <SegretoPersonaggi breve />
     </header>
 
     {partenze.length > 0 && (

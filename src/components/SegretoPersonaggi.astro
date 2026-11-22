@@ -1,0 +1,28 @@
+---
+interface Props { breve?: boolean }
+const { breve = false } = Astro.props;
+---
+<aside class="segreto scheda">
+  <p class="segreto-titolo">🕯️ Il segreto di Numeria</p>
+  {breve ? (
+    <p>Ottavia, Brontolo e gli altri aiutanti <b>non esistono fuori di te</b>: sono la tua curiosità, la tua pazienza, la tua voglia di capire.
+    E i Distrattori sono i tuoi dubbi travestiti. <a href="/guida/#segreto">Leggi il segreto completo</a>.</p>
+  ) : (
+    <>
+      <p>All'inizio sembra che a guidarti siano loro: Ottavia la Civetta che indica la strada, Brontolo il Fabbro che forgia gli strumenti.
+      Ma guarda meglio: Ottavia sbaglia, si corregge e riparte, proprio come fai tu quando ragioni. Brontolo brontola, ma non molla: è la tua pazienza.</p>
+      <p><b>Gli aiutanti sono prodotti della tua mente.</b> La Civetta è la tua <b>curiosità</b>, che fa domande anche quando non sa la risposta.
+      Il Fabbro è la tua <b>pazienza</b>, che trasforma un errore in uno strumento. I matematici della storia sono la prova che altri, prima di te, hanno fatto le stesse domande.</p>
+      <p>E i Distrattori? Il Mercante di Scorciatoie, il Menestrello del «Non sono portato», la Sirena del Dopo: sono le voci dei dubbi e delle abitudini che ognuno ha dentro.
+      Riconoscerle è già metà della vittoria.</p>
+      <p class="morale">La morale del Regno: <b>non ti serve un maestro perfetto. Ti bastano la curiosità e la voglia di imparare.</b> I maestri veri, i libri e questo sito
+      sono solo lanterne: la strada la cammini tu.</p>
+    </>
+  )}
+</aside>
+<style>
+  .segreto { border: 2px dashed var(--magia); background: linear-gradient(135deg, var(--curiosita-bg), var(--superficie)); margin: 1.5rem 0; }
+  .segreto-titolo { margin: 0 0 .3rem; font-family: var(--font-titoli); font-weight: 800; font-size: 1.15rem; color: var(--magia); }
+  .segreto p { margin: .4rem 0; }
+  .morale { font-size: 1.05rem; }
+</style>
