@@ -76,15 +76,17 @@ const qui = Astro.url.pathname;
 </script>
 
 <style>
-  .testata { background: var(--superficie); border-bottom: 3px solid var(--sole); position: sticky; top: 0; z-index: 20; }
+  .testata { position: sticky; top: 0; z-index: 20; color: #f3e3bd;
+    background-color: #2b1a10; background-image: linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.25)), var(--tx-legno);
+    border-bottom: 3px solid var(--oro); box-shadow: 0 2px 0 #5b3a26, 0 8px 20px rgba(0,0,0,.35); }
   .riga { display: flex; align-items: center; gap: .6rem; min-height: 64px; }
   .riga > * { min-width: 0; }
-  .logo { display: flex; align-items: center; gap: .45rem; text-decoration: none; color: var(--testo); font-family: var(--font-titoli); font-size: 1.3rem; font-weight: 700; flex: none; }
-  .logo b { color: var(--gioco); }
+  .logo { display: flex; align-items: center; gap: .45rem; text-decoration: none; color: var(--oro-chiaro) !important; font-family: var(--font-titoli); font-size: 1.3rem; font-weight: 700; flex: none; text-shadow: 0 2px 0 #000; letter-spacing: .02em; }
+  .logo b { color: #ffb36b; }
   .nav-desk { display: none; }
   .azioni { display: flex; align-items: center; gap: .4rem; margin-left: auto; }
-  .tema { background: none; border: 2px solid var(--bordo); border-radius: 999px; width: 2.4rem; height: 2.4rem; cursor: pointer; font-size: 1.05rem; flex: none; }
-  .zaino { display: inline-flex; align-items: center; gap: .35rem; text-decoration: none; font-weight: 800; color: var(--testo); padding: .2em .55em .2em .3em; border-radius: 999px; background: var(--fiducia-chiaro); }
+  .tema { background: rgba(0,0,0,.25); border: 2px solid var(--oro); color: #f3e3bd; border-radius: 999px; width: 2.4rem; height: 2.4rem; cursor: pointer; font-size: 1.05rem; flex: none; }
+  .zaino { display: inline-flex; align-items: center; gap: .35rem; text-decoration: none; font-weight: 800; color: #f3e3bd; padding: .2em .55em .2em .3em; border-radius: 999px; background: rgba(0,0,0,.3); border: 2px solid var(--oro); }
   .mini-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--superficie); display: grid; place-items: center; overflow: hidden; }
   .zaino-grado { background: var(--sole); color: #3a2a00; border: 0; }
   .zaino { position: relative; }
@@ -93,17 +95,17 @@ const qui = Astro.url.pathname;
   @media (prefers-reduced-motion: no-preference) { .non-salvato { animation: pulsaNS 1.4s ease-in-out infinite; } @keyframes pulsaNS { 50% { transform: scale(1.2); } } }
 
   .mappa-sito { position: relative; }
-  .mappa-sito summary { list-style: none; cursor: pointer; font-weight: 800; padding: .35em .8em; border-radius: 999px; border: 2px solid var(--bordo); white-space: nowrap; display: flex; align-items: center; gap: .2rem; }
+  .mappa-sito summary { list-style: none; cursor: pointer; font-weight: 700; font-family: var(--font-titoli); padding: .35em .9em; border-radius: 10px; border: 2px solid var(--oro); white-space: nowrap; display: flex; align-items: center; gap: .2rem; color: #f3e3bd; background: rgba(0,0,0,.25); }
   .mappa-sito summary::-webkit-details-marker { display: none; }
-  .mappa-sito[open] summary { background: var(--fiducia); color: #fff; border-color: var(--fiducia); }
+  .mappa-sito[open] summary { background: var(--oro); color: #2b1a10; }
   .hamb { display: none; }
-  .pannello-mappa { position: absolute; right: 0; top: calc(100% + 10px); width: min(640px, calc(100vw - 32px)); background: var(--superficie); border: 2px solid var(--bordo); border-radius: 18px; box-shadow: 0 20px 50px rgba(0,0,0,.18); padding: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: .8rem 1.2rem; }
-  .gruppo-titolo { margin: 0 0 .3rem; font-family: var(--font-titoli); font-weight: 800; color: var(--gioco); }
+  .pannello-mappa { position: absolute; right: 0; top: calc(100% + 10px); width: min(640px, calc(100vw - 32px)); background: var(--superficie); background-image: var(--tx-pergamena); color: var(--testo); border: 3px solid var(--oro); border-radius: 18px; box-shadow: 0 20px 50px rgba(0,0,0,.18); padding: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: .8rem 1.2rem; }
+  .gruppo-titolo { margin: 0 0 .3rem; font-family: var(--font-titoli); font-weight: 700; color: var(--gioco); letter-spacing: .03em; }
   .gruppo ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .15rem; }
   .gruppo a { display: block; padding: .35rem .5rem; border-radius: 10px; text-decoration: none; color: var(--testo); }
   .gruppo a span { display: block; font-size: .8rem; color: var(--testo-tenue); }
   .gruppo a:hover, .gruppo a[aria-current] { background: var(--fiducia-chiaro); color: var(--fiducia); }
-  @media (max-width: 1099px) { .testo-mappa { display: none; } }
+  @media (max-width: 1399px) { .testo-mappa { display: none; } }
   @media (max-width: 640px) {
     .pannello-mappa { grid-template-columns: 1fr; position: fixed; left: 16px; right: 16px; width: auto; top: 72px; max-height: calc(100svh - 90px); overflow-y: auto; }
     .ico { display: none; } .hamb { display: inline; }
@@ -112,7 +114,7 @@ const qui = Astro.url.pathname;
   @media (max-width: 380px) { .zaino-grado { display: none; } }
   @media (min-width: 1100px) {
     .nav-desk { display: flex; gap: .1rem; margin-left: 1rem; }
-    .nav-desk a { padding: .35em .65em; border-radius: 999px; text-decoration: none; color: var(--testo); font-weight: 700; white-space: nowrap; }
-    .nav-desk a:hover, .nav-desk a[aria-current] { background: var(--fiducia-chiaro); color: var(--fiducia); }
+    .nav-desk a { padding: .35em .65em; border-radius: 8px; text-decoration: none; color: #f3e3bd !important; font-family: var(--font-titoli); font-weight: 700; font-size: .95rem; white-space: nowrap; letter-spacing: .02em; }
+    .nav-desk a:hover, .nav-desk a[aria-current] { background: rgba(201,162,74,.22); color: var(--oro-chiaro) !important; box-shadow: inset 0 -2px 0 var(--oro); }
   }
 </style>
