@@ -1,0 +1,35 @@
+---
+/** «Dove la trovi»: applicazioni dell'argomento in informatica, ingegneria e vita quotidiana. */
+export type Applicazione = { ambito: 'informatica' | 'ingegneria' | 'quotidiano' | 'natura'; titolo: string; testo: string };
+interface Props { voci: Applicazione[] }
+const { voci } = Astro.props;
+const stile = {
+  informatica: { icona: '💻', nome: 'Informatica', c: 'var(--fiducia)' },
+  ingegneria: { icona: '🏗️', nome: 'Ingegneria', c: 'var(--gioco)' },
+  quotidiano: { icona: '🛒', nome: 'Tutti i giorni', c: 'var(--successo)' },
+  natura: { icona: '🌿', nome: 'Natura', c: 'var(--magia)' },
+};
+---
+<section class="applicazioni" aria-label="Dove la trovi nel mondo reale">
+  <p class="app-titolo">🌍 Dove la trovi nel mondo reale</p>
+  <div class="app-griglia">
+    {voci.map((v) => (
+      <article class="app" style={`--c:${stile[v.ambito].c}`}>
+        <p class="ambito"><span aria-hidden="true">{stile[v.ambito].icona}</span> {stile[v.ambito].nome}</p>
+        <h4>{v.titolo}</h4>
+        <p set:html={v.testo} />
+      </article>
+    ))}
+  </div>
+  <p class="app-piede"><a href="/matematica-ovunque/">Tutto è matematica: scopri altri esempi →</a></p>
+</section>
+<style>
+  .applicazioni { margin: 2rem 0; padding: 1rem 1.1rem; border-radius: var(--raggio); background: linear-gradient(135deg, var(--fiducia-chiaro), var(--superficie)); border: 2px solid var(--bordo); }
+  .app-titolo { margin: 0 0 .6rem; font-family: var(--font-titoli); font-weight: 800; font-size: 1.2rem; }
+  .app-griglia { display: grid; gap: .7rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
+  .app { background: var(--superficie); border-radius: 14px; border-top: 5px solid var(--c); padding: .7rem .85rem; box-shadow: var(--ombra); }
+  .ambito { margin: 0; font-size: .75rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--c); }
+  .app h4 { margin: .2rem 0 .3rem; font-size: 1.02rem; }
+  .app p { margin: 0; font-size: .95rem; }
+  .app-piede { margin: .8rem 0 0; font-weight: 700; }
+</style>

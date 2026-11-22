@@ -47,6 +47,8 @@ e così via raddoppiando. Sull'ultima casella servirebbero $2^{63}$ chicchi: cir
 230 miliardi di tonnellate di riso, solo sull'ultima casella. È una leggenda, ma il calcolo è vero: le potenze crescono in modo esplosivo.
 </Curiosita>
 
+<Interattivo tipo="potenze" titolo="Raddoppiare contro moltiplicare per 2" didascalia="Arancione: 2 · n cresce di 2 alla volta. Viola: 2ⁿ raddoppia a ogni passo. Prova a portare n a 20." altezza={320} />
+
 <Esempio titolo="Esempio pratico: le notizie che girano">
 Una persona racconta una notizia a 3 amici, ognuno la racconta ad altri 3, e così via. Dopo 5 «giri» la sanno $3^5 = 243$ persone nuove nell'ultimo giro.
 </Esempio>
@@ -54,6 +56,12 @@ Una persona racconta una notizia a 3 amici, ognuno la racconta ad altri 3, e cos
 <Attenzione>
 Errore tipico: confondere $2^3$ con $2 \cdot 3$. $2^3 = 8$, mentre $2 \cdot 3 = 6$. E ancora: $(-3)^2 = 9$, ma $-3^2 = -9$, perché l'esponente si applica solo al 3.
 </Attenzione>
+
+<Applicazioni voci={[
+  { ambito: "informatica", titolo: "Bit e password", testo: "Ogni bit in più raddoppia le combinazioni: con 8 bit ce ne sono 2⁸ = 256. Per questo una password più lunga è molto più difficile da indovinare." },
+  { ambito: "ingegneria", titolo: "La notazione scientifica", testo: "La distanza Terra–Luna è circa 3,84 · 10⁸ m: le potenze di 10 servono a scrivere numeri enormi (o minuscoli) senza perdersi tra gli zeri." },
+  { ambito: "quotidiano", titolo: "L’interesse composto", testo: "Un risparmio che cresce del 2% all’anno, dopo n anni è moltiplicato per 1,02ⁿ: interessi sugli interessi." }
+]} />
 
 <Sfida domande={[
   { testo: "Quanto fa 3⁴?", risposta: 81, spiegazione: "3 · 3 · 3 · 3 = 81." },

@@ -46,10 +46,18 @@ Con due dadi i risultati possibili sono $6 \times 6 = 36$. La somma 7 si ottiene
 La somma 12 in un solo modo (6+6): $P = \tfrac{1}{36}$. Per questo nei giochi con due dadi il 7 esce così spesso.
 </Esempio>
 
+<Interattivo tipo="dadi" titolo="Il laboratorio dei dadi" didascalia="Lancia due dadi tante volte: le frequenze si avvicinano alle probabilità teoriche. È la legge dei grandi numeri, vista in diretta." altezza={320} />
+
 <Attenzione>
 Errore tipico: «Al lotto il 47 non esce da 80 estrazioni, quindi ora deve uscire!». Le estrazioni sono **indipendenti**: il caso non ha memoria.
 La probabilità alla prossima estrazione è la stessa di sempre.
 </Attenzione>
+
+<Applicazioni voci={[
+  { ambito: "quotidiano", titolo: "Le previsioni del tempo", testo: "«70% di pioggia» è una probabilità: in giorni con condizioni simili, ha piovuto circa 7 volte su 10." },
+  { ambito: "informatica", titolo: "I filtri antispam", testo: "I filtri della posta stimano la probabilità che un messaggio sia spam in base alle parole che contiene." },
+  { ambito: "ingegneria", titolo: "L’affidabilità", testo: "Se un componente si guasta con probabilità 1/100, due componenti di riserva indipendenti si guastano insieme con probabilità 1/10.000: per questo aerei e ospedali hanno sistemi doppi." }
+]} />
 
 <Sfida domande={[
   { testo: "In un sacchetto ci sono 3 palline rosse e 7 blu. Probabilità di pescarne una rossa? (scrivi il decimale)", risposta: 0.3, tolleranza: 0.001, spiegazione: "3 favorevoli su 10 possibili: 3/10 = 0,3." },

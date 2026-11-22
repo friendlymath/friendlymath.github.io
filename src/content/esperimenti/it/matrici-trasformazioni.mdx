@@ -1,0 +1,35 @@
+---
+titolo: "Le matrici come trasformazioni: piegare il piano"
+descrizione: "Una matrice 2 × 2 non è una tabella di numeri: è un modo di deformare tutto il piano. Il determinante dice di quanto cambiano le aree."
+icona: "🔷"
+lezioniCollegate: []
+fonti:
+  - titolo: "Transformation matrix"
+    url: "https://en.wikipedia.org/wiki/Transformation_matrix"
+    editore: "Wikipedia"
+    consultato: "2026-11-22"
+  - titolo: "Determinant"
+    url: "https://en.wikipedia.org/wiki/Determinant"
+    editore: "Wikipedia"
+    consultato: "2026-11-22"
+---
+
+Una matrice $\begin{pmatrix} a & b \\ c & d \end{pmatrix}$ dice dove vanno a finire i due vettori di base:
+il vettore verde $(1, 0)$ finisce in $(a, c)$, il vettore rosso $(0, 1)$ finisce in $(b, d)$. **Tutto il resto del piano li segue**: le rette restano rette, le parallele restano parallele.
+
+<Interattivo tipo="matrice" titolo="Deforma il piano" didascalia="Scegli una trasformazione: la griglia si deforma con continuità. Il quadratino giallo mostra come cambia l'area." altezza={440} />
+
+## Il determinante: quanto si allargano le aree
+
+Il quadratino giallo parte con area 1. Dopo la trasformazione la sua area è il **determinante** $ad - bc$:
+
+- ingrandimento ×2 → area ×4;
+- taglio → area ×1 (la figura si inclina ma non cresce);
+- riflessione → determinante negativo: il piano è stato «girato come un guanto».
+
+<Esempio titolo="Dove lo usi">
+Ogni volta che **ruoti o ingrandisci una foto** sul telefono, che un **videogioco** muove la telecamera, o che un programma di grafica deforma un'immagine,
+il computer moltiplica le coordinate dei punti per una matrice. Le schede grafiche sono progettate proprio per fare milioni di questi prodotti al secondo.
+</Esempio>
+
+Se vuoi approfondire l'algebra lineare con animazioni, il canale <a href="https://www.youtube.com/@ClearMath1" rel="noopener">ClearMath</a> la racconta proprio così: matrici come funzioni.
