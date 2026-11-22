@@ -10,13 +10,16 @@ const lezioni = (await lezioniPubblicate()).map((l) => ({ id: l.id, titolo: l.da
     <h1>🎒 Zaino dell'eroe</h1>
     <div class="scheda eroe">
       <div class="ritratto" aria-hidden="true">{GRADI.map((g) => <span data-ritratto={g.numero} hidden={g.numero !== 1}><Stemma numero={g.numero} taglia={84} /></span>)}</div>
+      <div class="avatar-zaino" data-avatar-zaino><a href="/eroe/" class="crea">🎲 Crea il tuo eroe</a></div>
       <div>
+        <p class="tenue" data-nome-eroe><a href="/eroe/">Crea il tuo personaggio</a></p>
         <p class="tenue grado-riga">Il tuo grado</p>
         <p class="nome-grado" data-nome>Recluta</p>
         <p class="tenue" data-equip>Equipaggiamento: un bastone</p>
       </div>
     </div>
 
+    <p><a class="btn vuoto" href="/eroe/">🎲 Modifica il personaggio</a></p>
     <ol class="scala" aria-label="I sei gradi">
       {GRADI.map((g) => <li data-scala={g.numero} title={`${g.nome} — ${g.regione}`}><Stemma numero={g.numero} taglia={46} /><span class="sr-only">{g.nome}</span></li>)}
     </ol>
@@ -56,6 +59,7 @@ const lezioni = (await lezioniPubblicate()).map((l) => ({ id: l.id, titolo: l.da
 <script>
   import { carica, salva, gradoAttuale, esportaPergamena, importaPergamena, unisci, progressoVuoto, type Progresso } from '../lib/progresso';
   import { grado, GRADI } from '../lib/mondo';
+  import { caricaEroe, salvaEroe, avatarSvg, nomeClasse } from '../lib/eroe';
 
   const $ = <T extends HTMLElement>(s: string) => document.querySelector<T>(s)!;
   const titoli: { id: string; titolo: string }[] = JSON.parse($('#titoli-lezioni').textContent || '[]');
@@ -66,6 +70,12 @@ const lezioni = (await lezioniPubblicate()).map((l) => ({ id: l.id, titolo: l.da
     const p = carica();
     const g = grado(gradoAttuale(p));
     document.querySelectorAll<HTMLElement>('[data-ritratto]').forEach((el) => (el.hidden = Number(el.dataset.ritratto) !== g.numero));
+    const eroe = caricaEroe();
+    const av = document.querySelector<HTMLElement>('[data-avatar-zaino]')!;
+    if (eroe) {
+      av.innerHTML = avatarSvg(eroe, g.numero, 90);
+      $('[data-nome-eroe]').textContent = `${eroe.nome || 'Senza nome'} · ${nomeClasse(eroe)}`;
+    }
     $('[data-nome]').textContent = g.nome;
     $('[data-equip]').textContent = `Equipaggiamento: ${g.equipaggiamento} · Regione: ${g.regione}`;
     document.querySelectorAll<HTMLElement>('[data-scala]').forEach((li) => li.classList.toggle('raggiunto', Number(li.dataset.scala) <= g.numero));
@@ -96,7 +106,8 @@ const lezioni = (await lezioniPubblicate()).map((l) => ({ id: l.id, titolo: l.da
   }
 
   $('[data-salva]').addEventListener('click', () => {
-    const blob = new Blob([esportaPergamena(carica())], { type: 'application/json' });
+    const eroe = caricaEroe();
+    const blob = new Blob([esportaPergamena({ ...carica(), ...(eroe ? { eroe } : {}) })], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = 'pergamena-friendlymath.json';
@@ -120,6 +131,7 @@ const lezioni = (await lezioniPubblicate()).map((l) => ({ id: l.id, titolo: l.da
   });
   const applica = (p: Progresso, t: string) => {
     $('[data-scelta]').hidden = true; inArrivo = null;
+    if (p.eroe) salvaEroe(p.eroe);
     msg(salva(p) ? t : 'Il browser non permette di salvare: i progressi resteranno solo finché la pagina è aperta.', !salva(p));
     mostra();
     document.dispatchEvent(new CustomEvent('friendlymath:progresso'));
@@ -134,7 +146,9 @@ const lezioni = (await lezioniPubblicate()).map((l) => ({ id: l.id, titolo: l.da
 </script>
 
 <style>
-  .eroe { display: flex; gap: 1rem; align-items: center; }
+  .eroe { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+  .avatar-zaino { min-width: 90px; display: grid; place-items: center; }
+  .avatar-zaino .crea { font-weight: 800; text-align: center; }
   .ritratto { flex: none; filter: drop-shadow(0 4px 0 rgba(0,0,0,.12)); }
   .grado-riga { margin: 0; font-size: .85rem; text-transform: uppercase; font-weight: 800; }
   .nome-grado { margin: 0; font-family: var(--font-titoli); font-size: 2rem; font-weight: 800; }

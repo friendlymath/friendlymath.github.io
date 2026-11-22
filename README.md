@@ -21,6 +21,7 @@ Sito statico costruito con [Astro](https://astro.build), pubblicato su GitHub Pa
 - `src/data/mappe/*.json`: mappe mentali in formato jsMind (`node_tree`).
 - `src/components/didattica/`: i blocchi usabili nelle lezioni senza import: `<Scena>`, `<Esempio>`, `<Curiosita>`, `<Storia>`, `<Attenzione distrattore="...">`, `<Interattivo tipo="...">`, `<Sfida domande={[...]}>`.
 - `src/scripts/interattivi/<tipo>.ts`: animazioni ed esperimenti (ognuno esporta `monta(area)`).
+- `src/data/programma.ts`: programma anno per anno (con fonti); `src/lib/palestra.ts`: formule e generatori di esercizi; `src/lib/eroe.ts`: il personaggio; `src/lib/loci.ts` + `src/components/StanzaLoci.astro`: le stanze del palazzo della memoria (campo `scenaStanza` nelle lezioni).
 - `src/lib/progresso.ts`: logica dei progressi e della Pergamena (testata in `tests/`).
 - `docs/superpowers/`: documento di progetto e piano.
 
@@ -44,4 +45,4 @@ Le domande di `<Sfida>` hanno `testo`, `risposta` (indice dell'opzione giusta, o
 
 ## Pubblicazione
 
-Il workflow `.github/workflows/deploy.yml` pubblica a ogni push su `main`. Una tantum: **Settings → Pages → Source: GitHub Actions**.
+Il workflow `.github/workflows/deploy.yml` pubblica a ogni push su `main` (ogni modifica viene caricata anche su `main`). Una tantum: **Settings → Pages → Source: GitHub Actions**.

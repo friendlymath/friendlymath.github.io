@@ -5,7 +5,7 @@ import Stemma from '../components/arte/Stemma.astro';
 import { GRADI, DISTRATTORI } from '../lib/mondo';
 const indice = [
   ['inizio', '🚀', 'Da dove comincio'], ['libro', '📖', 'Il Libro'], ['cammino', '🗺️', 'Il Cammino'], ['mappa', '🎮', 'Comandi della mappa'],
-  ['stanza', '🚪', "Com'è fatta una stanza"], ['gradi', '🛡️', 'Gradi e Guardiani'], ['distrattori', '🎭', 'I Distrattori'],
+  ['stanza', '🚪', "Com'è fatta una stanza"], ['loci', '🏛️', 'Il palazzo della memoria'], ['palestra', '🏋️', 'La Palestra'], ['eroe', '🎲', 'Il tuo eroe'], ['gradi', '🛡️', 'Gradi e Guardiani'], ['distrattori', '🎭', 'I Distrattori'],
   ['zaino', '🎒', 'Zaino e Pergamena'], ['legenda', '🔣', 'Legenda dei simboli'], ['adulti', '👩‍🏫', 'Per genitori e insegnanti'],
 ];
 ---
@@ -84,6 +84,36 @@ const indice = [
           <div class="box curiosita"><p class="box-titolo">✨ Lo sapevi?</p><p>Una curiosità o un collegamento, con la fonte.</p></div>
           <div class="box storia"><p class="box-titolo">⚔️ La sfida</p><p>Domande a scelta o numeriche, con spiegazione. Riprova quante volte vuoi.</p></div>
         </div>
+      </section>
+
+      <section id="loci" class="capitolo">
+        <h2>🏛️ Il palazzo della memoria</h2>
+        <p>Molte lezioni si aprono con una <b>stanza illustrata</b>: una bottega, una biblioteca, un mercato, una fortezza. Ogni oggetto numerato custodisce un concetto
+        (lo scaffale con i mattoncini = unità, decine e centinaia; la sedia vuota con lo 0 = lo zero tiene il posto). È il <b>metodo dei loci</b>, una tecnica di memoria antichissima:
+        si lega ogni idea a un oggetto in un luogo preciso, e per ricordare basta «ripercorrere» la stanza con la mente.</p>
+        <ul>
+          <li>Tocca un oggetto per saltare al paragrafo che spiega quel concetto.</li>
+          <li>Prima di una verifica, chiudi gli occhi e prova a rivedere la stanza: oggetto 1, oggetto 2… che cosa ti ricorda ciascuno?</li>
+        </ul>
+      </section>
+
+      <section id="palestra" class="capitolo">
+        <h2>🏋️ La Palestra</h2>
+        <p>Nella <a href="/palestra/">Palestra</a> le formule si <b>smontano</b>: tocchi ogni pezzo (per esempio il «2ab» del quadrato del binomio) e leggi che cosa significa.
+        Poi ti alleni con sei esercizi sempre nuovi, con i passaggi spiegati.</p>
+        <ul>
+          <li><b>Nuova serie</b>: altri sei esercizi. Ogni serie ha un numero: la stessa serie si può rifare dal link.</li>
+          <li><b>Stampa la scheda</b>: esercizi con lo spazio per i calcoli e, su un foglio a parte, le soluzioni. Dalla finestra di stampa puoi anche salvarla in PDF.</li>
+          <li><b>Scarica (.txt)</b>: esercizi e soluzioni in un file di testo.</li>
+        </ul>
+      </section>
+
+      <section id="eroe" class="capitolo">
+        <h2>🎲 Il tuo eroe</h2>
+        <p>Nella pagina <a href="/eroe/">Crea il tuo eroe</a> scegli, come in un gioco di ruolo: chi sei (eroina, eroe, o nessuno dei due), la <b>classe</b>
+        (Guerriera/o dei Numeri, Maga/o delle Formule, Esploratrice/ore delle Forme, Barda/o dei Problemi, Veggente del Caso), l'aspetto e quattro caratteristiche:
+        Logica, Intuizione, Pazienza, Curiosità. Il tuo personaggio compare sulla mappa del Cammino e nello Zaino, e cambia equipaggiamento salendo di grado.
+        Il nome è facoltativo e non lascia mai il tuo dispositivo, se non dentro la tua Pergamena.</p>
       </section>
 
       <section id="gradi" class="capitolo">

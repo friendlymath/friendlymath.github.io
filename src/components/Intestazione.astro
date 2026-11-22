@@ -1,13 +1,11 @@
 ---
-const voci = [
+import { SEZIONI } from '../lib/sito';
+const principali = [
   { href: '/libro/', testo: 'Libro', icona: '📖' },
   { href: '/cammino/', testo: 'Cammino', icona: '🗺️' },
+  { href: '/palestra/', testo: 'Palestra', icona: '🏋️' },
   { href: '/mappe/', testo: 'Mappe', icona: '🧠' },
-  { href: '/curiosita/', testo: 'Curiosità', icona: '✨' },
-  { href: '/storia/', testo: 'Storia', icona: '🏛️' },
-  { href: '/esperimenti/', testo: 'Esperimenti', icona: '🧪' },
   { href: '/guida/', testo: 'Guida', icona: '🧭' },
-  { href: '/faq/', testo: 'FAQ', icona: '❓' },
 ];
 const qui = Astro.url.pathname;
 ---
@@ -22,22 +20,23 @@ const qui = Astro.url.pathname;
       <span>Friendly<b>Math</b></span>
     </a>
     <nav class="nav-desk" aria-label="Principale">
-      {voci.map((v) => <a href={v.href} aria-current={qui.startsWith(v.href) ? 'page' : undefined}><span aria-hidden="true">{v.icona}</span> {v.testo}</a>)}
+      {principali.map((v) => <a href={v.href} aria-current={qui.startsWith(v.href) ? 'page' : undefined}><span aria-hidden="true">{v.icona}</span> {v.testo}</a>)}
     </nav>
-    <details class="menu">
-      <summary aria-label="Apri il menu"><span aria-hidden="true">☰</span><span class="testo-menu"> Menu</span></summary>
-      <nav aria-label="Menu mobile">
-        <ul>
-          {voci.map((v) => (
-            <li><a href={v.href} aria-current={qui.startsWith(v.href) ? 'page' : undefined}><span aria-hidden="true">{v.icona}</span> {v.testo}</a></li>
-          ))}
-        </ul>
-      </nav>
-    </details>
     <div class="azioni">
+      <details class="mappa-sito">
+        <summary aria-label="Mappa del sito"><span aria-hidden="true" class="ico">🗺️</span><span class="testo-mappa"> Mappa del sito</span><span class="hamb" aria-hidden="true">☰</span></summary>
+        <div class="pannello-mappa" role="navigation" aria-label="Mappa del sito">
+          {SEZIONI.map((s) => (
+            <div class="gruppo">
+              <p class="gruppo-titolo"><span aria-hidden="true">{s.icona}</span> {s.gruppo}</p>
+              <ul>{s.voci.map((v) => <li><a href={v.href} aria-current={qui.startsWith(v.href) ? 'page' : undefined}><b>{v.testo}</b><span>{v.nota}</span></a></li>)}</ul>
+            </div>
+          ))}
+        </div>
+      </details>
       <button class="tema" type="button" aria-label="Cambia tema chiaro/scuro" title="Tema chiaro/scuro">🌓</button>
       <a href="/zaino/" class="zaino" aria-label="Zaino dell'eroe: progressi e Pergamena">
-        <span aria-hidden="true">🎒</span> <span class="zaino-testo">Zaino</span>
+        <span class="mini-avatar" data-mini-avatar aria-hidden="true">🎒</span>
         <span class="zaino-grado pillola" data-grado-attuale>Recluta</span>
       </a>
     </div>
@@ -47,12 +46,18 @@ const qui = Astro.url.pathname;
 <script>
   import { carica, gradoAttuale } from '../lib/progresso';
   import { grado } from '../lib/mondo';
-  const aggiornaGrado = () => {
+  import { caricaEroe, avatarInterno } from '../lib/eroe';
+  const aggiorna = () => {
+    const g = gradoAttuale(carica());
     const el = document.querySelector('[data-grado-attuale]');
-    if (el) el.textContent = grado(gradoAttuale(carica())).nome;
+    if (el) el.textContent = grado(g).nome;
+    const e = caricaEroe();
+    const av = document.querySelector<HTMLElement>('[data-mini-avatar]');
+    if (av && e) av.innerHTML = `<svg viewBox="22 16 56 56" width="30" height="30">${avatarInterno(e, g)}</svg>`;
   };
-  aggiornaGrado();
-  document.addEventListener('friendlymath:progresso', aggiornaGrado);
+  aggiorna();
+  document.addEventListener('friendlymath:progresso', aggiorna);
+  document.addEventListener('friendlymath:eroe', aggiorna);
 
   document.querySelector('.tema')?.addEventListener('click', () => {
     const r = document.documentElement;
@@ -60,35 +65,45 @@ const qui = Astro.url.pathname;
     r.dataset.theme = scuroOra ? 'light' : 'dark';
     try { localStorage.setItem('friendlymath:tema', r.dataset.theme); } catch {}
   });
-  // chiude il menu mobile cliccando un link
-  document.querySelectorAll('.menu a').forEach((a) => a.addEventListener('click', () => a.closest('details')?.removeAttribute('open')));
+  const mappa = document.querySelector<HTMLDetailsElement>('.mappa-sito')!;
+  document.addEventListener('click', (e) => { if (mappa.open && !mappa.contains(e.target as Node)) mappa.open = false; });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && mappa.open) { mappa.open = false; mappa.querySelector('summary')!.focus(); } });
 </script>
 
 <style>
   .testata { background: var(--superficie); border-bottom: 3px solid var(--sole); position: sticky; top: 0; z-index: 20; }
-  .riga { display: flex; align-items: center; gap: .75rem; min-height: 64px; }
-  .logo { display: flex; align-items: center; gap: .45rem; text-decoration: none; color: var(--testo); font-family: var(--font-titoli); font-size: 1.3rem; font-weight: 700; }
-  .logo b { color: var(--gioco); }
-  .menu { margin-left: auto; position: relative; }
-  .menu summary { list-style: none; cursor: pointer; font-weight: 800; padding: .3em .75em; border-radius: 999px; border: 2px solid var(--bordo); white-space: nowrap; }
-  .menu summary::-webkit-details-marker { display: none; }
-  .menu ul { list-style: none; margin: 0; padding: 0; }
-  .menu nav { position: absolute; right: 0; top: calc(100% + 8px); background: var(--superficie); border: 2px solid var(--bordo); border-radius: var(--raggio); padding: .5rem; box-shadow: var(--ombra); min-width: 13rem; }
-  .menu a { display: block; padding: .45em .7em; border-radius: var(--raggio-s); text-decoration: none; color: var(--testo); font-weight: 700; }
-  .menu a:hover, .menu a[aria-current] { background: var(--fiducia-chiaro); color: var(--fiducia); }
-  .azioni { display: flex; align-items: center; gap: .4rem; }
-  .tema { background: none; border: 2px solid var(--bordo); border-radius: 999px; width: 2.4rem; height: 2.4rem; cursor: pointer; font-size: 1.05rem; }
-  .zaino { display: inline-flex; align-items: center; gap: .35rem; text-decoration: none; font-weight: 800; color: var(--testo); padding: .3em .7em; border-radius: 999px; background: var(--fiducia-chiaro); }
-  .zaino-grado { background: var(--sole); color: #3a2a00; border: 0; }
+  .riga { display: flex; align-items: center; gap: .6rem; min-height: 64px; }
   .riga > * { min-width: 0; }
-  @media (max-width: 560px) { .zaino-testo { display: none; } .logo span { font-size: 1.1rem; } .riga { gap: .4rem; } }
-  @media (max-width: 400px) { .testo-menu { display: none; } .logo svg { width: 30px; height: 30px; } .tema { width: 2.1rem; height: 2.1rem; } .zaino { padding: .25em .5em; } }
+  .logo { display: flex; align-items: center; gap: .45rem; text-decoration: none; color: var(--testo); font-family: var(--font-titoli); font-size: 1.3rem; font-weight: 700; flex: none; }
+  .logo b { color: var(--gioco); }
   .nav-desk { display: none; }
+  .azioni { display: flex; align-items: center; gap: .4rem; margin-left: auto; }
+  .tema { background: none; border: 2px solid var(--bordo); border-radius: 999px; width: 2.4rem; height: 2.4rem; cursor: pointer; font-size: 1.05rem; flex: none; }
+  .zaino { display: inline-flex; align-items: center; gap: .35rem; text-decoration: none; font-weight: 800; color: var(--testo); padding: .2em .55em .2em .3em; border-radius: 999px; background: var(--fiducia-chiaro); }
+  .mini-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--superficie); display: grid; place-items: center; overflow: hidden; }
+  .zaino-grado { background: var(--sole); color: #3a2a00; border: 0; }
+
+  .mappa-sito { position: relative; }
+  .mappa-sito summary { list-style: none; cursor: pointer; font-weight: 800; padding: .35em .8em; border-radius: 999px; border: 2px solid var(--bordo); white-space: nowrap; display: flex; align-items: center; gap: .2rem; }
+  .mappa-sito summary::-webkit-details-marker { display: none; }
+  .mappa-sito[open] summary { background: var(--fiducia); color: #fff; border-color: var(--fiducia); }
+  .hamb { display: none; }
+  .pannello-mappa { position: absolute; right: 0; top: calc(100% + 10px); width: min(640px, calc(100vw - 32px)); background: var(--superficie); border: 2px solid var(--bordo); border-radius: 18px; box-shadow: 0 20px 50px rgba(0,0,0,.18); padding: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: .8rem 1.2rem; }
+  .gruppo-titolo { margin: 0 0 .3rem; font-family: var(--font-titoli); font-weight: 800; color: var(--gioco); }
+  .gruppo ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .15rem; }
+  .gruppo a { display: block; padding: .35rem .5rem; border-radius: 10px; text-decoration: none; color: var(--testo); }
+  .gruppo a span { display: block; font-size: .8rem; color: var(--testo-tenue); }
+  .gruppo a:hover, .gruppo a[aria-current] { background: var(--fiducia-chiaro); color: var(--fiducia); }
+  @media (max-width: 1099px) { .testo-mappa { display: none; } }
+  @media (max-width: 640px) {
+    .pannello-mappa { grid-template-columns: 1fr; position: fixed; left: 16px; right: 16px; width: auto; top: 72px; max-height: calc(100svh - 90px); overflow-y: auto; }
+    .ico { display: none; } .hamb { display: inline; }
+    .logo span { font-size: 1.1rem; }
+  }
+  @media (max-width: 380px) { .zaino-grado { display: none; } }
   @media (min-width: 1100px) {
-    .menu { display: none; }
     .nav-desk { display: flex; gap: .1rem; margin-left: 1rem; }
-    .nav-desk a { padding: .35em .6em; border-radius: 999px; text-decoration: none; color: var(--testo); font-weight: 700; font-size: .95rem; white-space: nowrap; }
+    .nav-desk a { padding: .35em .65em; border-radius: 999px; text-decoration: none; color: var(--testo); font-weight: 700; white-space: nowrap; }
     .nav-desk a:hover, .nav-desk a[aria-current] { background: var(--fiducia-chiaro); color: var(--fiducia); }
-    .azioni { margin-left: auto; }
   }
 </style>

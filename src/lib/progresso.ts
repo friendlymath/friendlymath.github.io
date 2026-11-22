@@ -3,6 +3,8 @@
  * Tutto resta nel browser della persona; nessun dato personale.
  */
 
+import { validaEroe, type Eroe } from './eroe';
+
 export const CHIAVE = 'friendlymath:progresso';
 export const VERSIONE = 1;
 export const GRADO_MAX = 6;
@@ -14,6 +16,8 @@ export type Progresso = {
   guardiani: number[];
   badge: string[];
   aggiornato: string;
+  /** il personaggio: viaggia nella Pergamena, ma vive in una chiave a parte del browser */
+  eroe?: Eroe;
 };
 
 /** `grado` qui è il numero della regione; il Guardiano è l'ultima stanza della regione. */
@@ -56,6 +60,7 @@ function valida(o: unknown): EsitoImport {
       guardiani: unici(r.guardiani),
       badge: unici(r.badge),
       aggiornato: typeof r.aggiornato === 'string' ? r.aggiornato : '',
+      ...(validaEroe(r.eroe) ? { eroe: validaEroe(r.eroe)! } : {}),
     },
   };
 }
@@ -144,7 +149,9 @@ export function importaPergamena(testo: string): EsitoImport {
 }
 
 export function unisci(a: Progresso, b: Progresso): Progresso {
+  const eroe = b.eroe ?? a.eroe;
   return {
+    ...(eroe ? { eroe } : {}),
     completate: unici([...a.completate, ...b.completate]),
     guardiani: unici([...a.guardiani, ...b.guardiani]),
     badge: unici([...a.badge, ...b.badge]),

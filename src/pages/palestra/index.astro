@@ -1,0 +1,54 @@
+---
+import Base from '../../layouts/Base.astro';
+import Stemma from '../../components/arte/Stemma.astro';
+import Fabbro from '../../components/arte/Fabbro.astro';
+import katex from 'katex';
+import { FORMULE } from '../../lib/palestra';
+import { GRADI } from '../../lib/mondo';
+const tex = (f: (typeof FORMULE)[number]) => katex.renderToString(f.membri.map((m) => m.tex).join(' '), { throwOnError: false });
+const gruppi = GRADI.map((g) => ({ g, formule: FORMULE.filter((f) => f.grado === g.numero) })).filter((x) => x.formule.length);
+---
+<Base titolo="Vai in palestra" descrizione="Allena formule ed equazioni capendo ogni pezzo: spiegazioni membro per membro ed esercizi infiniti, anche da stampare.">
+  <section class="testa-palestra">
+    <div class="contenitore testa-riga">
+      <Fabbro taglia={120} />
+      <div>
+        <p class="pillola">🏋️ Vai in palestra</p>
+        <h1>La Palestra delle formule</h1>
+        <p class="sottotitolo">Qui le formule non si imparano a memoria: si <b>smontano</b> pezzo per pezzo, si capisce cosa vuol dire ogni lettera, e poi ci si allena.
+        Esercizi sempre nuovi, con i passaggi spiegati. Puoi anche stamparli o scaricarli.</p>
+        <p class="tenue">«Muscoli? No. Neuroni. Ma il principio è lo stesso: poco e spesso.» — Brontolo il Fabbro</p>
+      </div>
+    </div>
+  </section>
+  <section class="contenitore">
+    {gruppi.map(({ g, formule }) => (
+      <section class="livello">
+        <h2><Stemma numero={g.numero} taglia={36} /> {g.nome} · {g.fase}</h2>
+        <div class="griglia g3">
+          {formule.map((f) => (
+            <a class="scheda attrezzo" href={`/palestra/${f.slug}/`}>
+              <span class="tipo">🏋️ Attrezzo</span>
+              <h3>{f.titolo}</h3>
+              <div class="formula-mini" set:html={tex(f)} />
+              <p class="tenue">{f.quando}</p>
+              <span class="vai">Allenati →</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+  </section>
+</Base>
+<style>
+  .testa-palestra { background: radial-gradient(900px 300px at 20% 0%, var(--esempio-bg), transparent 70%); padding: 2rem 0 1rem; }
+  .testa-riga { display: flex; gap: 1.2rem; align-items: center; }
+  .sottotitolo { font-size: 1.15rem; max-width: 44rem; margin-top: 0; }
+  .livello h2 { display: flex; align-items: center; gap: .5rem; }
+  .attrezzo { text-decoration: none; color: var(--testo); display: flex; flex-direction: column; gap: .3rem; border-top: 6px solid var(--gioco); }
+  .attrezzo h3 { margin: 0; }
+  .tipo { font-size: .8rem; font-weight: 800; text-transform: uppercase; color: var(--gioco); }
+  .formula-mini { background: var(--superficie-2); border-radius: 10px; padding: .6rem; text-align: center; font-size: 1.15rem; overflow-x: auto; }
+  .vai { margin-top: auto; font-weight: 800; color: var(--fiducia); }
+  @media (max-width: 560px) { .testa-riga :global(svg) { width: 80px; height: 80px; flex: none; } }
+</style>

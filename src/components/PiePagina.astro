@@ -1,12 +1,15 @@
 ---
+import { AGGIORNATO, AGGIORNATO_ISO } from '../lib/sito';
 const anno = new Date().getFullYear();
 ---
 <footer class="piede">
   <div class="contenitore">
     <p><b>FriendlyMath</b> — la matematica per chiunque. Nessun account, nessun dato raccolto: i tuoi progressi restano nel tuo browser e nella tua <a href="/faq/#pergamena">Pergamena</a>.</p>
-    <p class="tenue"><a href="/guida/">Guida del sito</a> · <a href="/fonti/">Fonti e crediti</a> · <a href="/faq/">FAQ</a> · © {anno} FriendlyMath. Testi originali; le fonti sono citate in ogni scheda.</p>
+    <p class="aggiornato">🕒 Ultimo aggiornamento del sito: <time datetime={AGGIORNATO_ISO}>{AGGIORNATO}</time></p>
+    <p class="tenue"><a href="/mappa-del-sito/">Mappa del sito</a> · <a href="/guida/">Guida del sito</a> · <a href="/fonti/">Fonti e crediti</a> · <a href="/faq/">FAQ</a> · © {anno} FriendlyMath. Testi originali; le fonti sono citate in ogni scheda.</p>
   </div>
 </footer>
 <style>
   .piede { margin-top: 4rem; padding: 2rem 0 3rem; background: var(--superficie-2); border-top: 3px dashed var(--bordo); font-size: .95rem; }
+  .aggiornato { font-weight: 700; }
 </style>

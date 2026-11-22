@@ -7,13 +7,18 @@ import Fabbro from '../components/arte/Fabbro.astro';
 import Stemma from '../components/arte/Stemma.astro';
 import { GRADI, MACROARGOMENTI } from '../lib/mondo';
 import { lezioniPubblicate, pubblicati } from '../lib/contenuti';
+import { AGGIORNATO_GIORNO, AGGIORNATO_ISO } from '../lib/sito';
 const lezioni = await lezioniPubblicate();
 const curiosita = (await pubblicati('curiosita')).slice(0, 3);
 ---
 <Base titolo="FriendlyMath">
-  <h1 class="sr-only">FriendlyMath: la matematica per chiunque</h1>
   <section class="bivio" aria-label="Scegli come studiare">
-    <p class="bivio-titolo"><span>La matematica per <b>chiunque</b>.</span> Scegli la tua strada.</p>
+    <header class="insegna">
+      <h1 class="nome-sito">Friendly<span>Math</span></h1>
+      <p class="motto">La matematica per <b>chiunque</b>: dalle tabelline ai quaternioni, con spiegazioni chiare, esempi veri ed esercizi che diventano un gioco.
+      Gratis e senza registrazione.</p>
+      <p class="scegli">Scegli la tua strada <span aria-hidden="true">↓</span> <span class="data">· aggiornato il <time datetime={AGGIORNATO_ISO}>{AGGIORNATO_GIORNO}</time></span></p>
+    </header>
 
     <a class="porta libro" href="/libro/">
       <div class="porta-arte"><LibroAperto /></div>
@@ -61,8 +66,8 @@ const curiosita = (await pubblicati('curiosita')).slice(0, 3);
       <a class="scheda sezione" href="/storia/" style="--c:var(--storia-bd)"><span class="sez-icona">🏛️</span><b>Storia</b><span class="tenue">Le persone dietro le idee, da Baghdad a Dublino.</span></a>
       <a class="scheda sezione" href="/esperimenti/" style="--c:var(--fiducia)"><span class="sez-icona">🧪</span><b>Esperimenti</b><span class="tenue">Simulazioni da provare: lancia aghi e trova π.</span></a>
       <a class="scheda sezione" href="/zaino/" style="--c:var(--sole)"><span class="sez-icona">🎒</span><b>Zaino dell'eroe</b><span class="tenue">Il tuo grado, i badge e la Pergamena dei progressi.</span></a>
-      <a class="scheda sezione" href="/faq/" style="--c:var(--pericolo)"><span class="sez-icona">❓</span><b>Domande frequenti</b><span class="tenue">Privacy, salvataggi, gradi: le risposte rapide.</span></a>
-      <a class="scheda sezione" href="/fonti/" style="--c:var(--testo-tenue)"><span class="sez-icona">📚</span><b>Fonti e crediti</b><span class="tenue">Tutte le fonti citate e gli strumenti usati.</span></a>
+      <a class="scheda sezione" href="/palestra/" style="--c:var(--pericolo)"><span class="sez-icona">🏋️</span><b>Vai in palestra</b><span class="tenue">Formule smontate pezzo per pezzo ed esercizi infiniti da stampare.</span></a>
+      <a class="scheda sezione" href="/eroe/" style="--c:var(--magia)"><span class="sez-icona">🎲</span><b>Crea il tuo eroe</b><span class="tenue">Corpo, classe e caratteristiche, come in un gioco di ruolo.</span></a>
     </div>
   </section>
 
@@ -93,11 +98,17 @@ const curiosita = (await pubblicati('curiosita')).slice(0, 3);
 </Base>
 
 <style>
-  .bivio { position: relative; display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100svh - 67px); }
-  .bivio-titolo { position: absolute; z-index: 2; top: 1.1rem; left: 50%; transform: translateX(-50%); margin: 0; white-space: nowrap;
-    background: var(--superficie); border: 3px solid var(--sole); border-radius: 999px; padding: .45rem 1.2rem; font-weight: 800; box-shadow: var(--ombra); font-size: 1.05rem; }
-  .bivio-titolo b { color: var(--gioco); }
-  .porta { position: relative; display: flex; flex-direction: column; justify-content: center; gap: 1.2rem; padding: 4.5rem clamp(16px, 4vw, 4rem) 3rem; text-decoration: none; color: var(--testo); overflow: hidden; isolation: isolate; }
+  .bivio { position: relative; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto 1fr; min-height: calc(100svh - 67px); }
+  .insegna { grid-column: 1 / -1; text-align: center; padding: 1.4rem 16px 1.2rem; background: linear-gradient(90deg, #dfe9ff, #fff3e0 50%, #ffe8c9); border-bottom: 3px dashed var(--bordo); }
+  :global(:root[data-theme="dark"]) .insegna { background: linear-gradient(90deg, #1d2a45, #262b3b 50%, #3a2a1b); }
+  @media (prefers-color-scheme: dark) { :global(:root:not([data-theme="light"])) .insegna { background: linear-gradient(90deg, #1d2a45, #262b3b 50%, #3a2a1b); } }
+  .nome-sito { font-size: clamp(3rem, 9vw, 6rem); margin: 0; line-height: 1; letter-spacing: -.02em; color: var(--fiducia); text-shadow: 0 4px 0 rgba(31,78,156,.15); }
+  .nome-sito span { color: var(--gioco); }
+  .motto { font-size: clamp(1.05rem, 2.2vw, 1.3rem); max-width: 48rem; margin: .5rem auto .3rem; }
+  .motto b { color: var(--gioco); }
+  .scegli { margin: .2rem 0 0; font-weight: 800; }
+  .data { font-weight: 600; color: var(--testo-tenue); font-size: .9rem; }
+  .porta { position: relative; display: flex; flex-direction: column; justify-content: center; gap: 1.2rem; padding: 2rem clamp(16px, 4vw, 4rem) 3rem; text-decoration: none; color: var(--testo); overflow: hidden; isolation: isolate; }
   .porta::before { content: ''; position: absolute; inset: 0; z-index: -1; transition: transform .5s ease; }
   .porta.libro::before { background: radial-gradient(circle at 30% 20%, #ffffff 0, transparent 50%), linear-gradient(160deg, #dfe9ff, #b9cdf6); }
   .porta.cammino::before { background: radial-gradient(circle at 70% 20%, #fff7e0 0, transparent 50%), linear-gradient(200deg, #ffe8c9, #ffc68f); }
@@ -128,11 +139,9 @@ const curiosita = (await pubblicati('curiosita')).slice(0, 3);
   @media (prefers-reduced-motion: no-preference) { .giu { animation: rimbalza 1.8s ease-in-out infinite; } @keyframes rimbalza { 50% { transform: translate(-50%, 6px); } } }
   @media (max-width: 860px) {
     .bivio { grid-template-columns: 1fr; }
-    .porta { min-height: calc(100svh - 67px); padding-top: 4.5rem; }
+    .porta { min-height: 80svh; padding-top: 2rem; }
     .porta.libro { border-right: 0; border-bottom: 3px dashed rgba(31,78,156,.25); }
     .porta.cammino { padding-top: 3rem; }
-    .bivio-titolo { white-space: normal; text-align: center; width: calc(100% - 32px); font-size: .95rem; }
-    .bivio-titolo span { display: block; }
     .giu { display: none; }
   }
 

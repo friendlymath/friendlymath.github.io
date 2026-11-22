@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import { SEZIONI, AGGIORNATO } from '../lib/sito';
+import { lezioniPubblicate, pubblicati } from '../lib/contenuti';
+import { MACROARGOMENTI } from '../lib/mondo';
+import { FORMULE } from '../lib/palestra';
+const lezioni = await lezioniPubblicate();
+const curiosita = await pubblicati('curiosita'), storia = await pubblicati('storia'), esperimenti = await pubblicati('esperimenti');
+---
+<Base titolo="Mappa del sito" descrizione="Tutte le pagine di FriendlyMath in un solo elenco.">
+  <section class="contenitore">
+    <h1>🗺️ Mappa del sito</h1>
+    <p class="tenue">Ogni pagina di FriendlyMath, in un elenco. Ultimo aggiornamento: {AGGIORNATO}.</p>
+    <div class="griglia g4 sezioni">
+      {SEZIONI.map((s) => (
+        <div class="scheda"><h2>{s.icona} {s.gruppo}</h2><ul>{s.voci.map((v) => <li><a href={v.href}>{v.testo}</a> <span class="tenue">— {v.nota}</span></li>)}</ul></div>
+      ))}
+    </div>
+    <h2>📖 Tutte le lezioni del Libro</h2>
+    <div class="griglia g3">
+      {MACROARGOMENTI.filter((m) => lezioni.some((l) => l.data.macroargomento === m.slug)).map((m) => (
+        <div class="scheda"><h3>{m.nome}</h3><ul>{lezioni.filter((l) => l.data.macroargomento === m.slug).map((l) => <li><a href={`/libro/${l.id}/`}>{l.data.titolo}</a></li>)}</ul></div>
+      ))}
+    </div>
+    <h2>🏋️ Palestra</h2>
+    <ul class="colonne">{FORMULE.map((f) => <li><a href={`/palestra/${f.slug}/`}>{f.titolo}</a></li>)}</ul>
+    <div class="griglia g3">
+      <div class="scheda"><h3>✨ Curiosità</h3><ul>{curiosita.map((c) => <li><a href={`/curiosita/${c.id}/`}>{c.data.titolo}</a></li>)}</ul></div>
+      <div class="scheda"><h3>🏛️ Storia</h3><ul>{storia.map((c) => <li><a href={`/storia/${c.id}/`}>{c.data.titolo}</a></li>)}</ul></div>
+      <div class="scheda"><h3>🧪 Esperimenti</h3><ul>{esperimenti.map((c) => <li><a href={`/esperimenti/${c.id}/`}>{c.data.titolo}</a></li>)}</ul></div>
+    </div>
+  </section>
+</Base>
+<style>
+  .sezioni h2 { font-size: 1.2rem; margin-top: 0; }
+  .scheda h3 { margin-top: 0; }
+  .scheda ul { padding-left: 1.1rem; margin: 0; }
+  .colonne { columns: 2 16rem; }
+</style>
