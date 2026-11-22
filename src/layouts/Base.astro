@@ -6,6 +6,8 @@ import 'katex/dist/katex.min.css';
 import Intestazione from '../components/Intestazione.astro';
 import PiePagina from '../components/PiePagina.astro';
 import Promemoria from '../components/Promemoria.astro';
+import { TEXTURE } from '../lib/texture';
+const varTexture = `:root{${Object.entries(TEXTURE).map(([k, v]) => `--tx-${k}:url("${v}")`).join(';')}}`;
 
 interface Props { titolo: string; descrizione?: string; }
 const { titolo, descrizione = 'La matematica per chiunque: un Libro da sfogliare e un Cammino da eroe per liberare il Regno di Numeria dalla Nebbia.' } = Astro.props;
@@ -22,6 +24,7 @@ const titoloCompleto = titolo === 'FriendlyMath' ? titolo : `${titolo} · Friend
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
     <meta property="og:title" content={titoloCompleto} />
     <meta property="og:description" content={descrizione} />
+    <style is:inline set:html={varTexture}></style>
     <script is:inline>
       try { const t = localStorage.getItem('friendlymath:tema'); if (t) document.documentElement.dataset.theme = t; } catch {}
     </script>

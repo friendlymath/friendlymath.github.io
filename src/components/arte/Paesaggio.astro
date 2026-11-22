@@ -1,4 +1,5 @@
 ---
+import { TEXTURE } from '../../lib/texture';
 /** Il Regno di Numeria visto dall'alto: villaggio, bosco, montagne, torre e cieli, con la Nebbia che scorre. */
 ---
 <svg class="paesaggio" viewBox="0 0 800 360" role="img" aria-label="Il Regno di Numeria: un sentiero attraversa villaggio, bosco, montagne, valle e città fino ai cieli, mentre la Nebbia avanza">
@@ -7,6 +8,9 @@
       <stop offset="0" stop-color="var(--cielo-a, #bcd7ff)" />
       <stop offset="1" stop-color="var(--cielo-b, #fff4dc)" />
     </linearGradient>
+    <pattern id="p-perg" width="320" height="320" patternUnits="userSpaceOnUse"><image href={TEXTURE.pergamena} width="320" height="320" /></pattern>
+    <pattern id="p-erba" width="200" height="200" patternUnits="userSpaceOnUse"><image href={TEXTURE.erba} width="200" height="200" /></pattern>
+    <radialGradient id="p-vig" cx="50%" cy="45%" r="75%"><stop offset=".6" stop-color="#1b1430" stop-opacity="0" /><stop offset="1" stop-color="#1b1430" stop-opacity=".35" /></radialGradient>
     <filter id="sfuma" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="6" /></filter>
   </defs>
   <rect width="800" height="360" fill="url(#cielo)" />
@@ -28,6 +32,7 @@
   <!-- colline -->
   <path d="M0 270c80-40 160-40 240-10s160 20 240-20 200-30 320 10v110H0z" fill="#8fd18f" />
   <path d="M0 300c100-30 220-20 320 0s260 10 480-20v80H0z" fill="#6cbf6c" />
+  <path d="M0 270c80-40 160-40 240-10s160 20 240-20 200-30 320 10v110H0z" fill="url(#p-erba)" opacity=".6" />
   <!-- bosco -->
   <g fill="#3b8f3b">
     <path d="M250 270l18-40 18 40z" /><path d="M280 275l16-34 16 34z" /><path d="M226 278l14-30 14 30z" /><path d="M306 282l14-28 14 28z" />
@@ -52,6 +57,8 @@
     <path d="M12 -34l4 44" stroke="#8a5a3c" stroke-width="4" stroke-linecap="round" />
     <path d="M-7 -36q7 -8 14 0" fill="#6b4226" />
   </g>
+  <rect width="800" height="360" fill="url(#p-perg)" opacity=".45" style="mix-blend-mode:multiply" />
+  <rect width="800" height="360" fill="url(#p-vig)" />
   <!-- nebbia -->
   <g class="nebbia" filter="url(#sfuma)" fill="#fff">
     <ellipse class="n1" cx="420" cy="230" rx="140" ry="26" opacity=".85" />

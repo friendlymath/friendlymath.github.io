@@ -5,6 +5,7 @@
  */
 import Oggetto from './arte/Oggetto.astro';
 import type { Ambiente, Oggetto as TipoOggetto } from '../lib/loci';
+import { TEXTURE } from '../lib/texture';
 
 interface Props { ambiente: Ambiente; loci: { oggetto: TipoOggetto; concetto: string; ancora?: string }[]; nome?: string; contesto: 'libro' | 'cammino' }
 const { ambiente, loci, nome, contesto } = Astro.props;
@@ -28,6 +29,9 @@ const palette: Record<Ambiente, { muro: string; muro2: string; pavimento: string
   radura: { muro: '#bfe8a8', muro2: '#a6d98b', pavimento: '#7fc36b', pavimento2: '#6bb158', titolo: 'Radura' },
 };
 const c = palette[ambiente];
+const texMuro = { bottega: 'legno', biblioteca: 'carta', rifugio: 'pietra', mercato: 'carta', fortezza: 'pietra', radura: 'erba' }[ambiente] as keyof typeof TEXTURE;
+const texPav = { bottega: 'legno', biblioteca: 'legno', rifugio: 'legno', mercato: 'pietra', fortezza: 'pietra', radura: 'erba' }[ambiente] as keyof typeof TEXTURE;
+const id = (k: string) => `${k}-${ambiente}`;
 ---
 <section class="stanza-loci" data-stanza-loci aria-label="Il palazzo della memoria">
   <div class="stanza-titolo">
@@ -37,6 +41,11 @@ const c = palette[ambiente];
   <svg viewBox="0 0 800 460" class="stanza-svg" role="img" aria-labelledby={`legenda-${ambiente}`}>
     <defs>
       <linearGradient id={`luce-${ambiente}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".25" /><stop offset="1" stop-color="#000" stop-opacity=".15" /></linearGradient>
+      <pattern id={id('txm')} width="256" height="256" patternUnits="userSpaceOnUse"><image href={TEXTURE[texMuro]} width="256" height="256" /></pattern>
+      <pattern id={id('txp')} width="256" height="256" patternUnits="userSpaceOnUse" patternTransform="scale(1 .5)"><image href={TEXTURE[texPav]} width="256" height="256" /></pattern>
+      <pattern id={id('txc')} width="220" height="220" patternUnits="userSpaceOnUse"><image href={TEXTURE.carta} width="220" height="220" /></pattern>
+      <radialGradient id={id('vig')} cx="50%" cy="45%" r="70%"><stop offset=".55" stop-color="#000" stop-opacity="0" /><stop offset="1" stop-color="#000" stop-opacity=".5" /></radialGradient>
+      <linearGradient id={id('fascio')} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c4" stop-opacity=".45" /><stop offset="1" stop-color="#fff3c4" stop-opacity="0" /></linearGradient>
       <filter id="ombra-oggetto" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="5" stdDeviation="3" flood-opacity=".3" /></filter>
     </defs>
     <!-- pareti -->
@@ -72,11 +81,14 @@ const c = palette[ambiente];
     {ambiente === 'radura' && <g>
       {[[160, 180], [260, 150], [560, 160], [660, 190], [420, 120]].map(([x, y]) => <g><rect x={x - 6} y={y} width="12" height="40" fill="#6e4429" /><circle cx={x} cy={y - 10} r="40" fill="#3b8f3b" /></g>)}
     </g>}
+    <rect width="800" height="300" fill={`url(#${id('txm')})`} opacity=".75" />
     <!-- pavimento -->
     <path d="M0 300h800v160H0z" fill={c.pavimento} />
     <path d="M110 300L0 460M690 300l110 160" stroke={c.pavimento2} stroke-width="4" />
     {[0, 1, 2, 3].map((i) => <path d={`M0 ${330 + i * 36}h800`} stroke={c.pavimento2} stroke-width="2" opacity=".6" />)}
-    <ellipse cx="400" cy="400" rx="300" ry="46" fill="rgba(0,0,0,.08)" />
+    <path d="M0 300h800v160H0z" fill={`url(#${id('txp')})`} opacity=".7" />
+    <ellipse cx="400" cy="400" rx="300" ry="46" fill="rgba(0,0,0,.1)" />
+    {['bottega', 'biblioteca', 'rifugio', 'fortezza'].includes(ambiente) && <path d="M330 95h140l190 365H140z" fill={`url(#${id('fascio')})`} style="mix-blend-mode:screen" />}
     <rect width="800" height="460" fill={`url(#luce-${ambiente})`} />
 
     <!-- oggetti -->
@@ -93,6 +105,8 @@ const c = palette[ambiente];
         </a>
       );
     })}
+    <rect width="800" height="460" fill={`url(#${id('txc')})`} pointer-events="none" />
+    <rect width="800" height="460" fill={`url(#${id('vig')})`} pointer-events="none" />
     {contesto === 'cammino' && nome && <g transform="translate(400 30)">
       <rect x={-nome.length * 7 - 20} y="-18" width={nome.length * 14 + 40} height="36" rx="18" fill="rgba(31,35,51,.82)" />
       <text y="7" text-anchor="middle" font-size="19" font-weight="800" fill="#fff">{nome}</text>

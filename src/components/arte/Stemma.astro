@@ -6,9 +6,11 @@ const colori = ['#f2a93b', '#4caf50', '#8d6e63', '#3f7fd8', '#c0392b', '#7b5cd6'
 const c = colori[numero - 1];
 ---
 <svg class="stemma" width={taglia} height={taglia} viewBox="0 0 64 64" role="img" aria-label={`Stemma della regione ${numero}`}>
-  <path d="M32 3l25 9v18c0 16-11 27-25 31C18 57 7 46 7 30V12z" fill={c} />
+  <defs><linearGradient id={`lucido-${numero}`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55" /><stop offset=".45" stop-color="#fff" stop-opacity="0" /><stop offset="1" stop-color="#000" stop-opacity=".25" /></linearGradient></defs>
+  <path d="M32 3l25 9v18c0 16-11 27-25 31C18 57 7 46 7 30V12z" fill={c} stroke="#c9a24a" stroke-width="2.5" />
   <path d="M32 3l25 9v18c0 16-11 27-25 31z" fill="rgba(0,0,0,.12)" />
   <path d="M32 7l21 7.5V30c0 13.5-9 23-21 27-12-4-21-13.5-21-27V14.5z" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.5" />
+  <path d="M32 3l25 9v18c0 16-11 27-25 31C18 57 7 46 7 30V12z" fill={`url(#lucido-${numero})`} />
   {numero === 1 && <g>
     <path d="M20 44V30l12-9 12 9v14z" fill="#fff8ea" />
     <path d="M17 31l15-12 15 12" stroke="#7a3f12" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
