@@ -2,6 +2,8 @@
 import JXG from 'jsxgraph';
 import '../../../node_modules/jsxgraph/distrib/jsxgraph.css';
 
+const it = (x: number, d: number) => x.toLocaleString('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d });
+
 export function monta(area: HTMLElement) {
   const id = `jxg-${Math.random().toString(36).slice(2, 8)}`;
   area.innerHTML = `<div id="${id}" class="jxgbox" style="width:100%;aspect-ratio:1/1;max-height:440px;border-radius:12px;border:0"></div>
@@ -32,7 +34,7 @@ export function monta(area: HTMLElement) {
   const aggiorna = () => {
     const a = Math.abs(A.X()), bb = Math.abs(B.Y());
     const c2 = a * a + bb * bb;
-    esito.innerHTML = `<span style="color:${col('--fiducia')}">${(a * a).toFixed(1)}</span> + <span style="color:${col('--successo')}">${(bb * bb).toFixed(1)}</span> = <span style="color:${col('--magia')}">${c2.toFixed(1)}</span> &nbsp;·&nbsp; cateti ${a.toFixed(1)} e ${bb.toFixed(1)}, ipotenusa ${Math.sqrt(c2).toFixed(2)}`;
+    esito.innerHTML = `<span style="color:${col('--fiducia')}">${it(a * a, 1)}</span> + <span style="color:${col('--successo')}">${it(bb * bb, 1)}</span> = <span style="color:${col('--magia')}">${it(c2, 1)}</span> &nbsp;·&nbsp; cateti ${it(a, 1)} e ${it(bb, 1)}, ipotenusa ${it(Math.sqrt(c2), 2)}`;
   };
   b.on('update', aggiorna);
   aggiorna();

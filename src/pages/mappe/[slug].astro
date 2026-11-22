@@ -38,8 +38,7 @@ const scarica = `data:application/json;charset=utf-8,${encodeURIComponent(json)}
   const dati = JSON.parse(el.dataset.mappa!);
   const segnaLink = (n: any) => { if (n.link) n.topic = `${n.topic} 🔗`; n.children?.forEach(segnaLink); };
   segnaLink(dati.data);
-  const scuro = () => document.documentElement.dataset.theme === 'dark' || (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
-  const jm = new (jsMind as any)({ container: 'mappa', editable: false, theme: scuro() ? 'asbestos' : 'orange', view: { draggable: true, hide_scrollbars_when_draggable: true, line_width: 3, line_color: '#7b5cd6' }, layout: { hspace: 40, vspace: 16 } });
+  const jm = new (jsMind as any)({ container: 'mappa', editable: false, view: { draggable: true, hide_scrollbars_when_draggable: true, line_width: 3, line_color: '#7b5cd6' }, layout: { hspace: 40, vspace: 16 } });
   jm.show(dati);
   const trova = (n: any, id: string): any => (n.id === id ? n : n.children?.map((c: any) => trova(c, id)).find(Boolean));
   el.addEventListener('click', (e) => {
@@ -55,7 +54,9 @@ const scarica = `data:application/json;charset=utf-8,${encodeURIComponent(json)}
 <style>
   .azioni { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
   .tela { height: 70vh; min-height: 420px; padding: 0; overflow: hidden; position: relative; }
-  :global(.tela jmnode) { font-family: var(--font); font-weight: 700; border-radius: 12px; }
-  :global(.tela jmnode[nodeid="root"]) { font-size: 1.2rem; }
+  :global(.tela jmnode) { font-family: var(--font); font-weight: 700; border-radius: 12px; background: var(--superficie) !important; color: var(--testo) !important; border: 2px solid var(--magia); box-shadow: var(--ombra) !important; }
+  :global(.tela jmnode:hover) { background: var(--curiosita-bg) !important; }
+  :global(.tela jmnode[nodeid="root"]) { font-size: 1.2rem; background: var(--fiducia) !important; color: #fff !important; border-color: var(--fiducia); }
+  :global(.tela jmexpander) { background: var(--sole) !important; border-color: var(--testo) !important; color: #3a2a00 !important; }
   .suggerimento { font-size: .9rem; }
 </style>

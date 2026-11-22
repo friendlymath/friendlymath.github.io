@@ -1,4 +1,6 @@
 /** Ago di Buffon: lancia aghi su un pavimento a righe e stima π. Aghi lunghi quanto la distanza fra le righe (l = t). */
+const it = (x: number, d: number) => x.toLocaleString('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d });
+
 export function monta(area: HTMLElement) {
   area.innerHTML = `
     <canvas width="640" height="400" style="width:100%;height:auto;border-radius:12px;background:var(--superficie-2)" aria-label="Pavimento con righe parallele su cui cadono gli aghi"></canvas>
@@ -25,7 +27,7 @@ export function monta(area: HTMLElement) {
     const el = area.querySelector('[data-stima]')!;
     if (!incroci) { el.textContent = `Lanci: ${lanci}. Nessun incrocio ancora.`; return; }
     const pi = (2 * l * lanci) / (t * incroci);
-    el.textContent = `Lanci: ${lanci} · incroci: ${incroci} · stima di π ≈ ${pi.toFixed(4)} (π vero ≈ 3,1416)`;
+    el.textContent = `Lanci: ${lanci} · incroci: ${incroci} · stima di π ≈ ${it(pi, 4)} (π vero ≈ 3,1416)`;
   };
   const lancia = (n: number) => {
     ctx.lineWidth = 1.5;

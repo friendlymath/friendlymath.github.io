@@ -88,6 +88,7 @@ h2 { font-size: clamp(1.4rem, 3vw, 1.8rem); margin-top: 1.8em; }
 .contenitore { max-width: var(--larghezza); margin: 0 auto; padding: 0 16px; }
 .stretto { max-width: 46rem; }
 .tenue { color: var(--testo-tenue); }
+[hidden] { display: none !important; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* Bottoni */
@@ -104,7 +105,8 @@ h2 { font-size: clamp(1.4rem, 3vw, 1.8rem); margin-top: 1.8em; }
 .btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,.18); }
 .btn.gioco { background: var(--gioco); }
 .btn.successo { background: var(--successo); }
-.btn.vuoto { background: transparent; color: var(--fiducia); border-color: currentColor; box-shadow: none; }
+.btn.vuoto, :root[data-theme="dark"] .btn.vuoto { background: transparent; color: var(--fiducia); border-color: currentColor; box-shadow: none; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.vuoto { color: var(--fiducia); } }
 .btn[disabled] { opacity: .5; cursor: not-allowed; }
 
 /* Schede */
