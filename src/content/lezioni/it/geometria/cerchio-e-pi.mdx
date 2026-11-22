@@ -1,0 +1,63 @@
+---
+titolo: "Circonferenza, cerchio e il numero π"
+descrizione: "Perché ogni ruota, grande o piccola, nasconde lo stesso numero: 3,14159…"
+macroargomento: geometria
+sottoargomento: "Cerchio"
+grado: 2
+scenaStanza:
+  ambiente: rifugio
+  loci:
+    - { oggetto: ruota, concetto: "Circonferenza = 2πr", ancora: "la-circonferenza" }
+    - { oggetto: pizza, concetto: "Area del cerchio = πr²", ancora: "larea-del-cerchio" }
+    - { oggetto: pergamena, concetto: "π: un numero che non finisce mai", ancora: "il-numero-π" }
+    - { oggetto: dadi, concetto: "Trovare π con il caso: l'ago di Buffon", ancora: "il-numero-π" }
+ispirazione:
+  - "https://www.matematika.it"
+---
+
+## Il numero π
+
+Prendi una ruota qualsiasi, misura il giro e dividilo per il diametro: ottieni sempre lo stesso numero, **π** (pi greco).
+
+$$
+\pi = 3{,}14159\,26535\ldots
+$$
+
+π è **irrazionale**: le sue cifre decimali non finiscono e non si ripetono mai. Nei calcoli si usa spesso $3{,}14$.
+
+## La circonferenza
+
+La **circonferenza** è il «bordo» del cerchio. La sua lunghezza è:
+
+$$
+C = 2\pi r = \pi d
+$$
+
+dove $r$ è il raggio e $d = 2r$ il diametro.
+
+## L'area del cerchio
+
+$$
+A = \pi r^2
+$$
+
+Un'idea per capirla: taglia il cerchio in tante fette sottili e mettile a incastro, una in su e una in giù. Ottieni quasi un rettangolo alto $r$ e largo mezza circonferenza, $\pi r$. Area: $\pi r \cdot r = \pi r^2$.
+
+<Esempio titolo="Esempio pratico: quale pizza conviene?">
+Una pizza da **30 cm** di diametro o due pizze da **20 cm**? Aree: $\pi \cdot 15^2 \approx 707$ cm² contro $2 \cdot \pi \cdot 10^2 \approx 628$ cm².
+Conviene la pizza grande: raddoppiare il diametro **quadruplica** l'area.
+</Esempio>
+
+<Attenzione>
+Errore tipico: usare il **diametro** al posto del **raggio** nella formula dell'area. Con $d = 10$ cm il raggio è 5 cm: $A = \pi \cdot 25 \approx 78{,}5$ cm², non $\pi \cdot 100$.
+</Attenzione>
+
+<Curiosita>
+Puoi stimare π anche lanciando aghi a caso su un pavimento a righe: prova l'<a href="/esperimenti/ago-di-buffon/">ago di Buffon</a>.
+</Curiosita>
+
+<Sfida domande={[
+  { testo: "Un cerchio ha raggio 10 cm. Quanto misura la circonferenza (usa π = 3,14)?", risposta: 62.8, tolleranza: 0.05, spiegazione: "C = 2 · 3,14 · 10 = 62,8 cm." },
+  { testo: "Area di un cerchio di raggio 3 (usa π = 3,14)?", risposta: 28.26, tolleranza: 0.05, spiegazione: "A = 3,14 · 9 = 28,26." },
+  { testo: "Se il raggio raddoppia, l'area…", opzioni: ["raddoppia", "triplica", "quadruplica"], risposta: 2, spiegazione: "π(2r)² = 4πr²: l'area diventa 4 volte più grande." }
+]} />

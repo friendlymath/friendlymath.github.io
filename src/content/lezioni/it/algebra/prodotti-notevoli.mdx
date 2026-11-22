@@ -1,0 +1,64 @@
+---
+titolo: "Prodotti notevoli: il quadrato del binomio, visto con le figure"
+descrizione: "(a + b)² non è a² + b². Un quadrato tagliato in quattro pezzi ti mostra perché."
+macroargomento: algebra
+sottoargomento: "Calcolo letterale"
+grado: 3
+regione: 3
+stanza: 2
+nomeStanza: "La Galleria degli Specchi"
+distrattore: mercante
+prerequisiti:
+  - numeri/potenze
+scenaStanza:
+  ambiente: biblioteca
+  loci:
+    - { oggetto: specchio, concetto: "(a + b)² = a² + 2ab + b²", ancora: "il-quadrato-del-binomio" }
+    - { oggetto: scacchiera, concetto: "Il quadrato diviso in quattro pezzi", ancora: "la-prova-con-le-figure" }
+    - { oggetto: bilancia, concetto: "Somma per differenza: (a + b)(a − b) = a² − b²", ancora: "somma-per-differenza" }
+    - { oggetto: incudine, concetto: "Calcolo mentale con i prodotti notevoli", ancora: "esempio" }
+ispirazione:
+  - "https://www.youmath.it"
+---
+
+<Scena personaggio="fabbro">
+Grrr. Ogni giorno arriva qualcuno con il martello sbagliato: «(a + b) al quadrato fa a² + b²!». E ogni giorno gli faccio vedere lo specchio.
+Guarda bene il quadrato. Conta i pezzi. Non due: **quattro**.
+</Scena>
+
+## Il quadrato del binomio
+
+$$
+(a + b)^2 = a^2 + 2ab + b^2
+$$
+
+Si legge: **quadrato del primo, più il doppio prodotto, più il quadrato del secondo**. Con il meno: $(a - b)^2 = a^2 - 2ab + b^2$.
+
+## La prova con le figure
+
+Prendi un quadrato di lato $a + b$. Dividilo con due tagli: ottieni un quadrato $a \times a$, un quadrato $b \times b$ e **due rettangoli** $a \times b$.
+L'area totale è quindi $a^2 + b^2 + 2ab$. I due rettangoli sono proprio i pezzi che il Mercante «dimentica».
+
+<Interattivo tipo="binomio" titolo="Il quadrato del binomio" didascalia="Muovi i cursori per cambiare a e b: le aree dei quattro pezzi sommate danno sempre (a + b)²." altezza={380} />
+
+## Somma per differenza
+
+$$
+(a + b)(a - b) = a^2 - b^2
+$$
+
+I termini «misti» $+ab$ e $-ab$ si cancellano. Molto comodo per i calcoli a mente.
+
+<Esempio titolo="Esempio">
+$21^2 = (20 + 1)^2 = 400 + 40 + 1 = 441$. E $49 \cdot 51 = (50 - 1)(50 + 1) = 2500 - 1 = 2499$. Tutto a mente!
+</Esempio>
+
+<Attenzione distrattore="mercante">
+«$(a + b)^2 = a^2 + b^2$, è più corto!». Prova con numeri veri: $(3 + 4)^2 = 49$, mentre $3^2 + 4^2 = 25$. Mancano proprio $2 \cdot 3 \cdot 4 = 24$.
+</Attenzione>
+
+<Sfida titolo="Sfida degli Specchi" domande={[
+  { testo: "Sviluppa (x + 3)². Qual è il coefficiente di x?", risposta: 6, spiegazione: "(x + 3)² = x² + 6x + 9: il doppio prodotto è 2 · 3 · x = 6x." },
+  { testo: "Calcola a mente 31².", risposta: 961, spiegazione: "(30 + 1)² = 900 + 60 + 1 = 961." },
+  { testo: "(x + 5)(x − 5) è uguale a…", opzioni: ["x² − 25", "x² + 25", "x² − 10x − 25"], risposta: 0, spiegazione: "Somma per differenza: quadrato del primo meno quadrato del secondo." }
+]} />

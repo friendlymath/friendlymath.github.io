@@ -5,12 +5,19 @@ macroargomento: numeri
 sottoargomento: "Contare e scrivere i numeri"
 grado: 1
 regione: 1
-stanza: 2
+stanza: 3
 guardiano: true
 nomeStanza: "Il Golem dei Riporti"
 distrattore: barone
 prerequisiti:
   - numeri/valore-posizionale
+scenaStanza:
+  ambiente: fortezza
+  loci:
+    - { oggetto: trono, concetto: "Il Golem: somme in colonna con il riporto", ancora: "ripasso-lampo-laddizione-con-il-riporto" }
+    - { oggetto: abaco, concetto: "10 unità diventano 1 decina: ecco il riporto", ancora: "ripasso-lampo-laddizione-con-il-riporto" }
+    - { oggetto: scacchiera, concetto: "Le tabelline per moltiplicare in fretta", ancora: "sfida" }
+    - { oggetto: forziere, concetto: "La spesa al mercato: 136 + 275", ancora: "esempio" }
 ---
 
 <Scena personaggio="narratore">
@@ -48,5 +55,6 @@ Totale: **411** centesimi, cioè 4 euro e 11 centesimi.
   { testo: "Quanto fa 58 + 27?", risposta: 85, spiegazione: "8 + 7 = 15: scrivo 5 e porto 1. 5 + 2 + 1 = 8. Totale 85." },
   { testo: "Quanto fa 349 + 476?", risposta: 825, spiegazione: "9+6=15 (5, porto 1); 4+7+1=12 (2, porto 1); 3+4+1=8. Totale 825." },
   { testo: "Nel numero 6 054, che cosa indica lo 0?", opzioni: ["Che il numero vale zero", "Che non ci sono centinaia", "Che non ci sono unità"], risposta: 1, spiegazione: "Lo zero è al posto delle centinaia: tiene il posto vuoto." },
-  { testo: "Metti in ordine dal più piccolo: 908, 98, 980", opzioni: ["98, 908, 980", "908, 98, 980", "98, 980, 908"], risposta: 0, spiegazione: "98 ha solo due cifre; tra 908 e 980 si confrontano le decine: 0 < 8." }
+  { testo: "Metti in ordine dal più piccolo: 908, 98, 980", opzioni: ["98, 908, 980", "908, 98, 980", "98, 980, 908"], risposta: 0, spiegazione: "98 ha solo due cifre; tra 908 e 980 si confrontano le decine: 0 < 8." },
+  { testo: "Quanto fa 6 × 7?", risposta: 42, spiegazione: "6 × 7 = 42: sei gruppi da sette." },
 ]} />

@@ -1,0 +1,62 @@
+---
+titolo: "Le potenze: moltiplicazioni che crescono in fretta"
+descrizione: "Base, esponente e le regole per calcolare senza fatica. E perché la leggenda della scacchiera fa paura."
+macroargomento: numeri
+sottoargomento: "Le operazioni"
+grado: 2
+scenaStanza:
+  ambiente: biblioteca
+  loci:
+    - { oggetto: torre, concetto: "Base ed esponente: una torre di fattori uguali", ancora: "base-ed-esponente" }
+    - { oggetto: scacchiera, concetto: "La crescita esplosiva delle potenze di 2", ancora: "una-crescita-esplosiva" }
+    - { oggetto: pergamena, concetto: "Le proprietà delle potenze", ancora: "le-proprieta-delle-potenze" }
+    - { oggetto: sedia, concetto: "Esponente zero: a⁰ = 1", ancora: "esponente-zero-e-uno" }
+ispirazione:
+  - "https://www.youmath.it"
+---
+
+## Base ed esponente
+
+Una **potenza** è una moltiplicazione di fattori tutti uguali:
+
+$$
+2^5 = 2 \cdot 2 \cdot 2 \cdot 2 \cdot 2 = 32
+$$
+
+Il numero in basso è la **base** (il fattore che si ripete), quello in alto l'**esponente** (quante volte si ripete).
+
+## Esponente zero e uno
+
+- $a^1 = a$: un solo fattore.
+- $a^0 = 1$ per ogni $a \neq 0$. Sembra strano, ma serve perché le regole qui sotto funzionino sempre: $\tfrac{a^3}{a^3} = a^{3-3} = a^0$, e sappiamo che un numero diviso per sé stesso fa 1.
+
+## Le proprietà delle potenze
+
+| Regola | Esempio |
+|---|---|
+| $a^m \cdot a^n = a^{m+n}$ | $2^3 \cdot 2^4 = 2^7$ |
+| $a^m : a^n = a^{m-n}$ | $5^6 : 5^2 = 5^4$ |
+| $(a^m)^n = a^{m \cdot n}$ | $(3^2)^3 = 3^6$ |
+| $a^n \cdot b^n = (a \cdot b)^n$ | $2^3 \cdot 5^3 = 10^3$ |
+
+## Una crescita esplosiva
+
+<Curiosita titolo="La leggenda della scacchiera">
+Una leggenda racconta di un saggio che chiese come premio un chicco di riso sulla prima casella di una scacchiera, 2 sulla seconda, 4 sulla terza,
+e così via raddoppiando. Sull'ultima casella servirebbero $2^{63}$ chicchi: circa 9 miliardi di miliardi. Se un chicco pesasse 0,025 g, sarebbero circa
+230 miliardi di tonnellate di riso, solo sull'ultima casella. È una leggenda, ma il calcolo è vero: le potenze crescono in modo esplosivo.
+</Curiosita>
+
+<Esempio titolo="Esempio pratico: le notizie che girano">
+Una persona racconta una notizia a 3 amici, ognuno la racconta ad altri 3, e così via. Dopo 5 «giri» la sanno $3^5 = 243$ persone nuove nell'ultimo giro.
+</Esempio>
+
+<Attenzione>
+Errore tipico: confondere $2^3$ con $2 \cdot 3$. $2^3 = 8$, mentre $2 \cdot 3 = 6$. E ancora: $(-3)^2 = 9$, ma $-3^2 = -9$, perché l'esponente si applica solo al 3.
+</Attenzione>
+
+<Sfida domande={[
+  { testo: "Quanto fa 3⁴?", risposta: 81, spiegazione: "3 · 3 · 3 · 3 = 81." },
+  { testo: "Semplifica 2⁵ · 2³ = 2^? (scrivi l'esponente)", risposta: 8, spiegazione: "Stessa base: si sommano gli esponenti, 5 + 3 = 8." },
+  { testo: "Quanto vale 7⁰?", risposta: 1, spiegazione: "Qualsiasi numero diverso da zero elevato a 0 fa 1." }
+]} />

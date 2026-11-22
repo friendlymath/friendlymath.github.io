@@ -4,6 +4,7 @@ import { grado, macro, DISTRATTORI } from '../lib/mondo';
 import type { Lezione } from '../lib/contenuti';
 import Fonti from '../components/Fonti.astro';
 import Stemma from '../components/arte/Stemma.astro';
+import StanzaLoci from '../components/StanzaLoci.astro';
 
 interface Props {
   lezione: Lezione;
@@ -42,6 +43,8 @@ const altroHref = contesto === 'libro' ? `/cammino/${lezione.id}/` : `/libro/${l
         {d.regione! > 1 && <> (o batti il Guardiano della regione precedente)</>}. Nel frattempo puoi leggerla liberamente nel <a href={altroHref}>Libro</a>.</p>
       </div>}
     </header>
+
+    {d.scenaStanza && <StanzaLoci ambiente={d.scenaStanza.ambiente} loci={d.scenaStanza.loci} nome={d.nomeStanza} contesto={contesto} />}
 
     <div class="prosa">
       <slot />

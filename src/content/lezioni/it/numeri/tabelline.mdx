@@ -1,0 +1,62 @@
+---
+titolo: "Le tabelline: la moltiplicazione come scorciatoia"
+descrizione: "Moltiplicare vuol dire sommare tante volte lo stesso numero. Le tabelline sono i mattoni da tenere in tasca."
+macroargomento: numeri
+sottoargomento: "Le operazioni"
+grado: 1
+regione: 1
+stanza: 2
+nomeStanza: "La Sala della Scacchiera"
+distrattore: sirena
+prerequisiti:
+  - numeri/valore-posizionale
+scenaStanza:
+  ambiente: biblioteca
+  loci:
+    - { oggetto: scacchiera, concetto: "La tavola pitagorica: righe × colonne", ancora: "la-tavola-pitagorica" }
+    - { oggetto: cesto, concetto: "Moltiplicare = sommare gruppi uguali", ancora: "moltiplicare-vuol-dire-sommare-gruppi-uguali" }
+    - { oggetto: specchio, concetto: "3 × 4 = 4 × 3: la proprietà commutativa", ancora: "i-trucchi-per-ricordarle" }
+    - { oggetto: clessidra, concetto: "La Sirena del Dopo: allenati un po' ogni giorno", ancora: "errore-tipico" }
+ispirazione:
+  - "https://matepratica.it"
+---
+
+<Scena personaggio="civetta">
+Benvenuto nella Sala della Scacchiera! Qui ogni casella contiene un numero, e i numeri si tengono per mano in righe e colonne.
+Io le tabelline le so tutte. Tranne quella del 7. E dell'8. Va bene, ripassiamole insieme.
+</Scena>
+
+## Moltiplicare vuol dire sommare gruppi uguali
+
+Se hai **4 sacchetti** con **3 caramelle** ciascuno, quante caramelle hai? Puoi sommare: $3 + 3 + 3 + 3 = 12$.
+Oppure, più in fretta, **moltiplicare**: $4 \times 3 = 12$. Il primo numero dice *quanti gruppi*, il secondo *quanti in ogni gruppo*.
+
+<Esempio titolo="Esempio pratico: le uova">
+Una confezione contiene **6** uova. Ne compri **5** confezioni: $5 \times 6 = 30$ uova. Nessuno vuole contarle una per una!
+</Esempio>
+
+## La tavola pitagorica
+
+La tabella delle tabelline si chiama **tavola pitagorica**: all'incrocio tra la riga del 3 e la colonna del 4 trovi $12$.
+Prova a esplorarla: i numeri lungo la diagonale ($1, 4, 9, 16, 25, \dots$) sono i **quadrati**.
+
+<Interattivo tipo="tabelline" titolo="La Scacchiera magica" didascalia="Passa sopra (o tocca) una casella: vedi la moltiplicazione e il rettangolo di caselle che la rappresenta." altezza={420} />
+
+## I trucchi per ricordarle
+
+- **L'ordine non conta**: $3 \times 4 = 4 \times 3$ (proprietà commutativa). Così le tabelline da imparare si dimezzano!
+- **Per 10**: aggiungi uno zero. $7 \times 10 = 70$.
+- **Per 5**: è la metà di per 10. $8 \times 5 = 80 : 2 = 40$.
+- **Per 9**: $9 \times 7 = 70 - 7 = 63$. E le cifre del risultato sommano sempre 9 ($6 + 3 = 9$).
+- **Per 2**: è il doppio. **Per 4**: il doppio del doppio.
+
+<Attenzione distrattore="sirena">
+«Le tabelline? Le studi tutte domani, in una volta sola!». Purtroppo la memoria non funziona così: funziona meglio **poco e spesso**.
+Cinque minuti al giorno battono un'ora alla settimana. La <a href="/palestra/">Palestra</a> è fatta apposta.
+</Attenzione>
+
+<Sfida titolo="Sfida della Scacchiera" domande={[
+  { testo: "Quanto fa 7 × 8?", risposta: 56, spiegazione: "7 × 8 = 56. Trucco: 5, 6, 7, 8 → 56 = 7 × 8." },
+  { testo: "Quanto fa 9 × 6?", risposta: 54, spiegazione: "9 × 6 = 60 − 6 = 54." },
+  { testo: "4 gruppi da 5 sono uguali a…", opzioni: ["5 gruppi da 4", "4 gruppi da 4", "9 gruppi da 1"], risposta: 0, spiegazione: "4 × 5 = 5 × 4 = 20: l'ordine dei fattori non cambia il prodotto." }
+]} />

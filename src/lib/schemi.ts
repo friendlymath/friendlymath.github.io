@@ -1,5 +1,6 @@
 import { z } from 'astro/zod';
 import { SLUG_MACRO, DISTRATTORI } from './mondo';
+import { AMBIENTI, OGGETTI } from './loci';
 
 export const schemaFonte = z.object({
   titolo: z.string().min(1),
@@ -28,6 +29,11 @@ export const schemaLezione = z
     fonti: z.array(schemaFonte).default([]),
     ispirazione: z.array(z.url()).default([]),
     stato: z.enum(['bozza', 'pubblicata']).default('pubblicata'),
+    /** la stanza illustrata del palazzo della memoria: ogni oggetto richiama un concetto */
+    scenaStanza: z.object({
+      ambiente: z.enum(AMBIENTI),
+      loci: z.array(z.object({ oggetto: z.enum(OGGETTI), concetto: z.string().min(1), ancora: z.string().optional() })).min(1).max(5),
+    }).optional(),
   })
   .refine((l) => (l.regione === undefined) === (l.stanza === undefined), {
     message: 'regione e stanza vanno indicate insieme',

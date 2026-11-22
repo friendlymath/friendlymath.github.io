@@ -1,0 +1,138 @@
+---
+/** Un oggetto del palazzo della memoria. Origine (0,0) = punto d'appoggio al centro; disegnato in circa 140×140. */
+import type { Oggetto } from '../../lib/loci';
+interface Props { tipo: Oggetto }
+const { tipo } = Astro.props;
+---
+{tipo === 'scaffale' && <g>
+  <rect x="-62" y="-130" width="124" height="130" rx="4" fill="#9a6a44" /><rect x="-56" y="-124" width="112" height="118" fill="#6e4429" />
+  <rect x="-56" y="-86" width="112" height="6" fill="#9a6a44" /><rect x="-56" y="-46" width="112" height="6" fill="#9a6a44" />
+  {[0, 1, 2, 3, 4, 5, 6].map((i) => <rect x={-50 + i * 14} y="-60" width="10" height="10" rx="2" fill="#f07a2c" />)}
+  {[0, 1, 2, 3].map((i) => <rect x={-50 + i * 12} y="-80" width="8" height="32" rx="2" fill="#3f7fd8" transform="translate(0 -38)" />)}
+  {[0, 1].map((i) => <rect x={-48 + i * 50} y="-40" width="40" height="34" rx="3" fill="#7b5cd6" />)}
+</g>}
+{tipo === 'abaco' && <g>
+  <rect x="-60" y="-110" width="120" height="100" rx="6" fill="none" stroke="#8a5a3c" stroke-width="8" />
+  <path d="M-55 0h-8M55 0h8" stroke="#8a5a3c" stroke-width="8" /><path d="M-50 -10v10M50 -10v10" stroke="#8a5a3c" stroke-width="8" />
+  {[-85, -60, -35].map((y, r) => <g><path d={`M-56 ${y}h112`} stroke="#c9b27c" stroke-width="3" />
+    {[0, 1, 2, 3, 4].slice(0, [3, 5, 2][r]).map((k) => <circle cx={-44 + k * 14} cy={y} r="7" fill={['#7b5cd6', '#3f7fd8', '#f07a2c'][r]} />)}</g>)}
+</g>}
+{tipo === 'sedia' && <g>
+  <rect x="-34" y="-120" width="8" height="120" fill="#8a5a3c" /><rect x="26" y="-120" width="8" height="120" fill="#8a5a3c" />
+  <rect x="-34" y="-120" width="68" height="40" rx="6" fill="#b5651d" /><rect x="-40" y="-58" width="80" height="10" rx="3" fill="#9a6a44" />
+  <rect x="-34" y="-50" width="6" height="50" fill="#6e4429" /><rect x="28" y="-50" width="6" height="50" fill="#6e4429" />
+  <circle cx="0" cy="-100" r="15" fill="#fff8ea" stroke="#1f2333" stroke-width="3" /><text y="-94" text-anchor="middle" font-size="18" font-weight="900" fill="#1f2333">0</text>
+</g>}
+{tipo === 'scacchiera' && <g>
+  <rect x="-60" y="-56" width="120" height="8" fill="#6e4429" /><rect x="-50" y="-48" width="8" height="48" fill="#6e4429" /><rect x="42" y="-48" width="8" height="48" fill="#6e4429" />
+  <g transform="translate(0 -60) skewX(-20) scale(1 .55)">
+    {[0, 1, 2, 3, 4].map((r) => [0, 1, 2, 3, 4].map((c) => <rect x={-50 + c * 20} y={-100 + r * 20} width="20" height="20" fill={(r + c) % 2 ? '#fff4e0' : '#1f4e9c'} />))}
+  </g>
+  <text x="18" y="-82" font-size="16" font-weight="900" fill="#f07a2c">×</text>
+</g>}
+{tipo === 'cesto' && <g>
+  <path d="M-55 -50h110l-12 50h-86z" fill="#c9a24a" stroke="#8a5a3c" stroke-width="3" />
+  <path d="M-50 -38h100M-46 -24h92M-42 -10h84" stroke="#8a5a3c" stroke-width="2" />
+  {[[-36, -60], [-20, -66], [-4, -60], [12, -66], [28, -60], [-28, -76], [-12, -80], [4, -76], [20, -80]].map(([x, y]) => <circle cx={x} cy={y} r="9" fill="#d64545" stroke="#9e2b2b" stroke-width="1.5" />)}
+  <path d="M-55 -50q55 -70 110 0" fill="none" stroke="#8a5a3c" stroke-width="5" />
+</g>}
+{tipo === 'specchio' && <g>
+  <path d="M-8 0l8 -30 8 30z" fill="#8a5a3c" /><rect x="-30" y="-6" width="60" height="6" rx="3" fill="#6e4429" />
+  <ellipse cy="-90" rx="42" ry="60" fill="#c9a24a" /><ellipse cy="-90" rx="34" ry="52" fill="#cfe7f7" />
+  <path d="M-20 -120q14 -14 30 -8" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8" />
+  <text y="-82" text-anchor="middle" font-size="16" font-weight="900" fill="#1f4e9c">a ↔ b</text>
+</g>}
+{tipo === 'clessidra' && <g>
+  <rect x="-34" y="-128" width="68" height="10" rx="3" fill="#8a5a3c" /><rect x="-34" y="-10" width="68" height="10" rx="3" fill="#8a5a3c" />
+  <path d="M-26 -118h52c0 30 -22 38 -22 54s22 24 22 54h-52c0 -30 22 -38 22 -54s-22 -24 -22 -54z" fill="#e7f3fb" stroke="#8a5a3c" stroke-width="3" />
+  <path d="M-14 -100h28l-14 28z" fill="#ffc93c" /><path d="M-20 -12q20 -24 40 0z" fill="#ffc93c" /><path d="M0 -70v50" stroke="#ffc93c" stroke-width="2" stroke-dasharray="3 4" />
+</g>}
+{tipo === 'pizza' && <g>
+  <rect x="-60" y="-50" width="120" height="8" fill="#6e4429" /><rect x="-50" y="-42" width="8" height="42" fill="#6e4429" /><rect x="42" y="-42" width="8" height="42" fill="#6e4429" />
+  <ellipse cy="-62" rx="54" ry="18" fill="#e3a857" /><ellipse cy="-64" rx="46" ry="14" fill="#d64545" />
+  {[[-20, -66], [10, -60], [26, -68], [-6, -70], [-30, -60]].map(([x, y]) => <circle cx={x} cy={y} r="4" fill="#fff3c4" />)}
+  <path d="M0 -64l-46 0M0 -64l40 7M0 -64l40 -7M0 -64l-22 13M0 -64l-22 -12" stroke="#a83232" stroke-width="2" />
+</g>}
+{tipo === 'forno' && <g>
+  <path d="M-62 0v-60a62 62 0 0 1 124 0v60z" fill="#b5651d" /><path d="M-62 0v-60a62 62 0 0 1 124 0v60" fill="none" stroke="#7a3f12" stroke-width="4" />
+  <path d="M-28 0v-34a28 28 0 0 1 56 0v34z" fill="#2b1a12" /><path d="M-14 -4q4 -26 14 -30 -2 14 8 20 2 -8 6 -10 2 14 -6 20z" fill="#ffc93c" />
+  <path d="M-40 -90h10M30 -96h10M-10 -112h12M-50 -60h8M42 -56h8" stroke="#7a3f12" stroke-width="3" />
+</g>}
+{tipo === 'mappa' && <g>
+  <rect x="-66" y="-150" width="132" height="96" rx="4" fill="#f4e6cc" stroke="#8a5a3c" stroke-width="4" />
+  <path d="M-54 -80c20 -30 40 10 60 -20s30 0 40 -20" stroke="#3f7fd8" stroke-width="3" fill="none" />
+  <path d="M-40 -120l10 -14 10 14zM10 -130l12 -16 12 16z" fill="#8d6e63" /><circle cx="30" cy="-84" r="5" fill="#d64545" />
+  <path d="M-54 -64h40" stroke="#1f2333" stroke-width="3" /><path d="M-54 -64h20" stroke="#fff" stroke-width="2" />
+  <text x="-8" y="-60" font-size="11" font-weight="900" fill="#1f2333">1:25 000</text>
+</g>}
+{tipo === 'bilancia' && <g>
+  <rect x="-30" y="-8" width="60" height="8" rx="3" fill="#6e4429" /><rect x="-4" y="-110" width="8" height="104" fill="#8a5a3c" />
+  <path d="M-60 -104h120" stroke="#8a5a3c" stroke-width="6" stroke-linecap="round" /><circle cy="-108" r="7" fill="#c9a24a" />
+  <path d="M-60 -104l-16 40M-60 -104l16 40M60 -104l-16 40M60 -104l16 40" stroke="#555" stroke-width="2" />
+  <path d="M-80 -64h40a20 10 0 0 1 -40 0zM40 -64h40a20 10 0 0 1 -40 0z" fill="#c9a24a" />
+  <rect x="-68" y="-80" width="16" height="16" rx="3" fill="#7b5cd6" /><text x="-60" y="-68" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">x</text>
+  <circle cx="60" cy="-72" r="8" fill="#f07a2c" />
+</g>}
+{tipo === 'incudine' && <g>
+  <rect x="-30" y="-24" width="60" height="24" fill="#4a4f5c" /><path d="M-56 -60h90q26 0 34 12h-30l-8 10h-70z" fill="#6b7280" />
+  <rect x="-20" y="-38" width="40" height="16" fill="#4a4f5c" />
+  <g transform="rotate(-30 30 -90)"><rect x="26" y="-128" width="8" height="50" rx="2" fill="#8a5a3c" /><rect x="14" y="-136" width="32" height="14" rx="3" fill="#7a8394" /></g>
+  <path d="M-46 -74l-8 -10M-36 -78l-2 -12M-24 -74l6 -10" stroke="#ffc93c" stroke-width="3" stroke-linecap="round" />
+</g>}
+{tipo === 'forziere' && <g>
+  <rect x="-56" y="-60" width="112" height="60" rx="6" fill="#9a6a44" stroke="#6e4429" stroke-width="4" />
+  <path d="M-56 -60q56 -50 112 0" fill="#b5651d" stroke="#6e4429" stroke-width="4" transform="rotate(-18 -56 -60)" />
+  {[[-30, -66], [-14, -72], [4, -68], [20, -74], [-22, -80], [10, -84]].map(([x, y]) => <circle cx={x} cy={y} r="8" fill="#ffc93c" stroke="#c9a24a" stroke-width="2" />)}
+  <rect x="-10" y="-40" width="20" height="18" rx="3" fill="#c9a24a" /><text y="-12" text-anchor="middle" font-size="20" font-weight="900" fill="#fff8ea">%</text>
+</g>}
+{tipo === 'pergamena' && <g>
+  <path d="M-8 0l8 -40 8 40z" fill="#8a5a3c" />
+  <rect x="-44" y="-140" width="88" height="100" fill="#fbefd1" stroke="#c9a24a" stroke-width="3" />
+  <rect x="-52" y="-148" width="104" height="14" rx="7" fill="#d9b77a" /><rect x="-52" y="-46" width="104" height="14" rx="7" fill="#d9b77a" />
+  <path d="M-32 -118h64M-32 -104h50M-32 -90h58M-32 -76h40" stroke="#b08850" stroke-width="3" stroke-linecap="round" />
+</g>}
+{tipo === 'torre' && <g>
+  {[[-56, 1], [-24, 2], [8, 4], [40, 8]].map(([x, n]) => <g>
+    {Array.from({ length: n }, (_, k) => <rect x={x} y={-14 - k * 14} width="24" height="13" rx="2" fill={['#f2a93b', '#4caf50', '#3f7fd8', '#7b5cd6'][Math.log2(n)]} />)}
+    <text x={x + 12} y="14" text-anchor="middle" font-size="12" font-weight="900" fill="#1f2333">2{['⁰', '¹', '²', '³'][Math.log2(n)]}</text>
+  </g>)}
+</g>}
+{tipo === 'catapulta' && <g>
+  <rect x="-56" y="-16" width="96" height="12" fill="#8a5a3c" /><circle cx="-40" cy="-4" r="10" fill="#6e4429" /><circle cx="24" cy="-4" r="10" fill="#6e4429" />
+  <path d="M-30 -16l20 -50 20 50" fill="none" stroke="#8a5a3c" stroke-width="8" />
+  <g transform="rotate(-35 -10 -60)"><rect x="-70" y="-64" width="80" height="7" rx="3" fill="#9a6a44" /><path d="M-76 -66h16v10h-16z" fill="#6e4429" /><circle cx="-68" cy="-70" r="7" fill="#7a8394" /></g>
+  <path d="M-40 -110q60 -90 120 0" fill="none" stroke="#7b5cd6" stroke-width="3" stroke-dasharray="6 6" />
+</g>}
+{tipo === 'lavagna' && <g>
+  <rect x="-70" y="-156" width="140" height="96" rx="4" fill="#2f4f3e" stroke="#8a5a3c" stroke-width="7" />
+  <text y="-114" text-anchor="middle" font-size="18" font-weight="700" fill="#f4f4f4" font-family="serif" font-style="italic">ax² + bx + c = 0</text>
+  <path d="M-40 -88q40 -24 80 0" stroke="#ffc93c" stroke-width="2" fill="none" /><rect x="30" y="-68" width="16" height="5" fill="#fff" />
+</g>}
+{tipo === 'cannocchiale' && <g>
+  <path d="M0 -60l-30 60M0 -60l30 60M0 -60v60" stroke="#6e4429" stroke-width="5" />
+  <g transform="rotate(-25 0 -66)"><rect x="-56" y="-76" width="80" height="20" rx="4" fill="#c9a24a" /><rect x="24" y="-80" width="30" height="28" rx="4" fill="#b08850" /><rect x="-64" y="-72" width="10" height="12" fill="#6e4429" /></g>
+  <text x="34" y="-104" font-size="18" font-weight="900" fill="#7b5cd6">Δ</text>
+</g>}
+{tipo === 'ruota' && <g>
+  <circle cy="-62" r="58" fill="none" stroke="#8a5a3c" stroke-width="10" />
+  {[0, 45, 90, 135].map((a) => <path d="M-58 -62h116" stroke="#9a6a44" stroke-width="5" transform={`rotate(${a} 0 -62)`} />)}
+  <circle cy="-62" r="10" fill="#6e4429" /><path d="M0 -62h58" stroke="#d64545" stroke-width="4" /><text x="26" y="-68" font-size="14" font-weight="900" fill="#d64545">r</text>
+  <text y="-130" text-anchor="middle" font-size="18" font-weight="900" fill="#1f4e9c">π</text>
+</g>}
+{tipo === 'dadi' && <g>
+  <rect x="-58" y="-56" width="50" height="50" rx="10" fill="#fff" stroke="#1f2333" stroke-width="3" transform="rotate(-10 -33 -31)" />
+  {[[-46, -44], [-20, -44], [-46, -18], [-20, -18], [-33, -31]].map(([x, y]) => <circle cx={x} cy={y} r="4.5" fill="#1f2333" transform="rotate(-10 -33 -31)" />)}
+  <rect x="6" y="-50" width="50" height="50" rx="10" fill="#d64545" stroke="#1f2333" stroke-width="3" transform="rotate(12 31 -25)" />
+  {[[18, -38], [44, -12], [31, -25]].map(([x, y]) => <circle cx={x} cy={y} r="4.5" fill="#fff" transform="rotate(12 31 -25)" />)}
+</g>}
+{tipo === 'calderone' && <g>
+  <path d="M-36 -14l-10 14M36 -14l10 14" stroke="#2b2b2b" stroke-width="6" />
+  <path d="M-58 -70h116q0 66 -58 66t-58 -66z" fill="#2f3340" /><ellipse cy="-70" rx="58" ry="12" fill="#3c4152" /><ellipse cy="-72" rx="50" ry="8" fill="#4caf50" />
+  <circle cx="-16" cy="-86" r="8" fill="#6fd47a" opacity=".8" /><circle cx="12" cy="-96" r="6" fill="#6fd47a" opacity=".7" /><circle cx="2" cy="-112" r="4" fill="#6fd47a" opacity=".6" />
+  <text x="20" y="-80" font-size="16" font-weight="900" fill="#fff">½</text>
+</g>}
+{tipo === 'trono' && <g>
+  <rect x="-50" y="-150" width="100" height="150" rx="10" fill="#7b2d2d" /><rect x="-40" y="-140" width="80" height="80" rx="8" fill="#a33b3b" />
+  <path d="M-50 -150l10 -20 10 20 10 -20 10 20 10 -20 10 20 10 -20 10 20 10 -20 10 20" fill="#ffc93c" />
+  <rect x="-60" y="-60" width="120" height="20" rx="6" fill="#5b1f1f" /><rect x="-60" y="-40" width="16" height="40" fill="#5b1f1f" /><rect x="44" y="-40" width="16" height="40" fill="#5b1f1f" />
+</g>}

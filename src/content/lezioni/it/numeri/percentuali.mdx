@@ -1,0 +1,62 @@
+---
+titolo: "Le percentuali: sconti, voti e interessi"
+descrizione: "Il 25% è solo un modo elegante di dire 25 su 100. Con un trucco, gli sconti si calcolano a mente."
+macroargomento: numeri
+sottoargomento: "Rapporti e proporzioni"
+grado: 2
+regione: 2
+stanza: 3
+nomeStanza: "Il Mercato delle Monete"
+distrattore: mercante
+prerequisiti:
+  - numeri/proporzioni
+scenaStanza:
+  ambiente: mercato
+  loci:
+    - { oggetto: forziere, concetto: "Percento = su cento", ancora: "per-cento-vuol-dire-su-cento" }
+    - { oggetto: bilancia, concetto: "Calcolare il p% di un numero", ancora: "calcolare-una-percentuale" }
+    - { oggetto: pergamena, concetto: "Sconti e aumenti: moltiplicare per 0,8 o 1,2", ancora: "sconti-e-aumenti-in-un-colpo-solo" }
+    - { oggetto: clessidra, concetto: "Due sconti del 50% non fanno il 100%", ancora: "errore-tipico" }
+ispirazione:
+  - "https://www.youmath.it"
+  - "https://matepratica.it"
+---
+
+<Scena personaggio="narratore">
+Al Mercato delle Monete ogni bancarella grida un'offerta: «−20%!», «+10% di prodotto gratis!», «Due sconti al prezzo di uno!».
+Il Mercante di Scorciatoie si frega le mani: è il suo posto preferito.
+</Scena>
+
+## Per cento vuol dire su cento
+
+Il simbolo **%** si legge «per cento»: $25\% = \tfrac{25}{100} = 0{,}25$. Il 100% è l'intero, il 50% la metà, il 10% un decimo.
+
+## Calcolare una percentuale
+
+Il $p\%$ di un numero $N$ è:
+
+$$
+\frac{p}{100} \cdot N
+$$
+
+Il 20% di 80: $\tfrac{20}{100} \cdot 80 = 16$. Trucco a mente: il 10% si ottiene spostando la virgola di un posto ($80 \to 8$); il 20% è il doppio: 16.
+
+<Esempio titolo="Esempio pratico: la verifica">
+Hai risposto bene a **18** domande su **24**. Che percentuale è? $\tfrac{18}{24} = 0{,}75 = 75\%$.
+</Esempio>
+
+## Sconti e aumenti in un colpo solo
+
+- Uno **sconto del 20%** lascia l'80% del prezzo: moltiplica per $0{,}8$. Un paio di scarpe da 60 € costa $60 \cdot 0{,}8 = 48$ €.
+- Un **aumento del 20%** porta al 120%: moltiplica per $1{,}2$.
+
+<Attenzione distrattore="mercante">
+«Sconto del 50% e poi un altro 50%: tutto gratis!». Sbagliato: il secondo sconto si applica sul prezzo **già scontato**.
+$100 \cdot 0{,}5 \cdot 0{,}5 = 25$: paghi ancora 25 €. Lo sconto totale è il 75%, non il 100%. E un aumento del 10% seguito da uno sconto del 10% **non** ti riporta al prezzo iniziale: $100 \cdot 1{,}1 \cdot 0{,}9 = 99$.
+</Attenzione>
+
+<Sfida titolo="Sfida del Mercato" domande={[
+  { testo: "Quanto è il 15% di 200?", risposta: 30, spiegazione: "10% di 200 = 20; 5% = 10; totale 30." },
+  { testo: "Una giacca da 80 € è scontata del 25%. Quanto la paghi (in euro)?", risposta: 60, spiegazione: "80 · 0,75 = 60 €." },
+  { testo: "Un prezzo aumenta del 10% e poi cala del 10%. Rispetto all'inizio è…", opzioni: ["uguale", "più basso", "più alto"], risposta: 1, spiegazione: "1,1 × 0,9 = 0,99: è l'1% più basso." }
+]} />

@@ -5,12 +5,19 @@ macroargomento: numeri
 sottoargomento: "Frazioni"
 grado: 2
 regione: 2
-stanza: 2
+stanza: 4
 guardiano: true
 nomeStanza: "La Strega delle Fette"
 distrattore: gnomo
 prerequisiti:
   - numeri/frazioni-equivalenti
+scenaStanza:
+  ambiente: fortezza
+  loci:
+    - { oggetto: calderone, concetto: "La Strega: confrontare frazioni con lo stesso denominatore", ancora: "confrontare-due-frazioni" }
+    - { oggetto: bilancia, concetto: "Il prodotto incrociato decide chi è più grande", ancora: "confrontare-due-frazioni" }
+    - { oggetto: forziere, concetto: "Lo sconto migliore: 1/4 o 3/10?", ancora: "esempio" }
+    - { oggetto: mappa, concetto: "Proporzioni e percentuali del Bosco", ancora: "sfida" }
 ---
 
 <Scena personaggio="narratore">
@@ -42,5 +49,7 @@ Denominatore comune 20: $\tfrac{1}{4} = \tfrac{5}{20}$ e $\tfrac{3}{10} = \tfrac
   { testo: "Qual è più grande?", opzioni: ["2/3", "3/5", "Sono uguali"], risposta: 0, spiegazione: "2×5 = 10 contro 3×3 = 9: vince 2/3." },
   { testo: "Le frazioni 6/9 e 10/15 sono…", opzioni: ["equivalenti", "diverse", "impossibili da confrontare"], risposta: 0, spiegazione: "Entrambe si semplificano in 2/3 (6×15 = 90 = 9×10)." },
   { testo: "Semplifica 24/36: quanto vale il denominatore ai minimi termini?", risposta: 3, spiegazione: "MCD(24, 36) = 12: 24/36 = 2/3." },
-  { testo: "Quanti dodicesimi fanno 3/4? (scrivi il numeratore)", risposta: 9, spiegazione: "Da 4 a 12 si moltiplica per 3: 3 × 3 = 9, cioè 9/12." }
+  { testo: "Quanti dodicesimi fanno 3/4? (scrivi il numeratore)", risposta: 9, spiegazione: "Da 4 a 12 si moltiplica per 3: 3 × 3 = 9, cioè 9/12." },
+  { testo: "Quanto è il 20% di 45?", risposta: 9, spiegazione: "10% di 45 = 4,5; il 20% è il doppio: 9." },
+  { testo: "Trova x: 3 : 4 = 9 : x", risposta: 12, spiegazione: "3 · x = 4 · 9 = 36, quindi x = 12." },
 ]} />

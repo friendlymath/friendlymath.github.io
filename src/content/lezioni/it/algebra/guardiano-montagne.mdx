@@ -5,12 +5,19 @@ macroargomento: algebra
 sottoargomento: "Equazioni"
 grado: 3
 regione: 3
-stanza: 2
+stanza: 4
 guardiano: true
 nomeStanza: "Lo Yeti delle Incognite"
 distrattore: sirena
 prerequisiti:
   - algebra/equazioni-primo-grado
+scenaStanza:
+  ambiente: fortezza
+  loci:
+    - { oggetto: trono, concetto: "Lo Yeti: radunare le x da una parte", ancora: "quando-la-x-e-da-tutte-e-due-le-parti" }
+    - { oggetto: clessidra, concetto: "La Sirena del Dopo: la verifica costa 10 secondi", ancora: "errore-tipico" }
+    - { oggetto: bilancia, concetto: "Due palestre: quando costano uguale?", ancora: "esempio" }
+    - { oggetto: catapulta, concetto: "Prodotti notevoli e secondo grado", ancora: "sfida" }
 ---
 
 <Scena personaggio="narratore">
@@ -42,5 +49,6 @@ Dopo quanti ingressi spendi uguale? $20 + 5x = 9x \Rightarrow 20 = 4x \Rightarro
   { testo: "Risolvi: 7x − 4 = 3x + 8", risposta: 3, spiegazione: "7x − 3x = 8 + 4, quindi 4x = 12 e x = 3." },
   { testo: "Risolvi: 3(x − 2) = 15", risposta: 7, spiegazione: "3x − 6 = 15, 3x = 21, x = 7." },
   { testo: "Risolvi: x/2 + 5 = 9", risposta: 8, spiegazione: "x/2 = 4, quindi x = 8." },
-  { testo: "La somma di un numero e del suo doppio è 27. Qual è il numero?", risposta: 9, spiegazione: "x + 2x = 27, 3x = 27, x = 9." }
+  { testo: "La somma di un numero e del suo doppio è 27. Qual è il numero?", risposta: 9, spiegazione: "x + 2x = 27, 3x = 27, x = 9." },
+  { testo: "Quante soluzioni reali ha x² − 6x + 9 = 0?", opzioni: ["Due", "Una", "Nessuna"], risposta: 1, spiegazione: "Δ = 36 − 36 = 0: una sola soluzione, x = 3. È il quadrato (x − 3)²." },
 ]} />

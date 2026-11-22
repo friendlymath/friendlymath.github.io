@@ -1,0 +1,67 @@
+---
+titolo: "Rapporti e proporzioni: la mappa in scala"
+descrizione: "Quando due grandezze crescono insieme, una proporzione ti dice il pezzo che manca."
+macroargomento: numeri
+sottoargomento: "Rapporti e proporzioni"
+grado: 2
+regione: 2
+stanza: 2
+nomeStanza: "La Tenda del Cartografo"
+distrattore: mercante
+prerequisiti:
+  - numeri/frazioni-equivalenti
+scenaStanza:
+  ambiente: rifugio
+  loci:
+    - { oggetto: mappa, concetto: "Il rapporto: un confronto con la divisione", ancora: "che-cose-un-rapporto" }
+    - { oggetto: bilancia, concetto: "Proporzione: due rapporti uguali", ancora: "la-proporzione" }
+    - { oggetto: incudine, concetto: "Prodotto dei medi = prodotto degli estremi", ancora: "la-proprieta-fondamentale" }
+    - { oggetto: cesto, concetto: "Più ingredienti, più biscotti: proporzionalità diretta", ancora: "proporzionalita-diretta-e-inversa" }
+ispirazione:
+  - "https://www.youmath.it"
+---
+
+<Scena personaggio="narratore">
+Nella tenda del Cartografo le mappe sono ovunque. Una dice «scala 1 : 25 000», un'altra «1 : 100». Il Cartografo sospira:
+«La Nebbia ha mescolato le scale. Ora tutti credono che il bosco sia lungo tre dita».
+</Scena>
+
+## Che cos'è un rapporto
+
+Il **rapporto** tra due numeri è il loro quoziente: il rapporto tra 6 e 3 è $6 : 3 = 2$. Si scrive anche come frazione, $\tfrac{6}{3}$.
+Una **scala** è un rapporto: «1 : 25 000» vuol dire che 1 cm sulla mappa è 25 000 cm (cioè 250 m) nella realtà.
+
+## La proporzione
+
+Una **proporzione** è un'uguaglianza tra due rapporti:
+
+$$
+a : b = c : d \qquad\text{si legge «a sta a b come c sta a d»}
+$$
+
+$a$ e $d$ si chiamano **estremi**, $b$ e $c$ **medi**.
+
+## La proprietà fondamentale
+
+In ogni proporzione **il prodotto dei medi è uguale al prodotto degli estremi**: $b \cdot c = a \cdot d$.
+Così si trova il termine mancante: in $3 : 4 = x : 20$ si ha $4 \cdot x = 3 \cdot 20$, quindi $x = 60 : 4 = 15$.
+
+<Esempio titolo="Esempio pratico: la ricetta per più persone">
+Per **4** persone servono **300 g** di farina. Per **10** persone? $4 : 300 = 10 : x \Rightarrow 4x = 3000 \Rightarrow x = 750$ g.
+</Esempio>
+
+## Proporzionalità diretta e inversa
+
+- **Diretta**: se una grandezza raddoppia, anche l'altra raddoppia (biscotti e farina). Il **rapporto** resta costante.
+- **Inversa**: se una raddoppia, l'altra si dimezza (operai e giorni di lavoro). Il **prodotto** resta costante.
+
+<Attenzione distrattore="mercante">
+«Se 3 operai finiscono un muro in 6 giorni, 6 operai ci mettono 12 giorni: è una proporzione!». No: più operai, **meno** giorni.
+È proporzionalità **inversa**: $3 \cdot 6 = 6 \cdot x \Rightarrow x = 3$ giorni. Prima di impostare la proporzione chiediti sempre: «se una cresce, l'altra cresce o cala?».
+</Attenzione>
+
+<Sfida titolo="Sfida del Cartografo" domande={[
+  { testo: "Trova x: 2 : 5 = 8 : x", risposta: 20, spiegazione: "2 · x = 5 · 8 = 40, quindi x = 20." },
+  { testo: "Su una mappa 1 : 100 000, 3 cm sono quanti km reali?", risposta: 3, spiegazione: "3 cm × 100 000 = 300 000 cm = 3 000 m = 3 km." },
+  { testo: "4 rubinetti riempiono una vasca in 6 ore. In quante ore la riempiono 8 rubinetti?", risposta: 3, spiegazione: "Proporzionalità inversa: 4 · 6 = 8 · x, x = 3 ore." }
+]} />

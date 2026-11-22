@@ -1,0 +1,80 @@
+---
+titolo: "Equazioni di secondo grado: la formula della catapulta"
+descrizione: "ax² + bx + c = 0: il discriminante ti dice in anticipo quante soluzioni ci sono, la formula te le dà."
+macroargomento: algebra
+sottoargomento: "Equazioni"
+grado: 3
+regione: 3
+stanza: 3
+nomeStanza: "L'Officina della Catapulta"
+distrattore: barone
+prerequisiti:
+  - algebra/equazioni-primo-grado
+  - algebra/prodotti-notevoli
+scenaStanza:
+  ambiente: fortezza
+  loci:
+    - { oggetto: catapulta, concetto: "La traiettoria è una parabola", ancora: "dove-si-incontrano" }
+    - { oggetto: lavagna, concetto: "La forma ax² + bx + c = 0", ancora: "la-forma-generale" }
+    - { oggetto: cannocchiale, concetto: "Il discriminante Δ = b² − 4ac prevede le soluzioni", ancora: "il-discriminante" }
+    - { oggetto: pergamena, concetto: "La formula risolutiva", ancora: "la-formula-risolutiva" }
+ispirazione:
+  - "https://www.youmath.it"
+  - "https://www.matematika.it"
+---
+
+<Scena personaggio="fabbro">
+Questa catapulta la uso per lanciare i martelli rotti oltre le mura. Il sasso sale, rallenta, scende: disegna una curva chiamata **parabola**.
+La domanda è sempre la stessa: **dove tocca terra?** Per saperlo serve un'equazione di secondo grado. E una formula che ti forgio adesso.
+</Scena>
+
+## La forma generale
+
+Un'equazione di secondo grado si scrive così:
+
+$$
+ax^2 + bx + c = 0 \qquad (a \neq 0)
+$$
+
+## Il discriminante
+
+Prima di risolvere, calcola il **discriminante**:
+
+$$
+\Delta = b^2 - 4ac
+$$
+
+- $\Delta > 0$: **due** soluzioni diverse.
+- $\Delta = 0$: **una** soluzione (due soluzioni coincidenti).
+- $\Delta < 0$: **nessuna** soluzione tra i numeri reali.
+
+## La formula risolutiva
+
+$$
+x = \frac{-b \pm \sqrt{\Delta}}{2a}
+$$
+
+Esempio: $x^2 - 5x + 6 = 0$. Qui $a = 1, b = -5, c = 6$, quindi $\Delta = 25 - 24 = 1$ e $x = \tfrac{5 \pm 1}{2}$: le soluzioni sono $x = 3$ e $x = 2$.
+Verifica: $9 - 15 + 6 = 0$ ✔️ e $4 - 10 + 6 = 0$ ✔️.
+
+## Dove si incontrano
+
+Le soluzioni sono i punti in cui la parabola $y = ax^2 + bx + c$ **tocca l'asse x**: due punti, uno solo (la tocca appena) o nessuno (passa sopra o sotto).
+
+<Interattivo tipo="parabola" titolo="La catapulta: cambia a, b, c" didascalia="Muovi i cursori: guarda il segno del discriminante e i punti in cui la parabola tocca l'asse x." altezza={420} />
+
+<Esempio titolo="Esempio pratico: il recinto">
+Hai 20 m di rete per un recinto rettangolare e vuoi un'area di 24 m². Se un lato è $x$, l'altro è $10 - x$: $x(10 - x) = 24 \Rightarrow x^2 - 10x + 24 = 0$.
+$\Delta = 100 - 96 = 4$, $x = \tfrac{10 \pm 2}{2}$: il recinto è $6 \times 4$ m.
+</Esempio>
+
+<Attenzione distrattore="barone">
+Il Barone del Panico vede la formula e grida: «Troppe lettere, è impossibile!». Calma: è solo una ricetta in tre passi. **1)** leggi $a$, $b$, $c$ con il loro segno; **2)** calcola $\Delta$; **3)** metti tutto nella formula.
+L'errore più frequente è dimenticare il segno di $b$: se $b = -5$, allora $-b = +5$ e $b^2 = 25$.
+</Attenzione>
+
+<Sfida titolo="Sfida della Catapulta" domande={[
+  { testo: "Calcola il discriminante di x² + 4x + 4 = 0.", risposta: 0, spiegazione: "Δ = 16 − 16 = 0: una sola soluzione, x = −2." },
+  { testo: "Quante soluzioni reali ha x² + x + 1 = 0?", opzioni: ["Due", "Una", "Nessuna"], risposta: 2, spiegazione: "Δ = 1 − 4 = −3 < 0: nessuna soluzione reale." },
+  { testo: "Risolvi x² − 7x + 12 = 0. Scrivi la soluzione più grande.", risposta: 4, spiegazione: "Δ = 49 − 48 = 1, x = (7 ± 1)/2 → 4 e 3." }
+]} />
