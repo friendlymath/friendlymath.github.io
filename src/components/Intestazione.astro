@@ -31,7 +31,7 @@ const verso = altraLingua(Astro.url);
       <details class="mappa-sito">
         <summary aria-label={t('Mappa del sito', 'Site map')}><span aria-hidden="true" class="ico">🗺️</span><span class="testo-mappa"> {t('Mappa del sito', 'Site map')}</span><span class="hamb" aria-hidden="true">☰</span></summary>
         <div class="pannello-mappa" role="navigation" aria-label={t('Mappa del sito', 'Site map')}>
-          <p class="lingua-menu">🌐 <a href={verso} hreflang={l === 'en' ? 'it' : 'en'} lang={l === 'en' ? 'it' : 'en'}>{l === 'en' ? 'Leggi in italiano' : 'Read in English'}</a></p>
+          <p class="tema-menu"><button type="button" class="btn vuoto" data-tema>🌓 {t('Tema chiaro/scuro', 'Light/dark theme')}</button></p>
           {SEZIONI.map((s) => (
             <div class="gruppo">
               <p class="gruppo-titolo"><span aria-hidden="true">{s.icona}</span> {s.gruppo}</p>
@@ -40,9 +40,15 @@ const verso = altraLingua(Astro.url);
           ))}
         </div>
       </details>
-      <a href={verso} class="tema lingua-link" hreflang={l === 'en' ? 'it' : 'en'} lang={l === 'en' ? 'it' : 'en'} aria-label={l === 'en' ? 'Leggi in italiano' : 'Read in English'} title={l === 'en' ? 'Italiano' : 'English'}>{l === 'en' ? 'IT' : 'EN'}</a>
+      <details class="sel-lingua">
+        <summary aria-label={t('Lingua: italiano. Cambia lingua', 'Language: English. Change language')} title={t('Lingua', 'Language')}><span class="globo" aria-hidden="true">🌐</span> {l.toUpperCase()} <span class="freccia" aria-hidden="true">▾</span></summary>
+        <ul class="voci-lingua" role="list">
+          <li><a href={l === 'it' ? Astro.url.pathname : verso} hreflang="it" lang="it" data-lingua="it" aria-current={l === 'it' ? 'true' : undefined}>Italiano {l === 'it' && <span aria-hidden="true">✓</span>}</a></li>
+          <li><a href={l === 'en' ? Astro.url.pathname : verso} hreflang="en" lang="en" data-lingua="en" aria-current={l === 'en' ? 'true' : undefined}>English {l === 'en' && <span aria-hidden="true">✓</span>}</a></li>
+        </ul>
+      </details>
       <a href={href(l, '/studio/')} class="tema studio-link" aria-label={t('Il tuo modo di studiare: lettura, strumenti, focus', 'Your way of learning: reading, tools, focus')} title={t('Il tuo modo di studiare', 'Your way of learning')}>Aa</a>
-      <button class="tema" type="button" aria-label={t('Cambia tema chiaro/scuro', 'Switch light/dark theme')} title={t('Tema chiaro/scuro', 'Light/dark theme')}>🌓</button>
+      <button class="tema" type="button" data-tema aria-label={t('Cambia tema chiaro/scuro', 'Switch light/dark theme')} title={t('Tema chiaro/scuro', 'Light/dark theme')}>🌓</button>
       <a href={href(l, '/zaino/')} class="zaino" aria-label={t("Zaino dell'eroe: progressi e Pergamena", 'Hero’s backpack: progress and Scroll')}>
         <span class="mini-avatar" data-mini-avatar aria-hidden="true">🎒</span>
         <span class="zaino-grado pillola" data-grado-attuale>{t('Recluta', 'Recruit')}</span>
@@ -73,12 +79,19 @@ const verso = altraLingua(Astro.url);
   document.addEventListener('friendlymath:eroe', aggiorna);
   document.addEventListener('friendlymath:salvato', aggiorna);
 
-  document.querySelector('.tema')?.addEventListener('click', () => {
+  // scelta esplicita della lingua: da qui in poi vale più della lingua del browser
+  document.querySelectorAll<HTMLAnchorElement>('[data-lingua]').forEach((a) => a.addEventListener('click', () => {
+    try { localStorage.setItem('friendlymath:lingua', a.dataset.lingua!); } catch {}
+  }));
+  const selLingua = document.querySelector<HTMLDetailsElement>('.sel-lingua')!;
+  document.addEventListener('click', (e) => { if (selLingua.open && !selLingua.contains(e.target as Node)) selLingua.open = false; });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && selLingua.open) { selLingua.open = false; selLingua.querySelector('summary')!.focus(); } });
+  document.querySelectorAll('[data-tema]').forEach((b) => b.addEventListener('click', () => {
     const r = document.documentElement;
     const scuroOra = r.dataset.theme ? r.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
     r.dataset.theme = scuroOra ? 'light' : 'dark';
     try { localStorage.setItem('friendlymath:tema', r.dataset.theme); } catch {}
-  });
+  }));
   const mappa = document.querySelector<HTMLDetailsElement>('.mappa-sito')!;
   document.addEventListener('click', (e) => { if (mappa.open && !mappa.contains(e.target as Node)) mappa.open = false; });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && mappa.open) { mappa.open = false; mappa.querySelector('summary')!.focus(); } });
@@ -95,11 +108,24 @@ const verso = altraLingua(Astro.url);
   @media (max-width: 372px) { .logo { font-size: 1.12rem; gap: .3rem; } .azioni { gap: .3rem; } }
   .nav-desk { display: none; }
   .azioni { display: flex; align-items: center; gap: .4rem; margin-left: auto; }
-  .lingua-link { display: inline-grid; place-items: center; text-decoration: none; font-family: var(--font-ui); font-weight: 900; font-size: .85rem; }
-  @media (max-width: 430px) { .lingua-link { display: none !important; } }
-  .lingua-menu { margin: 0 0 .6rem; font-family: var(--font-ui); font-weight: 800; }
+  .sel-lingua { position: relative; flex: none; }
+  .sel-lingua summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: .25rem; height: 2.4rem; padding: 0 .65rem; border-radius: 999px; border: 2px solid var(--oro); background: rgba(0,0,0,.25); color: #f3e3bd; font-family: var(--font-ui); font-weight: 900; font-size: .9rem; white-space: nowrap; }
+  .sel-lingua summary::-webkit-details-marker { display: none; }
+  .sel-lingua[open] summary { background: var(--oro); color: #2b1a10; }
+  .sel-lingua .freccia { font-size: .7rem; }
+  .voci-lingua { position: absolute; right: 0; top: calc(100% + 8px); z-index: 30; list-style: none; margin: 0; padding: .35rem; min-width: 10rem; background: var(--superficie); border: 3px solid var(--oro); border-radius: 14px; box-shadow: 0 14px 34px rgba(0,0,0,.25); }
+  .voci-lingua a { display: flex; justify-content: space-between; padding: .5rem .7rem; border-radius: 10px; text-decoration: none; color: var(--testo) !important; font-family: var(--font-ui); font-weight: 800; }
+  .voci-lingua a:hover, .voci-lingua a:focus-visible { background: var(--superficie-2); }
+  .voci-lingua a[aria-current] { color: var(--fiducia) !important; }
+  .tema-menu { display: none; margin: 0 0 .4rem; }
+  @media (max-width: 430px) {
+    button.tema { display: none !important; }
+    .tema-menu { display: block; grid-column: 1 / -1; }
+    .sel-lingua .globo { display: none; }
+    .sel-lingua summary { padding: 0 .5rem; }
+  }
   .studio-link { display: inline-grid; place-items: center; text-decoration: none; font-family: var(--font-ui); font-weight: 900; font-size: .95rem; }
-  @media (max-width: 420px) { .studio-link { display: none !important; } }
+  @media (max-width: 560px) { .studio-link { display: none !important; } .sel-lingua .globo { display: none; } }
   .tema { background: rgba(0,0,0,.25); border: 2px solid var(--oro); color: #f3e3bd; border-radius: 999px; width: 2.4rem; height: 2.4rem; cursor: pointer; font-size: 1.05rem; flex: none; }
   .zaino { display: inline-flex; align-items: center; gap: .35rem; text-decoration: none; font-weight: 800; color: #f3e3bd; padding: .2em .55em .2em .3em; border-radius: 999px; background: rgba(0,0,0,.3); border: 2px solid var(--oro); }
   .mini-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--superficie); display: grid; place-items: center; overflow: hidden; }
@@ -126,8 +152,10 @@ const verso = altraLingua(Astro.url);
     .ico { display: none; } .hamb { display: inline; }
     .logo span { font-size: 1.1rem; }
   }
-  @media (max-width: 380px) { .zaino-grado { display: none; } }
-  @media (min-width: 1100px) {
+  @media (max-width: 700px) { .zaino-grado { display: none; } }
+  @media (max-width: 380px) { .mappa-sito summary { padding: .35em .6em; } .logo svg { width: 30px; height: 30px; } }
+  @media (max-width: 345px) { .logo svg { display: none; } }
+  @media (min-width: 1180px) {
     .nav-desk { display: flex; gap: .1rem; margin-left: 1rem; }
     .nav-desk a { padding: .35em .65em; border-radius: 8px; text-decoration: none; color: #f3e3bd !important; font-family: var(--font-titoli); font-weight: 700; font-size: .95rem; white-space: nowrap; letter-spacing: .02em; }
     .nav-desk a:hover, .nav-desk a[aria-current] { background: rgba(201,162,74,.22); color: var(--oro-chiaro) !important; box-shadow: inset 0 -2px 0 var(--oro); }

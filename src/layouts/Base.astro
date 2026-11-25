@@ -39,6 +39,21 @@ const titoloCompleto = titolo === 'FriendlyMath' ? titolo : `${titolo} · Friend
     <meta property="og:title" content={titoloCompleto} />
     <meta property="og:description" content={descrizione} />
     <style is:inline set:html={varTexture}></style>
+    {base !== '/404/' && <script is:inline>
+      // Lingua: prima la scelta fatta con il selettore; altrimenti italiano se il browser è in italiano, inglese per tutte le altre lingue.
+      // I motori di ricerca non vengono reindirizzati, così entrambe le versioni restano indicizzate.
+      (function () {
+        try {
+          if (/bot|crawl|spider|slurp|facebookexternalhit|preview/i.test(navigator.userAgent)) return;
+          var p = location.pathname, inglese = p === '/en' || p.indexOf('/en/') === 0;
+          var scelta = localStorage.getItem('friendlymath:lingua');
+          var primaria = ((navigator.languages && navigator.languages[0]) || navigator.language || '').toLowerCase();
+          var voluta = scelta === 'it' || scelta === 'en' ? scelta : (primaria.indexOf('it') === 0 ? 'it' : 'en');
+          if (voluta === 'en' && !inglese) location.replace('/en' + p + location.search + location.hash);
+          else if (voluta === 'it' && inglese) location.replace((p.slice(3) || '/') + location.search + location.hash);
+        } catch (e) {}
+      })();
+    </script>}
     <script is:inline>
       try { const t = localStorage.getItem('friendlymath:tema'); if (t) document.documentElement.dataset.theme = t; } catch {}
       try {
