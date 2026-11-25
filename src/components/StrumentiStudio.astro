@@ -2,32 +2,35 @@
 /** Strumenti compensativi a comparsa: Leggimi, righello di lettura, calcolatrice, tavola pitagorica, formulario. */
 import katex from 'katex';
 import { FORMULE } from '../lib/palestra';
+import { linguaDa, traduttore, href } from '../lib/lingua';
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
 const formulario = FORMULE.map((f) => ({ titolo: f.titolo, slug: f.slug, html: katex.renderToString(f.membri.map((m) => m.tex).join(' '), { throwOnError: false }) }));
 ---
-<div class="dock" data-dock aria-label="Strumenti di studio">
-  <button type="button" class="dock-btn solo-leggimi" data-leggimi aria-pressed="false" title="Leggimi ad alta voce">🔊<span> Leggimi</span></button>
-  <button type="button" class="dock-btn solo-righello" data-righello aria-pressed="false" title="Righello di lettura">📏<span> Righello</span></button>
-  <button type="button" class="dock-btn solo-strumenti" data-apri-strumenti aria-expanded="false" title="Calcolatrice, tavola pitagorica, formulario">🧮<span> Strumenti</span></button>
-  <a class="dock-btn" href="/studio/" title="Il tuo modo di studiare">⚙️<span class="sr-only"> Il tuo modo di studiare</span></a>
+<div class="dock" data-dock aria-label={t('Strumenti di studio', 'Learning tools')}>
+  <button type="button" class="dock-btn solo-leggimi" data-leggimi aria-pressed="false" title={t('Leggimi ad alta voce', 'Read aloud')}>🔊<span> {t('Leggimi', 'Read aloud')}</span></button>
+  <button type="button" class="dock-btn solo-righello" data-righello aria-pressed="false" title={t('Righello di lettura', 'Reading ruler')}>📏<span> {t('Righello', 'Ruler')}</span></button>
+  <button type="button" class="dock-btn solo-strumenti" data-apri-strumenti aria-expanded="false" title={t('Calcolatrice, tavola pitagorica, formulario', 'Calculator, times table, formula sheet')}>🧮<span> {t('Strumenti', 'Tools')}</span></button>
+  <a class="dock-btn" href={href(l, '/studio/')} title={t('Il tuo modo di studiare', 'Your way of learning')}>⚙️<span class="sr-only"> {t('Il tuo modo di studiare', 'Your way of learning')}</span></a>
 </div>
 
 <div class="righello-velo" data-velo aria-hidden="true" hidden><div class="fascia" data-fascia></div></div>
 
-<section class="cassetta" data-cassetta hidden aria-label="Strumenti di calcolo">
+<section class="cassetta" data-cassetta hidden aria-label={t('Strumenti di calcolo', 'Calculation tools')}>
   <div class="cassetta-testa">
     <div role="tablist" class="schede-cassetta">
-      <button type="button" role="tab" aria-selected="true" data-tab="calc">🧮 Calcolatrice</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="tavola">✖️ Tavola pitagorica</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="formule">📜 Formulario</button>
+      <button type="button" role="tab" aria-selected="true" data-tab="calc">🧮 {t('Calcolatrice', 'Calculator')}</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="tavola">✖️ {t('Tavola pitagorica', 'Times table')}</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="formule">📜 {t('Formulario', 'Formula sheet')}</button>
     </div>
-    <button type="button" class="chiudi-cassetta" data-chiudi-cassetta aria-label="Chiudi">✕</button>
+    <button type="button" class="chiudi-cassetta" data-chiudi-cassetta aria-label={t('Chiudi', 'Close')}>✕</button>
   </div>
   <div data-pannello="calc">
-    <label class="sr-only" for="calc-in">Espressione</label>
-    <input id="calc-in" type="text" inputmode="decimal" autocomplete="off" placeholder="Per esempio: 3,5 × (2 + 4)" data-calc-in />
+    <label class="sr-only" for="calc-in">{t('Espressione', 'Expression')}</label>
+    <input id="calc-in" type="text" inputmode="decimal" autocomplete="off" placeholder={t('Per esempio: 3,5 × (2 + 4)', 'For example: 3.5 × (2 + 4)')} data-calc-in />
     <p class="calc-out" aria-live="polite" data-calc-out>= </p>
     <div class="tasti" data-tasti>
-      {['7', '8', '9', '÷', '4', '5', '6', '×', '1', '2', '3', '−', '0', ',', '(', ')', '^', 'C', '⌫', '+'].map((t) => <button type="button" data-t={t}>{t}</button>)}
+      {['7', '8', '9', '÷', '4', '5', '6', '×', '1', '2', '3', '−', '0', t(',', '.'), '(', ')', '^', 'C', '⌫', '+'].map((t) => <button type="button" data-t={t}>{t}</button>)}
     </div>
   </div>
   <div data-pannello="tavola" hidden>
@@ -42,6 +45,8 @@ const formulario = FORMULE.map((f) => ({ titolo: f.titolo, slug: f.slug, html: k
 
 <script>
   import { calcola } from '../lib/calcolatrice';
+  import { linguaPagina } from '../lib/lingua';
+  const en = linguaPagina() === 'en';
   const dock = document.querySelector<HTMLElement>('[data-dock]')!;
 
   // --- Leggimi (sintesi vocale del dispositivo) ---
@@ -60,15 +65,15 @@ const formulario = FORMULE.map((f) => ({ titolo: f.titolo, slug: f.slug, html: k
   };
   let parlando = false;
   btnL.addEventListener('click', () => {
-    if (!('speechSynthesis' in window)) { alert('Questo browser non ha la sintesi vocale.'); return; }
+    if (!('speechSynthesis' in window)) { alert(en ? 'This browser has no speech synthesis.' : 'Questo browser non ha la sintesi vocale.'); return; }
     if (parlando) { speechSynthesis.cancel(); return; }
     const testo = testoDaLeggere();
-    const voce = speechSynthesis.getVoices().find((v) => v.lang?.toLowerCase().startsWith('it'));
+    const voce = speechSynthesis.getVoices().find((v) => v.lang?.toLowerCase().startsWith(en ? 'en' : 'it'));
     // spezza in frasi: i browser interrompono le letture troppo lunghe
     const frasi = testo.match(/[^.!?]+[.!?]*/g) ?? [testo];
     frasi.forEach((f, i) => {
       const u = new SpeechSynthesisUtterance(f.trim());
-      u.lang = 'it-IT'; if (voce) u.voice = voce; u.rate = 0.95;
+      u.lang = en ? 'en-GB' : 'it-IT'; if (voce) u.voice = voce; u.rate = 0.95;
       if (i === 0) u.onstart = () => { parlando = true; btnL.setAttribute('aria-pressed', 'true'); };
       if (i === frasi.length - 1) u.onend = () => { parlando = false; btnL.setAttribute('aria-pressed', 'false'); };
       speechSynthesis.speak(u);
@@ -104,7 +109,7 @@ const formulario = FORMULE.map((f) => ({ titolo: f.titolo, slug: f.slug, html: k
   const aggiorna = () => {
     if (!inp.value.trim()) { out.textContent = '= '; return; }
     const r = calcola(inp.value);
-    out.textContent = r === null ? '= …' : `= ${r.toLocaleString('it-IT', { maximumFractionDigits: 8 })}`;
+    out.textContent = r === null ? '= …' : `= ${r.toLocaleString(en ? 'en-GB' : 'it-IT', { maximumFractionDigits: 8 })}`;
   };
   inp.addEventListener('input', aggiorna);
   cassetta.querySelectorAll<HTMLButtonElement>('[data-t]').forEach((b) => b.addEventListener('click', () => {

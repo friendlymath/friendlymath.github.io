@@ -1,0 +1,96 @@
+---
+import Base from '../layouts/Base.astro';
+import { linguaDa } from '../lib/lingua';
+const l = linguaDa(Astro.url);
+---
+{l === 'en' ? (
+<Base titolo="Privacy" descrizione="What data FriendlyMath uses: none collected by the site; everything stays on your device.">
+  <section class="contenitore stretto privacy-pagina">
+    <h1>🔒 Privacy</h1>
+    <p class="sottotitolo"><b>In short:</b> FriendlyMath has no accounts, no profiling cookies, no visitor statistics, and does not send your progress,
+    your character or your learning choices to any server. Everything stays on your device.</p>
+
+    <h2>What is saved, and where</h2>
+    <p>The site saves some information in <b>your browser’s</b> storage (the so-called <i>localStorage</i>). It stays on your device and nobody else can read it:</p>
+    <ul>
+      <li><b>Progress</b>: completed lessons, defeated Guardians, badges.</li>
+      <li><b>Character</b>: name (optional), looks, lineage, class, abilities.</li>
+      <li><b>Preferences</b>: light or dark theme, Book view, date of your last Scroll save.</li>
+      <li><b>Learning and accessibility profile</b> (when you turn it on): the reading and learning settings you choose, including any neurodivergence.
+      This is health information: that is why it never leaves your device.</li>
+    </ul>
+    <p>The <b>Scroll</b> is a file you download yourself, whenever you want: it contains your progress and character, and you keep it wherever you like.
+    Your learning profile is <b>never</b> written into it.</p>
+
+    <h2>Who can see this data</h2>
+    <p>Only you. <b>Whoever runs FriendlyMath neither receives nor can consult</b> your progress, your character, your learning profile or any neurodivergence:
+    the site is made of static pages and has no server collecting data.</p>
+
+    <h2>The only technical data: your IP address</h2>
+    <p>The site is hosted on <b>GitHub Pages</b> (GitHub, Inc.). As stated in GitHub’s documentation, when you visit a GitHub Pages site
+    your IP address is logged and stored by GitHub <b>for security purposes</b>, even if you have no GitHub account.
+    The site owner does not receive these logs. For details see the
+    <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages#data-collection" rel="noopener">GitHub Pages documentation</a>
+    and <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub’s privacy statement</a>.</p>
+
+    <h2>Fonts, images, links</h2>
+    <p>Fonts, images and libraries are loaded from this same site, with no external services. Links to other sites (sources, further reading)
+    only take you away from FriendlyMath when you click them: from there, those sites’ rules apply.</p>
+
+    <h2>How to delete everything</h2>
+    <ul>
+      <li>In the <a href="/zaino/">Hero’s backpack</a>: “Start again from scratch”.</li>
+      <li>On the <a href="/en/studio/">Your way of learning</a> page: “Delete my learning profile”.</li>
+      <li>Or clear this site’s browsing data in your browser settings.</li>
+      <li>The Scrolls you downloaded are your own files: you can delete them whenever you like.</li>
+    </ul>
+    <p class="tenue">This page was last updated in November 2026. The Italian version is the reference text.</p>
+  </section>
+</Base>
+) : (
+<Base titolo="Privacy" descrizione="Quali dati usa FriendlyMath: nessuno raccolto dal sito; tutto resta sul tuo dispositivo.">
+  <section class="contenitore stretto privacy-pagina">
+    <h1>🔒 Privacy</h1>
+    <p class="sottotitolo"><b>In breve:</b> FriendlyMath non ha account, non usa cookie di profilazione, non ha statistiche di visita e non invia a nessun server i tuoi progressi,
+    il tuo personaggio o le tue scelte di studio. Tutto resta sul tuo dispositivo.</p>
+
+    <h2>Cosa viene salvato, e dove</h2>
+    <p>Il sito salva alcune informazioni nella memoria del <b>tuo browser</b> (il cosiddetto <i>localStorage</i>). Restano sul tuo dispositivo e nessun altro può leggerle:</p>
+    <ul>
+      <li><b>Progressi</b>: lezioni completate, Guardiani sconfitti, distintivi.</li>
+      <li><b>Personaggio</b>: nome (facoltativo), aspetto, classe, caratteristiche.</li>
+      <li><b>Preferenze</b>: tema chiaro o scuro, vista del Libro, data dell'ultimo salvataggio della Pergamena.</li>
+      <li><b>Profilo di studio e accessibilità</b> (quando lo attivi): le regolazioni di lettura e di studio che scegli, comprese eventuali neurodivergenze.
+      Sono informazioni sulla salute: per questo non escono mai dal tuo dispositivo.</li>
+    </ul>
+    <p>La <b>Pergamena</b> è un file che scarichi tu, quando vuoi: contiene progressi e personaggio, e la conservi dove preferisci.</p>
+
+    <h2>Chi può vedere questi dati</h2>
+    <p>Solo tu. <b>Chi gestisce FriendlyMath non riceve né può consultare</b> i tuoi progressi, il tuo personaggio, il tuo profilo di studio o le tue eventuali neurodivergenze:
+    il sito è fatto di pagine statiche e non ha un server che raccolga dati.</p>
+
+    <h2>L'unico dato tecnico: l'indirizzo IP</h2>
+    <p>Il sito è ospitato su <b>GitHub Pages</b> (GitHub, Inc.). Come indicato nella documentazione di GitHub, quando visiti un sito GitHub Pages
+    il tuo indirizzo IP viene registrato e conservato da GitHub <b>per motivi di sicurezza</b>, anche se non hai un account GitHub.
+    Il gestore del sito non riceve questi registri. Per i dettagli vedi la
+    <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages#data-collection" rel="noopener">documentazione di GitHub Pages</a>
+    e l'<a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">informativa privacy di GitHub</a>.</p>
+
+    <h2>Caratteri, immagini, collegamenti</h2>
+    <p>Caratteri tipografici, immagini e librerie sono caricati dallo stesso sito, senza servizi esterni. I link verso altri siti (fonti, approfondimenti)
+    portano fuori da FriendlyMath solo quando li clicchi: da lì valgono le regole di quei siti.</p>
+
+    <h2>Come cancellare tutto</h2>
+    <ul>
+      <li>Nello <a href="/zaino/">Zaino dell'eroe</a>: «Ricominciare da zero».</li>
+      <li>Oppure cancella i dati di navigazione di questo sito dalle impostazioni del browser.</li>
+      <li>Le Pergamene che hai scaricato sono file tuoi: puoi eliminarle quando vuoi.</li>
+    </ul>
+    <p class="tenue">Ultimo aggiornamento di questa pagina: novembre 2026.</p>
+  </section>
+</Base>
+)}
+<style>
+  .privacy-pagina { padding-top: 1.2rem; }
+  .sottotitolo { font-size: 1.12rem; }
+</style>

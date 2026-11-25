@@ -1,26 +1,38 @@
 ---
 /** Scelta rapida del profilo di studio, da usare dentro il percorso (creazione dell'eroe, ingresso del Cammino). */
-import { PROFILI, REGOLAZIONI } from '../lib/studio';
+import { profiliL, regolazioniL } from '../lib/studio';
+import { linguaDa, traduttore, href } from '../lib/lingua';
 interface Props { compatta?: boolean }
 const { compatta = false } = Astro.props;
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const PROFILI = profiliL(l);
+const REGOLAZIONI = regolazioniL(l);
 ---
 <div class:list={['scelta-profilo', { compatta }]} data-scelta-profilo>
   <div class="profili-rapidi">
     {PROFILI.map((p) => (
-      <label class="profilo-rapido" title={`Attiva: ${p.regolazioni.map((r) => REGOLAZIONI.find((x) => x.id === r)!.nome).join(', ')}`}>
+      <label class="profilo-rapido" title={`${t('Attiva', 'Turns on')}: ${p.regolazioni.map((r) => REGOLAZIONI.find((x) => x.id === r)!.nome).join(', ')}`}>
         <input type="checkbox" data-profilo-rapido={p.id} />
         <span><b>{p.nome}</b><small>{p.descrizione}</small></span>
       </label>
     ))}
   </div>
   <p class="effetto tenue" data-effetto aria-live="polite"></p>
-  <p class="privacy-profilo">🔒 <b>Questa scelta resta solo su questo dispositivo.</b> Non viene inviata a nessuno e non finisce nella Pergamena:
-  chi gestisce FriendlyMath non può sapere se hai una neurodivergenza né a che punto sei del percorso. Questi dati li crei e li controlli solo tu.
-  <a href="/studio/">Regola ogni dettaglio o cancella tutto</a>.</p>
+  {l === 'en'
+    ? <p class="privacy-profilo">🔒 <b>This choice stays only on this device.</b> It is not sent to anyone and does not go into your Scroll:
+      whoever runs FriendlyMath cannot know whether you are neurodivergent or how far along the Quest you are. You create this data and only you control it.
+      <a href={href(l, '/studio/')}>Fine-tune every setting or delete everything</a>.</p>
+    : <p class="privacy-profilo">🔒 <b>Questa scelta resta solo su questo dispositivo.</b> Non viene inviata a nessuno e non finisce nella Pergamena:
+      chi gestisce FriendlyMath non può sapere se hai una neurodivergenza né a che punto sei del percorso. Questi dati li crei e li controlli solo tu.
+      <a href="/studio/">Regola ogni dettaglio o cancella tutto</a>.</p>}
 </div>
 
 <script>
-  import { caricaStudio, salvaStudio, cambiaProfilo, applicaStudio, REGOLAZIONI, type Profilo } from '../lib/studio';
+  import { caricaStudio, salvaStudio, cambiaProfilo, applicaStudio, regolazioniL, type Profilo } from '../lib/studio';
+  import { linguaPagina } from '../lib/lingua';
+  const en = linguaPagina() === 'en';
+  const REGOLAZIONI = regolazioniL(linguaPagina());
   for (const radice of document.querySelectorAll<HTMLElement>('[data-scelta-profilo]')) {
     const effetto = radice.querySelector<HTMLElement>('[data-effetto]')!;
     const caselle = [...radice.querySelectorAll<HTMLInputElement>('[data-profilo-rapido]')];
@@ -28,8 +40,8 @@ const { compatta = false } = Astro.props;
       const s = caricaStudio();
       caselle.forEach((c) => (c.checked = s.profili.includes(c.dataset.profiloRapido as Profilo)));
       effetto.textContent = s.regolazioni.length
-        ? `Attivo ora: ${s.regolazioni.map((r) => REGOLAZIONI.find((x) => x.id === r)!.nome).join(' · ')}.`
-        : 'Nessuna regolazione attiva: il percorso è quello standard.';
+        ? `${en ? 'Active now' : 'Attivo ora'}: ${s.regolazioni.map((r) => REGOLAZIONI.find((x) => x.id === r)!.nome).join(' · ')}.`
+        : en ? 'No settings active: this is the standard path.' : 'Nessuna regolazione attiva: il percorso è quello standard.';
     };
     caselle.forEach((c) => c.addEventListener('change', () => {
       const s = cambiaProfilo(caricaStudio(), c.dataset.profiloRapido as Profilo, c.checked);

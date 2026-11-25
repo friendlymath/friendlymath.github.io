@@ -10,14 +10,19 @@ import PiePagina from '../components/PiePagina.astro';
 import Promemoria from '../components/Promemoria.astro';
 import StrumentiStudio from '../components/StrumentiStudio.astro';
 import { TEXTURE } from '../lib/texture';
+import { linguaDa, percorsoBase, esisteInInglese, traduttore } from '../lib/lingua';
 const varTexture = `:root{${Object.entries(TEXTURE).map(([k, v]) => `--tx-${k}:url("${v}")`).join(';')}}`;
 
 interface Props { titolo: string; descrizione?: string; }
-const { titolo, descrizione = 'La matematica per chiunque: un Libro da sfogliare e un Cammino da eroe per liberare il Regno di Numeria dalla Nebbia.' } = Astro.props;
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const { titolo, descrizione = t('La matematica per chiunque: un Libro da sfogliare e un Cammino da eroe per liberare il Regno di Numeria dalla Nebbia.', 'Maths for anyone: a Book to browse and a hero’s Quest to free the Kingdom of Numeria from the Fog.') } = Astro.props;
+const base = percorsoBase(Astro.url);
+const bilingue = esisteInInglese(Astro.url);
 const titoloCompleto = titolo === 'FriendlyMath' ? titolo : `${titolo} · FriendlyMath`;
 ---
 <!doctype html>
-<html lang="it">
+<html lang={l}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,6 +30,12 @@ const titoloCompleto = titolo === 'FriendlyMath' ? titolo : `${titolo} · Friend
     <meta name="description" content={descrizione} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    {bilingue && <>
+      <link rel="alternate" hreflang="it" href={new URL(base, Astro.site)} />
+      <link rel="alternate" hreflang="en" href={new URL(`/en${base}`, Astro.site)} />
+      <link rel="alternate" hreflang="x-default" href={new URL(base, Astro.site)} />
+    </>}
+    <meta property="og:locale" content={l === 'en' ? 'en_GB' : 'it_IT'} />
     <meta property="og:title" content={titoloCompleto} />
     <meta property="og:description" content={descrizione} />
     <style is:inline set:html={varTexture}></style>
@@ -37,9 +48,10 @@ const titoloCompleto = titolo === 'FriendlyMath' ? titolo : `${titolo} · Friend
     </script>
   </head>
   <body>
-    <a class="sr-only" href="#contenuto">Vai al contenuto</a>
+    <a class="sr-only" href="#contenuto">{t('Vai al contenuto', 'Skip to content')}</a>
     <Intestazione />
     <main id="contenuto">
+      {l === 'en' && !bilingue && <p class="contenitore avviso-lingua">🇮🇹 This page is not available in English yet: you are reading the Italian version. <a href="/en/">Back to the English home</a>.</p>}
       <slot />
     </main>
     <PiePagina />

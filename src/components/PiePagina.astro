@@ -1,12 +1,18 @@
 ---
-import { AGGIORNATO, AGGIORNATO_ISO } from '../lib/sito';
+import { aggiornatoL, AGGIORNATO_ISO } from '../lib/sito';
+import { linguaDa, traduttore, href } from '../lib/lingua';
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const h = (p: string) => href(l, p);
 const anno = new Date().getFullYear();
 ---
 <footer class="piede">
   <div class="contenitore">
-    <p><b>FriendlyMath</b> — la matematica per chiunque. Nessun account: progressi, personaggio e scelte di studio restano solo sul tuo dispositivo e nella tua <a href="/faq/#pergamena">Pergamena</a>. <a href="/privacy/">Privacy</a>.</p>
-    <p class="aggiornato">🕒 Ultimo aggiornamento del sito: <time datetime={AGGIORNATO_ISO}>{AGGIORNATO}</time></p>
-    <p class="tenue"><a href="/mappa-del-sito/">Mappa del sito</a> · <a href="/privacy/">Privacy</a> · <a href="/guida/">Guida del sito</a> · <a href="/fonti/">Fonti e crediti</a> · <a href="/faq/">FAQ</a> · © {anno} FriendlyMath. Testi originali; le fonti sono citate in ogni scheda.</p>
+    {l === 'en'
+      ? <p><b>FriendlyMath</b> — maths for anyone. No account: progress, character and learning choices stay only on your device and in your <a href="/faq/#pergamena">Scroll</a>. <a href={h('/privacy/')}>Privacy</a>.</p>
+      : <p><b>FriendlyMath</b> — la matematica per chiunque. Nessun account: progressi, personaggio e scelte di studio restano solo sul tuo dispositivo e nella tua <a href="/faq/#pergamena">Pergamena</a>. <a href="/privacy/">Privacy</a>.</p>}
+    <p class="aggiornato">🕒 {t('Ultimo aggiornamento del sito', 'Site last updated')}: <time datetime={AGGIORNATO_ISO}>{aggiornatoL(l)}</time></p>
+    <p class="tenue"><a href={h('/mappa-del-sito/')}>{t('Mappa del sito', 'Site map')}</a> · <a href={h('/privacy/')}>Privacy</a> · <a href={h('/guida/')}>{t('Guida del sito', 'Site guide')}</a> · <a href={h('/fonti/')}>{t('Fonti e crediti', 'Sources and credits')}</a> · <a href={h('/faq/')}>FAQ</a> · © {anno} FriendlyMath. {t('Testi originali; le fonti sono citate in ogni scheda.', 'Original texts; sources are cited on every page.')} · <a href={l === 'en' ? '/' : '/en/'} lang={l === 'en' ? 'it' : 'en'}>{l === 'en' ? 'Italiano' : 'English'}</a></p>
   </div>
 </footer>
 <style>

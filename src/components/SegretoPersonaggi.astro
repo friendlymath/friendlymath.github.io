@@ -1,7 +1,29 @@
 ---
+import { linguaDa } from '../lib/lingua';
 interface Props { breve?: boolean }
 const { breve = false } = Astro.props;
+const l = linguaDa(Astro.url);
 ---
+{l === 'en' ? (
+<aside class="segreto scheda">
+  <p class="segreto-titolo">🕯️ The secret of Numeria</p>
+  {breve ? (
+    <p>Ottavia, Brontolo and the other helpers <b>don’t exist outside you</b>: they are your curiosity, your patience, your wish to understand.
+    And the Distractors are your doubts in disguise. <a href="/guida/#segreto">Read the full secret</a> (in Italian for now).</p>
+  ) : (
+    <>
+      <p>At first it seems they are the ones guiding you: Ottavia the Owl pointing the way, Brontolo the Blacksmith forging the tools.
+      But look closer: Ottavia makes mistakes, corrects herself and sets off again, just as you do when you reason. Brontolo grumbles but never gives up: he is your patience.</p>
+      <p><b>The helpers are products of your own mind.</b> The Owl is your <b>curiosity</b>, asking questions even when she doesn’t know the answer.
+      The Blacksmith is your <b>patience</b>, turning a mistake into a tool. The mathematicians of history are proof that others asked the same questions before you.</p>
+      <p>And the Distractors? The Shortcut Merchant, the Minstrel of “I’m Just Not a Maths Person”, the Siren of Later: they are the voices of the doubts and habits everyone carries inside.
+      Recognising them is already half the victory.</p>
+      <p class="morale">The moral of the Kingdom: <b>you don’t need a perfect teacher. Curiosity and the will to learn are enough.</b> Real teachers, books and this site
+      are just lanterns: you are the one who walks the road.</p>
+    </>
+  )}
+</aside>
+) : (
 <aside class="segreto scheda">
   <p class="segreto-titolo">🕯️ Il segreto di Numeria</p>
   {breve ? (
@@ -20,6 +42,7 @@ const { breve = false } = Astro.props;
     </>
   )}
 </aside>
+)}
 <style>
   .segreto { border: 2px dashed var(--magia); background: linear-gradient(135deg, var(--curiosita-bg), var(--superficie)); margin: 1.5rem 0; }
   .segreto-titolo { margin: 0 0 .3rem; font-family: var(--font-titoli); font-weight: 800; font-size: 1.15rem; color: var(--magia); }

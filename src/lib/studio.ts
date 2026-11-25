@@ -1,3 +1,4 @@
+import type { Lingua } from './lingua';
 /**
  * «Il tuo modo di studiare»: profili e regolazioni di accessibilità.
  * Fonti: British Dyslexia Association, Dyslexia Style Guide (2023); Legge 170/2010 e Linee guida DSA (DM 12/07/2011)
@@ -94,3 +95,26 @@ export const movimentoRidotto = () =>
 export function applicaStudio(s: ImpostazioniStudio, el: HTMLElement = document.documentElement) {
   for (const r of REGOLAZIONI) el.toggleAttribute(`data-a-${r.id.toLowerCase()}`, s.regolazioni.includes(r.id));
 }
+
+/* ---------- English ---------- */
+const REG_EN: Record<Regolazione, { nome: string; spiega: string }> = {
+  leggibile: { nome: 'High-readability text', spiega: 'Sans-serif, larger type, wider letter and line spacing, plain cream background, no italics or all-caps.' },
+  leggimi: { nome: 'Read aloud', spiega: 'A button reads the lesson with your device’s voice.' },
+  righello: { nome: 'Reading ruler', spiega: 'A band highlights the line you are reading and dims the rest.' },
+  strumenti: { nome: 'Calculation tools', spiega: 'Calculator, times table and formula sheet always at hand, even during challenges.' },
+  sfideBrevi: { nome: 'Shorter challenges', spiega: 'Fewer questions per challenge, same goal: less quantity, not less quality.' },
+  tastierino: { nome: 'Large keypad', spiega: 'Answer by tapping big number keys instead of typing.' },
+  focus: { nome: 'Focus mode', spiega: 'The lesson is split into short steps, one at a time, with a progress bar.' },
+  calmo: { nome: 'No surprise motion', spiega: 'Turns off automatic animations, confetti and map flights. Experiments only start when you start them.' },
+  letterale: { nome: 'Plain language', spiega: 'Hides story scenes and irony, and shows what you will do at the start of each lesson.' },
+  essenziale: { nome: 'Essential lessons', spiega: 'Lessons open in the short version: key ideas, one example, the challenge. The full version is one click away.' },
+};
+const PROF_EN: Record<Profilo, { nome: string; descrizione: string }> = {
+  dislessia: { nome: 'Dyslexia', descrizione: 'Reading is tiring or slow.' },
+  discalculia: { nome: 'Dyscalculia', descrizione: 'Calculations and numbers don’t become automatic.' },
+  disgrafia: { nome: 'Dysgraphia and dysorthographia', descrizione: 'Writing by hand or typing is hard.' },
+  adhd: { nome: 'Attention (ADHD)', descrizione: 'Staying focused for long is hard.' },
+  autismo: { nome: 'Autism', descrizione: 'I prefer clear, predictable instructions with no surprises.' },
+};
+export const regolazioniL = (l: Lingua) => (l === 'en' ? REGOLAZIONI.map((r) => ({ ...r, ...REG_EN[r.id] })) : REGOLAZIONI);
+export const profiliL = (l: Lingua) => (l === 'en' ? PROFILI.map((p) => ({ ...p, ...PROF_EN[p.id] })) : PROFILI);

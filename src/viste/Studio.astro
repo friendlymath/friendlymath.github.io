@@ -1,0 +1,127 @@
+---
+import Base from '../layouts/Base.astro';
+import AvvisoPrivacy from '../components/AvvisoPrivacy.astro';
+import { profiliL, regolazioniL } from '../lib/studio';
+import { linguaDa, traduttore } from '../lib/lingua';
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const PROFILI = profiliL(l);
+const REGOLAZIONI = regolazioniL(l);
+---
+<Base titolo={t('Il tuo modo di studiare', 'Your way of learning')} descrizione={t('Regola FriendlyMath sul tuo modo di imparare: dislessia, discalculia, disgrafia, ADHD, autismo o semplici preferenze. Tutto resta sul tuo dispositivo.', 'Adapt FriendlyMath to the way you learn: dyslexia, dyscalculia, dysgraphia, ADHD, autism or simple preferences. Everything stays on your device.')}>
+  <section class="contenitore stretto studio-pagina">
+    <h1>⚙️ {t('Il tuo modo di studiare', 'Your way of learning')}</h1>
+    <p class="sottotitolo">{t('Ogni mente impara a modo suo. Qui puoi adattare il sito a te: scegli un profilo per partire con le regolazioni consigliate, poi accendi o spegni ciascuna regolazione come preferisci. Non serve una diagnosi: se una regolazione ti aiuta, usala.', 'Every mind learns in its own way. Here you can adapt the site to you: pick a profile to start with the recommended settings, then turn each setting on or off as you like. No diagnosis needed: if a setting helps you, use it.')}</p>
+
+    <AvvisoPrivacy cosa={t('il tuo profilo di studio', 'your learning profile')} />
+    <p class="nota-extra" set:html={t('🔐 In più, il profilo di studio <b>non entra nemmeno nella Pergamena</b>: se condividi il file con qualcuno, nessuno può risalire alle tue scelte. Puoi cancellare tutto in qualsiasi momento con il pulsante in fondo.', '🔐 What’s more, your learning profile <b>never even goes into your Scroll</b>: if you share the file with someone, nobody can trace your choices. You can delete everything at any time with the button at the bottom.')} />
+
+    <h2>{t('1. Parti da un profilo (facoltativo)', '1. Start from a profile (optional)')}</h2>
+    <div class="profili">
+      {PROFILI.map((p) => (
+        <label class="profilo scheda">
+          <input type="checkbox" data-profilo={p.id} />
+          <span class="nome">{p.nome}</span>
+          <span class="desc">{p.descrizione}</span>
+          <span class="attiva">{t('Attiva', 'Turns on')}: {p.regolazioni.map((r) => REGOLAZIONI.find((x) => x.id === r)!.nome).join(' · ')}</span>
+        </label>
+      ))}
+    </div>
+
+    <h2>{t('2. Regola ogni dettaglio', '2. Fine-tune every setting')}</h2>
+    <ul class="regolazioni">
+      {REGOLAZIONI.map((r) => (
+        <li>
+          <label class="interruttore">
+            <input type="checkbox" role="switch" data-regolazione={r.id} />
+            <span class="leva" aria-hidden="true"></span>
+            <span><b>{r.nome}</b><br /><small>{r.spiega}</small></span>
+          </label>
+        </li>
+      ))}
+    </ul>
+    <p class="stato" aria-live="polite" data-stato></p>
+    <p><button type="button" class="btn secondario" data-azzera>🧹 {t('Cancella il mio profilo di studio', 'Delete my learning profile')}</button></p>
+
+    <h2>{t('Da sapere', 'Good to know')}</h2>
+    {l === 'en' ? (
+    <ul>
+      <li><b>It does not replace school or specialists.</b> If you have a diagnosis, the support plan agreed at school with teachers and family comes first.
+      These tools are extra help for studying on your own.</li>
+      <li>In Italy, dyslexia, dysorthographia, dysgraphia and dyscalculia are <b>specific learning disorders</b> (DSA), recognised by
+      <a href="https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:2010-10-08;170" rel="noopener" hreflang="it">Law 170/2010</a>. The
+      <a href="https://www.mim.gov.it/web/guest/disturbi-specifici-dell-apprendimento-dsa-" rel="noopener" hreflang="it">2011 guidelines</a>
+      describe <i>compensatory tools</i> (speech synthesis, calculator, times table, formula sheets) and <i>dispensatory measures</i> (for example fewer exercises, same goal): you’ll find some of them here.
+      Other countries have their own frameworks: ask your school.</li>
+      <li>The readability settings follow the <a href="https://www.bdadyslexia.org.uk/" rel="noopener">Dyslexia Style Guide</a> (2023)
+      by the British Dyslexia Association: sans-serif fonts, larger text, generous spacing, a background that isn’t pure white, no italics.
+      We don’t use “special dyslexia fonts”: research has not shown that they read better than ordinary sans-serif fonts.</li>
+    </ul>
+    ) : (
+    <ul>
+      <li><b>Non sostituisce la scuola né gli specialisti.</b> Se hai una diagnosi, a scuola valgono il PDP (Piano Didattico Personalizzato) e le misure decise con docenti e famiglia.
+      Questi strumenti sono un aiuto in più per studiare da solo o da sola.</li>
+      <li>In Italia dislessia, disortografia, disgrafia e discalculia sono <b>DSA</b> (Disturbi Specifici dell’Apprendimento), riconosciuti dalla
+      <a href="https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:2010-10-08;170" rel="noopener">Legge 170/2010</a>. Le
+      <a href="https://www.mim.gov.it/web/guest/disturbi-specifici-dell-apprendimento-dsa-" rel="noopener">Linee guida del 2011</a>
+      descrivono gli <i>strumenti compensativi</i> (sintesi vocale, calcolatrice, tavola pitagorica, formulari) e le <i>misure dispensative</i> (per esempio meno esercizi, stesso obiettivo): qui ne trovi alcuni.</li>
+      <li>ADHD e autismo non sono DSA: a scuola rientrano nei <b>BES</b> (Bisogni Educativi Speciali) o nella Legge 104/1992, a seconda dei casi.</li>
+      <li>Le regole di leggibilità seguono la <a href="https://www.bdadyslexia.org.uk/" rel="noopener">Dyslexia Style Guide</a> (2023)
+      della British Dyslexia Association: caratteri senza grazie, testo più grande, spaziature generose, sfondo non bianco puro, niente corsivo.
+      Non usiamo caratteri “speciali per la dislessia”: le ricerche non hanno mostrato che leggano meglio dei normali caratteri senza grazie.</li>
+    </ul>
+    )}
+  </section>
+</Base>
+
+<script>
+  import { caricaStudio, salvaStudio, cambiaProfilo, cambiaRegolazione, applicaStudio, studioVuoto, CHIAVE_STUDIO, type Profilo, type Regolazione } from '../lib/studio';
+  import { linguaPagina } from '../lib/lingua';
+  const en = linguaPagina() === 'en';
+  let s = caricaStudio();
+  const stato = document.querySelector<HTMLElement>('[data-stato]')!;
+  const mostra = () => {
+    document.querySelectorAll<HTMLInputElement>('[data-profilo]').forEach((c) => (c.checked = s.profili.includes(c.dataset.profilo as Profilo)));
+    document.querySelectorAll<HTMLInputElement>('[data-regolazione]').forEach((c) => (c.checked = s.regolazioni.includes(c.dataset.regolazione as Regolazione)));
+  };
+  const applica = (msg: string) => {
+    salvaStudio(s); applicaStudio(s); mostra();
+    stato.textContent = msg;
+    location.hash = '';
+  };
+  document.querySelectorAll<HTMLInputElement>('[data-profilo]').forEach((c) => c.addEventListener('change', () => {
+    s = cambiaProfilo(s, c.dataset.profilo as Profilo, c.checked);
+    applica(c.checked ? (en ? 'Profile on: the recommended settings are now active.' : 'Profilo attivato: le regolazioni consigliate sono accese.') : (en ? 'Profile off.' : 'Profilo disattivato.'));
+  }));
+  document.querySelectorAll<HTMLInputElement>('[data-regolazione]').forEach((c) => c.addEventListener('change', () => {
+    s = cambiaRegolazione(s, c.dataset.regolazione as Regolazione, c.checked);
+    applica(c.checked ? (en ? 'Setting on.' : 'Regolazione accesa.') : (en ? 'Setting off.' : 'Regolazione spenta.'));
+  }));
+  document.querySelector('[data-azzera]')!.addEventListener('click', () => {
+    s = studioVuoto();
+    try { localStorage.removeItem(CHIAVE_STUDIO); } catch {}
+    applicaStudio(s); mostra();
+    stato.textContent = (en ? 'Learning profile deleted from this device.' : 'Profilo di studio cancellato da questo dispositivo.');
+  });
+  mostra();
+</script>
+
+<style>
+  .nota-extra { font-size: .95rem; }
+  .profili { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .8rem; }
+  .profilo { display: grid; gap: .25rem; cursor: pointer; padding: .9rem 1rem; position: relative; }
+  .profilo input { position: absolute; top: .9rem; right: .9rem; width: 1.3rem; height: 1.3rem; accent-color: var(--fiducia); }
+  .profilo .nome { font-family: var(--font-titoli); font-weight: 700; font-size: 1.1rem; padding-right: 1.8rem; }
+  .profilo .attiva { font-size: .85rem; color: var(--testo-tenue); }
+  .profilo:has(input:checked) { outline: 3px solid var(--fiducia); }
+  .regolazioni { list-style: none; padding: 0; display: grid; gap: .5rem; }
+  .interruttore { display: grid; grid-template-columns: auto 1fr; gap: .8rem; align-items: start; cursor: pointer; background: var(--superficie); border: 2px solid var(--bordo); border-radius: var(--raggio); padding: .7rem .9rem; }
+  .interruttore input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .leva { width: 3rem; height: 1.6rem; border-radius: 999px; background: #9a8f7e; position: relative; transition: background .2s; margin-top: .15rem; grid-column: 1; grid-row: 1; }
+  .leva::after { content: ''; position: absolute; top: .2rem; left: .2rem; width: 1.2rem; height: 1.2rem; border-radius: 50%; background: #fff; transition: transform .2s; }
+  .interruttore input:checked + .leva { background: var(--successo); }
+  .interruttore input:checked + .leva::after { transform: translateX(1.4rem); }
+  .interruttore input:focus-visible + .leva { outline: 3px solid var(--fiducia); outline-offset: 2px; }
+  .interruttore > span:last-child { grid-column: 2; grid-row: 1; }
+  .stato { min-height: 1.4em; font-weight: 700; color: var(--successo); }
+</style>

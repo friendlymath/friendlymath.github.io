@@ -1,8 +1,20 @@
 ---
 /** Avviso sulla privacy da mostrare dove si fanno scelte personali (personaggio, profilo di studio, progressi). */
+import { linguaDa } from '../lib/lingua';
 interface Props { cosa?: string }
-const { cosa = 'il tuo personaggio, i tuoi progressi e le tue scelte di studio' } = Astro.props;
+const l = linguaDa(Astro.url);
+const { cosa = l === 'en' ? 'your character, your progress and your learning choices' : 'il tuo personaggio, i tuoi progressi e le tue scelte di studio' } = Astro.props;
 ---
+{l === 'en' ? (
+<aside class="avviso-privacy" role="note">
+  <p class="titolo-privacy">🔒 Your data stays yours</p>
+  <p>{cosa.charAt(0).toUpperCase() + cosa.slice(1)}: saved <b>only on this device</b> (and in your Scroll, if you choose to download it).
+  Nothing is sent to anyone: <b>whoever runs FriendlyMath cannot know who you are, how far along the Quest you are, or whether you are neurodivergent.</b>
+  You create this data and only you control it.</p>
+  <p class="nota-privacy">The only technical data: as with every site hosted on GitHub Pages, GitHub logs visitors’ IP addresses for security reasons.
+  The site owner does not receive these logs. <a href="/en/privacy/">Read the full privacy notice</a>.</p>
+</aside>
+) : (
 <aside class="avviso-privacy" role="note">
   <p class="titolo-privacy">🔒 I tuoi dati restano tuoi</p>
   <p>{cosa.charAt(0).toUpperCase() + cosa.slice(1)} vengono salvati <b>solo su questo dispositivo</b> (e nella Pergamena, se decidi di scaricarla).
@@ -11,6 +23,7 @@ const { cosa = 'il tuo personaggio, i tuoi progressi e le tue scelte di studio' 
   <p class="nota-privacy">Unico dato tecnico: come per ogni sito ospitato su GitHub Pages, GitHub registra l'indirizzo IP dei visitatori per motivi di sicurezza.
   Il gestore del sito non riceve questi registri. <a href="/privacy/">Leggi la privacy completa</a>.</p>
 </aside>
+)}
 <style>
   .avviso-privacy { border: 2px solid var(--successo); border-left-width: 8px; background: var(--scena-bg); border-radius: var(--raggio); padding: .8rem 1rem; margin: 1rem 0; }
   .avviso-privacy p { margin: .3rem 0; }

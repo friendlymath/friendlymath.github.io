@@ -230,3 +230,6 @@ input, select, button { font-family: var(--font-ui); }
 .tastierino button { font: inherit; font-family: var(--font-ui); font-size: 1.4rem; font-weight: 800; padding: .5rem 0; border-radius: 10px; border: 2px solid var(--bordo); background: var(--superficie); color: var(--testo); cursor: pointer; }
 .tastierino button:active { transform: translateY(2px); }
 @media print { .dock, .cassetta, .righello-velo, .tastierino { display: none !important; } }
+
+/* Avviso: pagina non ancora tradotta */
+.avviso-lingua { background: var(--curiosita-bg); border: 2px dashed var(--oro); border-radius: var(--raggio-s); padding: .5rem .9rem; margin-top: 1rem; font-family: var(--font-ui); font-size: .95rem; }
