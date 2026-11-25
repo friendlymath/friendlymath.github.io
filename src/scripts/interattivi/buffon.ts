@@ -1,14 +1,17 @@
 /** Ago di Buffon: lancia aghi su un pavimento a righe e stima π. Aghi lunghi quanto la distanza fra le righe (l = t). */
-const it = (x: number, d: number) => x.toLocaleString('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d });
+const it = (x: number, d: number) => x.toLocaleString(LOC(), { minimumFractionDigits: d, maximumFractionDigits: d });
 
+import { linguaPagina } from '../../lib/lingua';
+const T = (it: string, en: string) => (linguaPagina() === 'en' ? en : it);
+const LOC = () => (linguaPagina() === 'en' ? 'en-GB' : 'it-IT');
 export function monta(area: HTMLElement) {
   area.innerHTML = `
-    <canvas width="640" height="400" style="width:100%;height:auto;border-radius:12px;background:var(--superficie-2)" aria-label="Pavimento con righe parallele su cui cadono gli aghi"></canvas>
+    <canvas width="640" height="400" style="width:100%;height:auto;border-radius:12px;background:var(--superficie-2)" aria-label="${T('Pavimento con righe parallele su cui cadono gli aghi', 'Floor with parallel lines where the needles fall')}"></canvas>
     <div class="comandi" style="display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-top:.6rem">
-      <button type="button" class="btn" data-n="1">Lancia 1 ago</button>
-      <button type="button" class="btn" data-n="100">Lancia 100</button>
-      <button type="button" class="btn gioco" data-n="1000">Lancia 1000</button>
-      <button type="button" class="btn vuoto" data-reset>Pulisci</button>
+      <button type="button" class="btn" data-n="1">${T('Lancia 1 ago', 'Drop 1 needle')}</button>
+      <button type="button" class="btn" data-n="100">${T('Lancia 100', 'Drop 100')}</button>
+      <button type="button" class="btn gioco" data-n="1000">${T('Lancia 1000', 'Drop 1000')}</button>
+      <button type="button" class="btn vuoto" data-reset>${T('Pulisci', 'Clear')}</button>
     </div>
     <p aria-live="polite" data-stima style="text-align:center;font-weight:800;margin:.6rem 0 0"></p>`;
   const cv = area.querySelector('canvas')!;
@@ -25,9 +28,9 @@ export function monta(area: HTMLElement) {
   };
   const stima = () => {
     const el = area.querySelector('[data-stima]')!;
-    if (!incroci) { el.textContent = `Lanci: ${lanci}. Nessun incrocio ancora.`; return; }
+    if (!incroci) { el.textContent = T(`Lanci: ${lanci}. Nessun incrocio ancora.`, `Drops: ${lanci}. No crossings yet.`); return; }
     const pi = (2 * l * lanci) / (t * incroci);
-    el.textContent = `Lanci: ${lanci} · incroci: ${incroci} · stima di π ≈ ${it(pi, 4)} (π vero ≈ 3,1416)`;
+    el.textContent = T(`Lanci: ${lanci} · incroci: ${incroci} · stima di π ≈ ${it(pi, 4)} (π vero ≈ 3,1416)`, `Drops: ${lanci} · crossings: ${incroci} · estimate of π ≈ ${it(pi, 4)} (true π ≈ 3.1416)`);
   };
   const lancia = (n: number) => {
     ctx.lineWidth = 1.5;

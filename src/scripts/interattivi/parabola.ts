@@ -1,5 +1,8 @@
 /** Parabola y = ax² + bx + c: discriminante e intersezioni con l'asse x. */
-const it = (x: number, d = 2) => x.toLocaleString('it-IT', { maximumFractionDigits: d });
+const it = (x: number, d = 2) => x.toLocaleString(LOC(), { maximumFractionDigits: d });
+import { linguaPagina } from '../../lib/lingua';
+const T = (it: string, en: string) => (linguaPagina() === 'en' ? en : it);
+const LOC = () => (linguaPagina() === 'en' ? 'en-GB' : 'it-IT');
 export function monta(area: HTMLElement) {
   let a = 1, b = -5, c = 6;
   area.innerHTML = `<div class="par">
@@ -8,7 +11,7 @@ export function monta(area: HTMLElement) {
       <label>b = <b data-v="b"></b><input type="range" min="-8" max="8" step="1" value="-5" data-k="b"></label>
       <label>c = <b data-v="c"></b><input type="range" min="-8" max="8" step="1" value="6" data-k="c"></label>
     </div>
-    <svg viewBox="0 0 320 240" data-svg role="img" aria-label="Grafico della parabola"></svg>
+    <svg viewBox="0 0 320 240" data-svg role="img" aria-label="${T('Grafico della parabola', 'Graph of the parabola')}"></svg>
     <p class="par-esito" aria-live="polite" data-esito></p></div>`;
   const st = document.createElement('style');
   st.textContent = `.par .cursori{display:grid;gap:.3rem}.par label{display:flex;gap:.6rem;align-items:center;font-weight:700}.par input{flex:1}.par svg{display:block;width:100%;max-width:420px;margin:.6rem auto;background:var(--superficie-2);border-radius:12px}.par-esito{text-align:center;font-weight:800}`;
@@ -29,7 +32,7 @@ export function monta(area: HTMLElement) {
     for (let j = -6; j <= 6; j++) griglia += `<line x1="0" y1="${Y(j)}" x2="320" y2="${Y(j)}" stroke="var(--bordo)" stroke-width="1"/>`;
     area.querySelector('[data-svg]')!.innerHTML = `${griglia}<line x1="0" y1="${Y(0)}" x2="320" y2="${Y(0)}" stroke="var(--testo)" stroke-width="2"/><line x1="${X(0)}" y1="0" x2="${X(0)}" y2="240" stroke="var(--testo)" stroke-width="2"/>${segmenti}${radici}`;
     for (const k of ['a', 'b', 'c'] as const) area.querySelector(`[data-v="${k}"]`)!.textContent = it({ a, b, c }[k]);
-    const quante = d > 0 ? `due soluzioni: x = ${it(sol[0])} e x = ${it(sol[1])}` : d === 0 ? `una soluzione: x = ${it(sol[0])}` : 'nessuna soluzione reale';
+    const quante = d > 0 ? T(`due soluzioni: x = ${it(sol[0])} e x = ${it(sol[1])}`, `two solutions: x = ${it(sol[0])} and x = ${it(sol[1])}`) : d === 0 ? T(`una soluzione: x = ${it(sol[0])}`, `one solution: x = ${it(sol[0])}`) : T('nessuna soluzione reale', 'no real solutions');
     area.querySelector('[data-esito]')!.textContent = `Δ = ${it(d)} → ${quante}`;
   };
   area.querySelectorAll<HTMLInputElement>('[data-k]').forEach((inp) => inp.addEventListener('input', () => {

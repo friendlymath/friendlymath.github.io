@@ -1,13 +1,16 @@
 /** Lancia due dadi tante volte: l'istogramma delle somme si avvicina alla teoria (il 7 vince). */
+import { linguaPagina } from '../../lib/lingua';
+const T = (it: string, en: string) => (linguaPagina() === 'en' ? en : it);
+const LOC = () => (linguaPagina() === 'en' ? 'en-GB' : 'it-IT');
 export function monta(area: HTMLElement) {
   const conta = Array(13).fill(0);
   let lanci = 0;
   const teorici = [0, 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1];
   area.innerHTML = `<div class="da"><div class="comandi-da">
-    <button type="button" class="btn" data-n="1">🎲 Lancia</button><button type="button" class="btn" data-n="100">×100</button><button type="button" class="btn gioco" data-n="1000">×1000</button><button type="button" class="btn vuoto" data-reset>↺</button></div>
+    <button type="button" class="btn" data-n="1">🎲 ${T('Lancia', 'Roll')}</button><button type="button" class="btn" data-n="100">×100</button><button type="button" class="btn gioco" data-n="1000">×1000</button><button type="button" class="btn vuoto" data-reset>↺</button></div>
     <p class="ultimo" data-ultimo aria-live="polite"></p>
-    <svg viewBox="0 0 440 220" data-svg role="img" aria-label="Istogramma delle somme dei due dadi"></svg>
-    <p class="tenue legenda-da">Barre: frequenza osservata · Linea tratteggiata: probabilità teorica (6 modi su 36 per il 7)</p></div>`;
+    <svg viewBox="0 0 440 220" data-svg role="img" aria-label="${T('Istogramma delle somme dei due dadi', 'Bar chart of the totals of two dice')}"></svg>
+    <p class="tenue legenda-da">${T('Barre: frequenza osservata · Linea tratteggiata: probabilità teorica (6 modi su 36 per il 7)', 'Bars: observed frequency · Dashed line: theoretical probability (6 ways out of 36 for a 7)')}</p></div>`;
   const st = document.createElement('style');
   st.textContent = `.comandi-da{display:flex;flex-wrap:wrap;gap:.4rem}.da svg{width:100%;display:block;background:var(--superficie-2);border-radius:12px;margin:.5rem 0}.ultimo{font-weight:800;min-height:1.5em;font-size:1.2rem}.legenda-da{font-size:.85rem}`;
   area.appendChild(st);
@@ -22,7 +25,7 @@ export function monta(area: HTMLElement) {
       s += `<line x1="${x - 2}" x2="${x + 30}" y1="${195 - ht}" y2="${195 - ht}" stroke="var(--testo)" stroke-width="2" stroke-dasharray="4 3"/>`;
     }
     area.querySelector('[data-svg]')!.innerHTML = s;
-    area.querySelector('[data-ultimo]')!.textContent = a ? `${facce[a]} ${facce[b!]}  → ${a + b!}  · lanci: ${lanci.toLocaleString('it-IT')} · il 7 è uscito il ${lanci ? ((conta[7] / lanci) * 100).toFixed(1).replace('.', ',') : 0}% delle volte (teoria: 16,7%)` : 'Premi «Lancia»';
+    area.querySelector('[data-ultimo]')!.textContent = a ? (() => { const p = lanci ? ((conta[7] / lanci) * 100).toFixed(1) : '0'; return T(`${facce[a]} ${facce[b!]}  → ${a + b!}  · lanci: ${lanci.toLocaleString('it-IT')} · il 7 è uscito il ${p.replace('.', ',')}% delle volte (teoria: 16,7%)`, `${facce[a]} ${facce[b!]}  → ${a + b!}  · rolls: ${lanci.toLocaleString('en-GB')} · 7 came up ${p}% of the time (theory: 16.7%)`); })() : T('Premi «Lancia»', 'Press “Roll”');
   };
   area.querySelectorAll<HTMLButtonElement>('[data-n]').forEach((btn) => btn.addEventListener('click', () => {
     let a = 1, b = 1;

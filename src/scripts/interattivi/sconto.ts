@@ -1,10 +1,13 @@
 /** Barra delle percentuali: prezzo, sconto e quanto paghi. */
-const eur = (x: number) => x.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' });
+const eur = (x: number) => x.toLocaleString(LOC(), { style: 'currency', currency: 'EUR' });
+import { linguaPagina } from '../../lib/lingua';
+const T = (it: string, en: string) => (linguaPagina() === 'en' ? en : it);
+const LOC = () => (linguaPagina() === 'en' ? 'en-GB' : 'it-IT');
 export function monta(area: HTMLElement) {
   let prezzo = 80, p = 25;
   area.innerHTML = `<div class="sc">
-    <label>Prezzo <b data-vp></b><input type="range" min="10" max="200" step="5" value="80" data-prezzo></label>
-    <label>Sconto <b data-vs></b><input type="range" min="0" max="90" step="5" value="25" data-sconto></label>
+    <label>${T('Prezzo', 'Price')} <b data-vp></b><input type="range" min="10" max="200" step="5" value="80" data-prezzo></label>
+    <label>${T('Sconto', 'Discount')} <b data-vs></b><input type="range" min="0" max="90" step="5" value="25" data-sconto></label>
     <div class="barra-sc" aria-hidden="true"><div class="paghi" data-paghi></div><div class="risparmi" data-risp></div></div>
     <div class="centesimi" data-centesimi aria-hidden="true"></div>
     <p class="esito-sc" aria-live="polite" data-esito></p></div>`;
@@ -25,9 +28,9 @@ export function monta(area: HTMLElement) {
     area.querySelector('[data-vs]')!.textContent = `${p}%`;
     const pa = area.querySelector<HTMLElement>('[data-paghi]')!, ri = area.querySelector<HTMLElement>('[data-risp]')!;
     pa.style.width = `${100 - p}%`; ri.style.width = `${p}%`;
-    pa.textContent = p < 90 ? `paghi ${eur(paghi)}` : ''; ri.textContent = p > 12 ? `−${eur(risp)}` : '';
+    pa.textContent = p < 90 ? `${T('paghi', 'you pay')} ${eur(paghi)}` : ''; ri.textContent = p > 12 ? `−${eur(risp)}` : '';
     c.querySelectorAll('i').forEach((q, i) => q.classList.toggle('via', i >= 100 - p));
-    area.querySelector('[data-esito]')!.textContent = `${p}% di ${eur(prezzo)} = ${p}/100 × ${prezzo} = ${eur(risp)} di sconto → paghi ${eur(paghi)} (cioè × ${((100 - p) / 100).toLocaleString('it-IT')})`;
+    area.querySelector('[data-esito]')!.textContent = T(`${p}% di ${eur(prezzo)} = ${p}/100 × ${prezzo} = ${eur(risp)} di sconto → paghi ${eur(paghi)} (cioè × ${((100 - p) / 100).toLocaleString('it-IT')})`, `${p}% of ${eur(prezzo)} = ${p}/100 × ${prezzo} = ${eur(risp)} off → you pay ${eur(paghi)} (that is × ${((100 - p) / 100).toLocaleString('en-GB')})`);
   };
   area.querySelector<HTMLInputElement>('[data-prezzo]')!.addEventListener('input', (e) => { prezzo = Number((e.target as HTMLInputElement).value); disegna(); });
   area.querySelector<HTMLInputElement>('[data-sconto]')!.addEventListener('input', (e) => { p = Number((e.target as HTMLInputElement).value); disegna(); });

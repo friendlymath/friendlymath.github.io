@@ -1,9 +1,12 @@
 import { movimentoRidotto } from '../../lib/studio';
 /** Una ruota che rotola: dopo un giro ha percorso π volte il diametro. */
+import { linguaPagina } from '../../lib/lingua';
+const T = (it: string, en: string) => (linguaPagina() === 'en' ? en : it);
+const LOC = () => (linguaPagina() === 'en' ? 'en-GB' : 'it-IT');
 export function monta(area: HTMLElement) {
-  area.innerHTML = `<div class="ru"><svg viewBox="0 0 440 170" data-svg role="img" aria-label="Una ruota di diametro 1 rotola e srotola la sua circonferenza"></svg>
-    <div class="com-ru"><button type="button" class="btn" data-via>▶ Fai rotolare</button><button type="button" class="btn vuoto" data-reset>↺</button></div>
-    <p class="esito-ru" aria-live="polite" data-esito>Diametro = 1. Quanta strada farà in un giro?</p></div>`;
+  area.innerHTML = `<div class="ru"><svg viewBox="0 0 440 170" data-svg role="img" aria-label="${T('Una ruota di diametro 1 rotola e srotola la sua circonferenza', 'A wheel with diameter 1 rolls and unrolls its circumference')}"></svg>
+    <div class="com-ru"><button type="button" class="btn" data-via>▶ ${T('Fai rotolare', 'Roll it')}</button><button type="button" class="btn vuoto" data-reset>↺</button></div>
+    <p class="esito-ru" aria-live="polite" data-esito>${T('Diametro = 1. Quanta strada farà in un giro?', 'Diameter = 1. How far will it travel in one turn?')}</p></div>`;
   const st = document.createElement('style');
   st.textContent = `.ru svg{width:100%;display:block;background:var(--superficie-2);border-radius:12px}.com-ru{display:flex;gap:.4rem;margin:.5rem 0}.esito-ru{font-weight:800;text-align:center}`;
   area.appendChild(st);
@@ -20,7 +23,7 @@ export function monta(area: HTMLElement) {
       <circle cx="${cx}" cy="${yS - r}" r="${r}" fill="var(--fiducia-chiaro)" stroke="var(--fiducia)" stroke-width="4"/>
       <line x1="${cx - r * Math.cos(-ang)}" y1="${yS - r - r * Math.sin(-ang)}" x2="${cx + r * Math.cos(-ang)}" y2="${yS - r + r * Math.sin(-ang)}" stroke="var(--fiducia)" stroke-width="2"/>
       <circle cx="${px}" cy="${py}" r="7" fill="var(--pericolo)"/>`;
-    if (t >= 1) area.querySelector('[data-esito]')!.innerHTML = '🎉 Un giro completo = <b>π ≈ 3,14</b> diametri. La linea rossa è la circonferenza «srotolata».';
+    if (t >= 1) area.querySelector('[data-esito]')!.innerHTML = T('🎉 Un giro completo = <b>π ≈ 3,14</b> diametri. La linea rossa è la circonferenza «srotolata».', '🎉 One full turn = <b>π ≈ 3.14</b> diameters. The red line is the “unrolled” circumference.');
   };
   const via = () => {
     cancelAnimationFrame(anim);
@@ -30,6 +33,6 @@ export function monta(area: HTMLElement) {
     anim = requestAnimationFrame(passo);
   };
   area.querySelector('[data-via]')!.addEventListener('click', () => { t = 0; via(); });
-  area.querySelector('[data-reset]')!.addEventListener('click', () => { cancelAnimationFrame(anim); t = 0; area.querySelector('[data-esito]')!.textContent = 'Diametro = 1. Quanta strada farà in un giro?'; disegna(); });
+  area.querySelector('[data-reset]')!.addEventListener('click', () => { cancelAnimationFrame(anim); t = 0; area.querySelector('[data-esito]')!.textContent = T('Diametro = 1. Quanta strada farà in un giro?', 'Diameter = 1. How far will it travel in one turn?'); disegna(); });
   disegna();
 }

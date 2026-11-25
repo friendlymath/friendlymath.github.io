@@ -1,10 +1,14 @@
 import { movimentoRidotto } from '../../lib/studio';
 /** Una matrice 2×2 come trasformazione del piano: la griglia si deforma con continuità. */
+import { linguaPagina } from '../../lib/lingua';
 export function monta(area: HTMLElement) {
-  const preset: Record<string, number[]> = { 'Identità': [1, 0, 0, 1], 'Rotazione 90°': [0, -1, 1, 0], 'Taglio': [1, 1, 0, 1], 'Ingrandimento ×2': [2, 0, 0, 2], 'Riflessione': [-1, 0, 0, 1], 'Schiacciamento': [1.5, 0, 0, 0.5] };
+  const EN = linguaPagina() === 'en';
+  const preset: Record<string, number[]> = EN
+    ? { 'Identity': [1, 0, 0, 1], 'Rotation 90°': [0, -1, 1, 0], 'Shear': [1, 1, 0, 1], 'Scale ×2': [2, 0, 0, 2], 'Reflection': [-1, 0, 0, 1], 'Squash': [1.5, 0, 0, 0.5] }
+    : { 'Identità': [1, 0, 0, 1], 'Rotazione 90°': [0, -1, 1, 0], 'Taglio': [1, 1, 0, 1], 'Ingrandimento ×2': [2, 0, 0, 2], 'Riflessione': [-1, 0, 0, 1], 'Schiacciamento': [1.5, 0, 0, 0.5] };
   let M = [1, 1, 0, 1], cur = [1, 0, 0, 1], anim = 0;
   area.innerHTML = `<div class="mx"><div class="preset" role="group">${Object.keys(preset).map((k) => `<button type="button" class="btn vuoto" data-p="${k}">${k}</button>`).join('')}</div>
-    <canvas width="520" height="400" aria-label="Griglia del piano trasformata dalla matrice"></canvas>
+    <canvas width="520" height="400" aria-label="${EN ? 'Grid of the plane transformed by the matrix' : 'Griglia del piano trasformata dalla matrice'}"></canvas>
     <p class="esito-mx" aria-live="polite" data-esito></p></div>`;
   const st = document.createElement('style');
   st.textContent = `.preset{display:flex;flex-wrap:wrap;gap:.35rem}.preset .btn{padding:.4em .8em;font-size:.9rem}.mx canvas{width:100%;max-width:560px;height:auto;display:block;margin:.6rem auto;background:#141826;border-radius:14px}.esito-mx{text-align:center;font-weight:800;font-family:ui-monospace,monospace}`;
@@ -26,7 +30,7 @@ export function monta(area: HTMLElement) {
     const freccia = (x: number, y: number, col: string) => { ctx.strokeStyle = col; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(O[0], O[1]); ctx.lineTo(x, y); ctx.stroke(); ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, 6, 0, 7); ctx.fill(); };
     freccia(ax, ay, '#5fd39a'); freccia(bx, by, '#ff8080');
     const det = cur[0] * cur[3] - cur[1] * cur[2];
-    area.querySelector('[data-esito]')!.textContent = `[ ${cur[0].toFixed(1)}  ${cur[1].toFixed(1)} ; ${cur[2].toFixed(1)}  ${cur[3].toFixed(1)} ]   area ×${det.toFixed(2)}`.replace(/\./g, ',');
+    area.querySelector('[data-esito]')!.textContent = `[ ${cur[0].toFixed(1)}  ${cur[1].toFixed(1)} ; ${cur[2].toFixed(1)}  ${cur[3].toFixed(1)} ]   area ×${det.toFixed(2)}`.replace(/\./g, EN ? '.' : ',');
   };
   const vaiA = (m: number[]) => {
     cancelAnimationFrame(anim);

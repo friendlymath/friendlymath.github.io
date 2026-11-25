@@ -1,9 +1,12 @@
 import { movimentoRidotto } from '../../lib/studio';
 /** Serie di Fourier: un'onda quadra costruita sommando sinusoidi, con gli epicicli che girano. */
+import { linguaPagina } from '../../lib/lingua';
+const T = (it: string, en: string) => (linguaPagina() === 'en' ? en : it);
+const LOC = () => (linguaPagina() === 'en' ? 'en-GB' : 'it-IT');
 export function monta(area: HTMLElement) {
   let N = 3, t = 0, anim = 0;
-  area.innerHTML = `<div class="fo"><label>Onde sommate: <b data-vn>3</b><input type="range" min="1" max="25" value="3" data-n></label>
-    <canvas width="760" height="300" aria-label="Cerchi rotanti che disegnano un'onda quadra"></canvas>
+  area.innerHTML = `<div class="fo"><label>${T('Onde sommate', 'Waves added')}: <b data-vn>3</b><input type="range" min="1" max="25" value="3" data-n></label>
+    <canvas width="760" height="300" aria-label="${T("Cerchi rotanti che disegnano un'onda quadra", 'Rotating circles drawing a square wave')}"></canvas>
     <p class="tenue" data-esito></p></div>`;
   const st = document.createElement('style');
   st.textContent = `.fo label{display:flex;gap:.6rem;align-items:center;font-weight:700}.fo input{flex:1}.fo canvas{width:100%;height:auto;display:block;background:#141826;border-radius:14px;margin:.6rem 0}`;
@@ -33,7 +36,7 @@ export function monta(area: HTMLElement) {
   const inp = area.querySelector<HTMLInputElement>('[data-n]')!;
   const testo = () => {
     area.querySelector('[data-vn]')!.textContent = String(N);
-    area.querySelector('[data-esito]')!.textContent = `Stai sommando ${N} sinusoidi (frequenze 1, 3, 5, … con ampiezze sempre più piccole). Più onde aggiungi, più la curva arancione assomiglia a un'onda quadra.`;
+    area.querySelector('[data-esito]')!.textContent = T(`Stai sommando ${N} sinusoidi (frequenze 1, 3, 5, … con ampiezze sempre più piccole). Più onde aggiungi, più la curva arancione assomiglia a un'onda quadra.`, `You are adding ${N} sine waves (frequencies 1, 3, 5, … with ever smaller amplitudes). The more waves you add, the more the orange curve looks like a square wave.`);
   };
   inp.addEventListener('input', () => { N = Number(inp.value); scia.length = 0; testo(); });
   testo();

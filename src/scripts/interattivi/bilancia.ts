@@ -1,16 +1,19 @@
 /** La bilancia delle equazioni: 3x + 2 = 11. Togli lo stesso peso da entrambi i piatti. */
+import { linguaPagina } from '../../lib/lingua';
+const T = (it: string, en: string) => (linguaPagina() === 'en' ? en : it);
+const LOC = () => (linguaPagina() === 'en' ? 'en-GB' : 'it-IT');
 export function monta(area: HTMLElement) {
   type Stato = { xs: number; uL: number; uR: number; div: number };
   const inizio: Stato = { xs: 3, uL: 2, uR: 11, div: 1 };
   let s: Stato = { ...inizio };
   area.innerHTML = `
     <div class="bil">
-      <svg viewBox="0 0 400 200" role="img" aria-label="Bilancia in equilibrio" data-svg></svg>
+      <svg viewBox="0 0 400 200" role="img" aria-label="${T('Bilancia in equilibrio', 'Balanced scales')}" data-svg></svg>
       <p class="eq" aria-live="polite" data-eq></p>
       <div class="comandi">
-        <button type="button" class="btn" data-a="togli1">Togli 1 da entrambi i piatti</button>
-        <button type="button" class="btn" data-a="dividi">Dividi entrambi per il numero di x</button>
-        <button type="button" class="btn vuoto" data-a="reset">Ricomincia</button>
+        <button type="button" class="btn" data-a="togli1">${T('Togli 1 da entrambi i piatti', 'Take 1 from both pans')}</button>
+        <button type="button" class="btn" data-a="dividi">${T('Dividi entrambi per il numero di x', 'Divide both by the number of x’s')}</button>
+        <button type="button" class="btn vuoto" data-a="reset">${T('Ricomincia', 'Start again')}</button>
       </div>
       <p class="tenue msg" data-msg></p>
     </div>`;
@@ -43,14 +46,14 @@ export function monta(area: HTMLElement) {
     const a = b.dataset.a;
     if (a === 'reset') { s = { ...inizio }; return disegna(); }
     if (a === 'togli1') {
-      if (s.uL === 0) return disegna('A sinistra ci sono solo x: ora conviene dividere!');
-      s.uL--; s.uR--; return disegna(s.uL === 0 ? 'Ottimo: a sinistra restano solo le x.' : 'La bilancia resta in equilibrio: hai tolto lo stesso peso da entrambe le parti.');
+      if (s.uL === 0) return disegna(T('A sinistra ci sono solo x: ora conviene dividere!', 'Only x’s are left on the left: now it’s time to divide!'));
+      s.uL--; s.uR--; return disegna(s.uL === 0 ? T('Ottimo: a sinistra restano solo le x.', 'Great: only the x’s are left on the left.') : T('La bilancia resta in equilibrio: hai tolto lo stesso peso da entrambe le parti.', 'The scales stay balanced: you took the same weight from both sides.'));
     }
     if (a === 'dividi') {
-      if (s.uL > 0) return disegna('Prima togli le palline da sinistra, altrimenti dividi anche loro e ti complichi la vita.');
-      if (s.xs === 1) return disegna('Hai già trovato x!');
-      if (s.uR % s.xs !== 0) return disegna('Non si divide in parti intere: controlla i passaggi.');
-      s.uR = s.uR / s.xs; s.xs = 1; return disegna(`🎉 x = ${s.uR}. Verifica: 3 × ${s.uR} + 2 = ${3 * s.uR + 2}.`);
+      if (s.uL > 0) return disegna(T('Prima togli le palline da sinistra, altrimenti dividi anche loro e ti complichi la vita.', 'First remove the balls from the left, or you’ll divide them too and make life hard for yourself.'));
+      if (s.xs === 1) return disegna(T('Hai già trovato x!', 'You’ve already found x!'));
+      if (s.uR % s.xs !== 0) return disegna(T('Non si divide in parti intere: controlla i passaggi.', 'It doesn’t divide into whole parts: check your steps.'));
+      s.uR = s.uR / s.xs; s.xs = 1; return disegna(`🎉 x = ${s.uR}. ${T('Verifica', 'Check')}: 3 × ${s.uR} + 2 = ${3 * s.uR + 2}.`);
     }
   }));
   disegna();

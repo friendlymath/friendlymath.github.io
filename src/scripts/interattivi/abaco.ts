@@ -1,12 +1,15 @@
 /** Abaco a mattoncini: unità, decine, centinaia con riporto automatico. */
+import { linguaPagina } from '../../lib/lingua';
+const T = (it: string, en: string) => (linguaPagina() === 'en' ? en : it);
+const LOC = () => (linguaPagina() === 'en' ? 'en-GB' : 'it-IT');
 export function monta(area: HTMLElement) {
   let n = 23;
   area.innerHTML = `
     <div class="abaco">
       <div class="colonne">
-        <div class="col" data-col="h"><p class="tit">Centinaia</p><div class="pezzi"></div><p class="cifra"></p></div>
-        <div class="col" data-col="da"><p class="tit">Decine</p><div class="pezzi"></div><p class="cifra"></p></div>
-        <div class="col" data-col="u"><p class="tit">Unità</p><div class="pezzi"></div><p class="cifra"></p></div>
+        <div class="col" data-col="h"><p class="tit">${T('Centinaia', 'Hundreds')}</p><div class="pezzi"></div><p class="cifra"></p></div>
+        <div class="col" data-col="da"><p class="tit">${T('Decine', 'Tens')}</p><div class="pezzi"></div><p class="cifra"></p></div>
+        <div class="col" data-col="u"><p class="tit">${T('Unità', 'Ones')}</p><div class="pezzi"></div><p class="cifra"></p></div>
       </div>
       <p class="totale" aria-live="polite"></p>
       <div class="comandi">
@@ -14,7 +17,7 @@ export function monta(area: HTMLElement) {
         <button type="button" class="btn" data-d="10">+10</button>
         <button type="button" class="btn" data-d="100">+100</button>
         <button type="button" class="btn vuoto" data-d="-1">−1</button>
-        <button type="button" class="btn vuoto" data-zero>Azzera</button>
+        <button type="button" class="btn vuoto" data-zero>${T('Azzera', 'Reset')}</button>
       </div>
     </div>`;
   const stile = document.createElement('style');

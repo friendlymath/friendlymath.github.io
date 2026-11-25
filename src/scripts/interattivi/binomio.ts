@@ -1,11 +1,14 @@
 /** Quadrato del binomio: (a+b)² = a² + 2ab + b² con quattro pezzi colorati. */
-const it = (x: number) => x.toLocaleString('it-IT');
+const it = (x: number) => x.toLocaleString(LOC());
+import { linguaPagina } from '../../lib/lingua';
+const T = (it: string, en: string) => (linguaPagina() === 'en' ? en : it);
+const LOC = () => (linguaPagina() === 'en' ? 'en-GB' : 'it-IT');
 export function monta(area: HTMLElement) {
   let a = 3, b = 2;
   area.innerHTML = `<div class="bin">
     <label>a = <b data-va>3</b> <input type="range" min="1" max="6" value="3" data-a></label>
     <label>b = <b data-vb>2</b> <input type="range" min="1" max="6" value="2" data-b></label>
-    <svg viewBox="0 0 240 240" data-svg role="img" aria-label="Quadrato di lato a più b diviso in quattro parti"></svg>
+    <svg viewBox="0 0 240 240" data-svg role="img" aria-label="${T('Quadrato di lato a più b diviso in quattro parti', 'Square with side a plus b split into four parts')}"></svg>
     <p class="bin-esito" aria-live="polite" data-esito></p></div>`;
   const st = document.createElement('style');
   st.textContent = `.bin label{display:flex;gap:.6rem;align-items:center;font-weight:700}.bin input{flex:1}.bin svg{display:block;width:100%;max-width:280px;margin:.6rem auto}.bin-esito{text-align:center;font-weight:800;font-size:1.1rem}`;
