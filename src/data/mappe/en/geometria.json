@@ -1,0 +1,25 @@
+{
+  "meta": { "name": "Geometry", "author": "FriendlyMath", "version": "1" },
+  "format": "node_tree",
+  "data": {
+    "id": "root", "topic": "📐 Geometry",
+    "children": [
+      { "id": "enti", "topic": "Basic elements", "direction": "right", "expanded": true, "children": [
+        { "id": "punto", "topic": "Point, line, plane" }, { "id": "angoli", "topic": "Angles" }, { "id": "segmenti", "topic": "Segments and measures" } ] },
+      { "id": "piana", "topic": "Plane shapes", "direction": "right", "expanded": true, "children": [
+        { "id": "triangoli", "topic": "Triangles", "children": [
+          { "id": "pitagora", "topic": "Pythagoras’ theorem", "link": "/en/libro/geometria/teorema-di-pitagora/" },
+          { "id": "simili", "topic": "Similar triangles" } ] },
+        { "id": "quadrilateri", "topic": "Quadrilaterals" },
+        { "id": "cerchio", "topic": "Circle and π" },
+        { "id": "aree", "topic": "Perimeters and areas" } ] },
+      { "id": "solida", "topic": "Solid geometry", "direction": "left", "expanded": false, "children": [
+        { "id": "poliedri", "topic": "Polyhedra" }, { "id": "rotondi", "topic": "Solids of revolution" }, { "id": "volumi", "topic": "Volumes" } ] },
+      { "id": "analitica", "topic": "Coordinate geometry", "direction": "left", "expanded": false, "children": [
+        { "id": "piano-cart", "topic": "Cartesian plane" }, { "id": "retta", "topic": "The line y = mx + c" }, { "id": "coniche", "topic": "Conic sections" } ] },
+      { "id": "trasf", "topic": "Transformations", "direction": "left", "expanded": false, "children": [
+        { "id": "isometrie", "topic": "Isometries" }, { "id": "omotetie", "topic": "Dilations" },
+        { "id": "rotazioni3d", "topic": "Rotations in space (quaternions!)", "link": "/en/storia/hamilton-quaternioni/" } ] }
+    ]
+  }
+}

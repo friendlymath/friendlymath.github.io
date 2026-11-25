@@ -207,8 +207,8 @@ export function avatarInterno(e: Eroe, grado = 1): string {
     </g>`;
 }
 
-export const avatarSvg = (e: Eroe, grado = 1, lato = 120) =>
-  `<svg viewBox="0 0 100 130" width="${lato}" height="${Math.round(lato * 1.3)}" role="img" aria-label="${nomeClasse(e)}">${avatarInterno(e, grado)}</svg>`;
+export const avatarSvg = (e: Eroe, grado = 1, lato = 120, l: 'it' | 'en' = typeof document !== 'undefined' && document.documentElement.lang === 'en' ? 'en' : 'it') =>
+  `<svg viewBox="0 0 100 130" width="${lato}" height="${Math.round(lato * 1.3)}" role="img" aria-label="${l === 'en' ? CLASSI_EN[e.classe].nomi[e.corpo] : nomeClasse(e)}">${avatarInterno(e, grado)}</svg>`;
 
 /** Un personaggio a caso, come tirare i dadi. */
 export function eroeCasuale(caso: () => number = Math.random): Eroe {

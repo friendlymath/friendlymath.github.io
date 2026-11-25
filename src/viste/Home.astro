@@ -14,9 +14,8 @@ const t = traduttore(l);
 const h = (p: string) => href(l, p);
 const GRADI = gradiL(l);
 const MACROARGOMENTI = macroargomentiL(l);
-const lezioni = await lezioniPubblicate();
-// le curiosità sono ancora solo in italiano
-const curiosita = l === 'it' ? (await pubblicati('curiosita')).slice(0, 3) : [];
+const lezioni = await lezioniPubblicate(l);
+const curiosita = (await pubblicati('curiosita', l)).slice(0, 3);
 ---
 <Base titolo="FriendlyMath">
   <section class="bivio" aria-label={t('Scegli come studiare', 'Choose how to learn')}>
@@ -26,19 +25,18 @@ const curiosita = l === 'it' ? (await pubblicati('curiosita')).slice(0, 3) : [];
       <p class="scegli">{t('Scegli la tua strada', 'Choose your path')} <span aria-hidden="true">↓</span> <span class="data">· {t('aggiornato il', 'updated')} <time datetime={AGGIORNATO_ISO}>{aggiornatoGiornoL(l)}</time></span></p>
     </header>
 
-    <a class="porta libro" href="/libro/">
+    <a class="porta libro" href={h('/libro/')}>
       <div class="porta-arte"><LibroAperto /></div>
       <div class="porta-testo">
         <p class="porta-etichetta">📖 {t('Studia come su un manuale', 'Study like a textbook')}</p>
         <h2>{t('Il Libro', 'The Book')}</h2>
         <p set:html={t('Tutti gli argomenti in ordine, dalle elementari ai quaternioni. <b>Accesso libero</b>: apri quello che ti serve, quando ti serve.', 'Every topic in order, from primary school to quaternions. <b>Open access</b>: open what you need, when you need it.')} />
-        {l === 'en' && <p class="ancora-it">🇮🇹 Lessons are in Italian for now: English versions are on the way.</p>}
         <p class="capitoli">{MACROARGOMENTI.slice(0, 5).map((m) => <span>{m.nome}</span>)}<span>+{MACROARGOMENTI.length - 5}</span></p>
         <span class="btn grande">{t('Apri il Libro →', 'Open the Book →')}</span>
       </div>
     </a>
 
-    <a class="porta cammino" href="/cammino/">
+    <a class="porta cammino" href={h('/cammino/')}>
       <div class="porta-arte"><Paesaggio /></div>
       <div class="porta-testo">
         <p class="porta-etichetta">🗺️ {t("Gioca come in un'avventura", 'Play it like an adventure')}</p>
@@ -60,7 +58,7 @@ const curiosita = l === 'it' ? (await pubblicati('curiosita')).slice(0, 3) : [];
       <div class="nuvoletta">
         {l === 'en'
           ? <p><b>Hello! I’m Ottavia, your guide.</b> The Kingdom of Numeria is wrapped in the <b>Fog</b>: the one that makes you say “I’m just not a maths person”.
-            Together we’ll lift it, one step at a time. <span class="tenue">First time here? Have a look at the <a href="/guida/">guide</a> (in Italian for now).</span></p>
+            Together we’ll lift it, one step at a time. <span class="tenue">First time here? Have a look at the <a href="/en/guida/">guide</a>.</span></p>
           : <p><b>Ciao! Sono Ottavia, la tua guida.</b> Il Regno di Numeria è avvolto dalla <b>Nebbia</b>: quella che ti fa dire «non sono portato».
             Insieme la diradiamo, un passo alla volta. <span class="tenue">Prima volta qui? Dai un'occhiata alla <a href="/guida/">guida</a>.</span></p>}
       </div>
@@ -70,14 +68,14 @@ const curiosita = l === 'it' ? (await pubblicati('curiosita')).slice(0, 3) : [];
   <section class="contenitore">
     <h2>{t('Cosa trovi a Numeria', 'What you’ll find in Numeria')}</h2>
     <div class="griglia g4">
-      <a class="scheda sezione" href="/guida/" style="--c:var(--successo)"><span class="sez-icona">🧭</span><b>{t('Guida del sito', 'Site guide')}</b><span class="tenue">{t('Come funzionano Libro, Cammino, sfide e Pergamena.', 'How the Book, the Quest, challenges and the Scroll work.')}</span></a>
-      <a class="scheda sezione" href="/mappe/" style="--c:var(--magia)"><span class="sez-icona">🧠</span><b>{t('Mappe mentali', 'Mind maps')}</b><span class="tenue">{t('Ogni grande argomento in una mappa da esplorare (anche in JSON).', 'Every big topic as a map to explore (also in JSON).')}</span></a>
-      <a class="scheda sezione" href="/curiosita/" style="--c:var(--gioco)"><span class="sez-icona">✨</span><b>{t('Curiosità', 'Curiosities')}</b><span class="tenue">{t('Paradossi e storie strane, sempre con le fonti.', 'Paradoxes and strange stories, always with sources.')}</span></a>
-      <a class="scheda sezione" href="/storia/" style="--c:var(--storia-bd)"><span class="sez-icona">🏛️</span><b>{t('Storia', 'History')}</b><span class="tenue">{t('Le persone dietro le idee, da Baghdad a Dublino.', 'The people behind the ideas, from Baghdad to Dublin.')}</span></a>
-      <a class="scheda sezione" href="/esperimenti/" style="--c:var(--fiducia)"><span class="sez-icona">🧪</span><b>{t('Esperimenti', 'Experiments')}</b><span class="tenue">{t('Simulazioni da provare: lancia aghi e trova π.', 'Simulations to try: drop needles and find π.')}</span></a>
-      <a class="scheda sezione" href="/zaino/" style="--c:var(--sole)"><span class="sez-icona">🎒</span><b>{t("Zaino dell'eroe", 'Hero’s backpack')}</b><span class="tenue">{t('Il tuo grado, i badge e la Pergamena dei progressi.', 'Your grade, your badges and the Scroll with your progress.')}</span></a>
-      <a class="scheda sezione" href="/palestra/" style="--c:var(--pericolo)"><span class="sez-icona">🏋️</span><b>{t('Vai in palestra', 'Training ground')}</b><span class="tenue">{t('Formule smontate pezzo per pezzo ed esercizi infiniti da stampare.', 'Formulas taken apart piece by piece, and endless printable exercises.')}</span></a>
-      <a class="scheda sezione" href="/eroe/" style="--c:var(--magia)"><span class="sez-icona">🎲</span><b>{t('Crea il tuo eroe', 'Create your hero')}</b><span class="tenue">{t('Corpo, classe e caratteristiche, come in un gioco di ruolo.', 'Lineage, class and abilities, as in a role-playing game.')}</span></a>
+      <a class="scheda sezione" href={h('/guida/')} style="--c:var(--successo)"><span class="sez-icona">🧭</span><b>{t('Guida del sito', 'Site guide')}</b><span class="tenue">{t('Come funzionano Libro, Cammino, sfide e Pergamena.', 'How the Book, the Quest, challenges and the Scroll work.')}</span></a>
+      <a class="scheda sezione" href={h('/mappe/')} style="--c:var(--magia)"><span class="sez-icona">🧠</span><b>{t('Mappe mentali', 'Mind maps')}</b><span class="tenue">{t('Ogni grande argomento in una mappa da esplorare (anche in JSON).', 'Every big topic as a map to explore (also in JSON).')}</span></a>
+      <a class="scheda sezione" href={h('/curiosita/')} style="--c:var(--gioco)"><span class="sez-icona">✨</span><b>{t('Curiosità', 'Curiosities')}</b><span class="tenue">{t('Paradossi e storie strane, sempre con le fonti.', 'Paradoxes and strange stories, always with sources.')}</span></a>
+      <a class="scheda sezione" href={h('/storia/')} style="--c:var(--storia-bd)"><span class="sez-icona">🏛️</span><b>{t('Storia', 'History')}</b><span class="tenue">{t('Le persone dietro le idee, da Baghdad a Dublino.', 'The people behind the ideas, from Baghdad to Dublin.')}</span></a>
+      <a class="scheda sezione" href={h('/esperimenti/')} style="--c:var(--fiducia)"><span class="sez-icona">🧪</span><b>{t('Esperimenti', 'Experiments')}</b><span class="tenue">{t('Simulazioni da provare: lancia aghi e trova π.', 'Simulations to try: drop needles and find π.')}</span></a>
+      <a class="scheda sezione" href={h('/zaino/')} style="--c:var(--sole)"><span class="sez-icona">🎒</span><b>{t("Zaino dell'eroe", 'Hero’s backpack')}</b><span class="tenue">{t('Il tuo grado, i badge e la Pergamena dei progressi.', 'Your grade, your badges and the Scroll with your progress.')}</span></a>
+      <a class="scheda sezione" href={h('/palestra/')} style="--c:var(--pericolo)"><span class="sez-icona">🏋️</span><b>{t('Vai in palestra', 'Training ground')}</b><span class="tenue">{t('Formule smontate pezzo per pezzo ed esercizi infiniti da stampare.', 'Formulas taken apart piece by piece, and endless printable exercises.')}</span></a>
+      <a class="scheda sezione" href={h('/eroe/')} style="--c:var(--magia)"><span class="sez-icona">🎲</span><b>{t('Crea il tuo eroe', 'Create your hero')}</b><span class="tenue">{t('Corpo, classe e caratteristiche, come in un gioco di ruolo.', 'Lineage, class and abilities, as in a role-playing game.')}</span></a>
     </div>
     <aside class="scheda invito-studio">
       {l === 'en'
@@ -102,9 +100,9 @@ const curiosita = l === 'it' ? (await pubblicati('curiosita')).slice(0, 3) : [];
 
   {curiosita.length > 0 && (
     <section class="contenitore">
-      <h2>✨ Lo sapevi?</h2>
+      <h2>✨ {t('Lo sapevi?', 'Did you know?')}</h2>
       <div class="griglia g3">
-        {curiosita.map((c) => <a class="scheda sezione" href={`/curiosita/${c.id}/`} style="--c:var(--magia)"><span class="sez-icona">{c.data.icona}</span><b>{c.data.titolo}</b><span class="tenue">{c.data.descrizione}</span><span class="leggi">Leggi →</span></a>)}
+        {curiosita.map((c) => <a class="scheda sezione" href={h(`/curiosita/${c.id}/`)} style="--c:var(--magia)"><span class="sez-icona">{c.data.icona}</span><b>{c.data.titolo}</b><span class="tenue">{c.data.descrizione}</span><span class="leggi">{t('Leggi →', 'Read →')}</span></a>)}
       </div>
     </section>
   )}
@@ -113,7 +111,7 @@ const curiosita = l === 'it' ? (await pubblicati('curiosita')).slice(0, 3) : [];
     <div class="scheda privacy">
       {l === 'en'
         ? <p>🎒 <b>No account, no data collected.</b> Your progress stays in your browser. To take it to another device, save your{' '}
-          <a href="/zaino/">Scroll</a> from the Hero’s backpack. <span class="tenue">({lezioni.length} lessons available in Italian, with English versions on the way.)</span></p>
+          <a href="/en/zaino/">Scroll</a> from the Hero’s backpack. <span class="tenue">({lezioni.length} lessons available, and the Fog lifts a little more every week.)</span></p>
         : <p>🎒 <b>Nessun account, nessun dato raccolto.</b> I tuoi progressi restano nel tuo browser. Per portarli su un altro dispositivo, salva la tua{' '}
           <a href="/zaino/">Pergamena</a> dallo Zaino dell'eroe. <span class="tenue">({lezioni.length} lezioni disponibili, e la Nebbia si dirada ogni settimana.)</span></p>}
     </div>

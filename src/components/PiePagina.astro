@@ -9,7 +9,7 @@ const anno = new Date().getFullYear();
 <footer class="piede">
   <div class="contenitore">
     {l === 'en'
-      ? <p><b>FriendlyMath</b> — maths for anyone. No account: progress, character and learning choices stay only on your device and in your <a href="/faq/#pergamena">Scroll</a>. <a href={h('/privacy/')}>Privacy</a>.</p>
+      ? <p><b>FriendlyMath</b> — maths for anyone. No account: progress, character and learning choices stay only on your device and in your <a href={h('/faq/#pergamena')}>Scroll</a>. <a href={h('/privacy/')}>Privacy</a>.</p>
       : <p><b>FriendlyMath</b> — la matematica per chiunque. Nessun account: progressi, personaggio e scelte di studio restano solo sul tuo dispositivo e nella tua <a href="/faq/#pergamena">Pergamena</a>. <a href="/privacy/">Privacy</a>.</p>}
     <p class="aggiornato">🕒 {t('Ultimo aggiornamento del sito', 'Site last updated')}: <time datetime={AGGIORNATO_ISO}>{aggiornatoL(l)}</time></p>
     <p class="tenue"><a href={h('/mappa-del-sito/')}>{t('Mappa del sito', 'Site map')}</a> · <a href={h('/privacy/')}>Privacy</a> · <a href={h('/guida/')}>{t('Guida del sito', 'Site guide')}</a> · <a href={h('/fonti/')}>{t('Fonti e crediti', 'Sources and credits')}</a> · <a href={h('/faq/')}>FAQ</a> · © {anno} FriendlyMath. {t('Testi originali; le fonti sono citate in ogni scheda.', 'Original texts; sources are cited on every page.')} · <a href={l === 'en' ? '/' : '/en/'} lang={l === 'en' ? 'it' : 'en'}>{l === 'en' ? 'Italiano' : 'English'}</a></p>

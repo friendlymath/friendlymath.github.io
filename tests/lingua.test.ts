@@ -13,18 +13,18 @@ describe('lingua', () => {
     expect(percorsoBase('/en/')).toBe('/');
     expect(percorsoBase('/libro')).toBe('/libro/');
   });
-  it('i link inglesi puntano a /en solo per le pagine tradotte', () => {
+  it('i link inglesi puntano sempre a /en', () => {
     expect(href('en', '/privacy/')).toBe('/en/privacy/');
     expect(href('en', '/')).toBe('/en/');
     expect(href('en', '/libro/')).toBe('/en/libro/');
     expect(href('en', '/libro/numeri/potenze/')).toBe('/en/libro/numeri/potenze/');
-    expect(href('en', '/faq/')).toBe('/faq/');
+    expect(href('en', '/faq/')).toBe('/en/faq/');
     expect(href('it', '/privacy/')).toBe('/privacy/');
     expect(href('en', '/studio/#x')).toBe('/en/studio/#x');
   });
   it('trova la pagina corrispondente', () => {
     expect(altraLingua(new URL('https://x.it/privacy/'))).toBe('/en/privacy/');
-    expect(altraLingua(new URL('https://x.it/faq/'))).toBe('/en/');
+    expect(altraLingua(new URL('https://x.it/faq/'))).toBe('/en/faq/');
     expect(altraLingua(new URL('https://x.it/libro/algebra/prodotti-notevoli/'))).toBe('/en/libro/algebra/prodotti-notevoli/');
     expect(altraLingua(new URL('https://x.it/en/studio/'))).toBe('/studio/');
   });

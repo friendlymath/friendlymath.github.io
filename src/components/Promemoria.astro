@@ -1,12 +1,13 @@
 ---
 /** Promemoria: i progressi si perdono se non si salva la Pergamena sul proprio dispositivo. */
-import { linguaDa, traduttore } from '../lib/lingua';
-const t = traduttore(linguaDa(Astro.url));
+import { linguaDa, traduttore, href } from '../lib/lingua';
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
 ---
 <div class="promemoria" data-promemoria role="status" hidden>
   <p class="titolo-prom">💾 <b data-titolo>{t('Salva i tuoi progressi!', 'Save your progress!')}</b></p>
   <p class="testo-prom" set:html={t('I progressi restano solo in questo browser: <b>si perdono</b> se cancelli i dati di navigazione, usi la navigazione in incognito o cambi dispositivo. Scarica la tua <b>Pergamena</b> sul PC o sul telefono per non perderli mai.', 'Your progress lives only in this browser: <b>it is lost</b> if you clear your browsing data, use a private window or switch device. Download your <b>Scroll</b> to your computer or phone so you never lose it.')} />
-  <p class="azioni-prom"><a class="btn gioco" href="/zaino/#pergamena">⬇️ {t('Salva la Pergamena', 'Save your Scroll')}</a> <button type="button" class="btn vuoto" data-dopo>{t('Più tardi', 'Later')}</button></p>
+  <p class="azioni-prom"><a class="btn gioco" href={href(l, '/zaino/#pergamena')}>⬇️ {t('Salva la Pergamena', 'Save your Scroll')}</a> <button type="button" class="btn vuoto" data-dopo>{t('Più tardi', 'Later')}</button></p>
   <button type="button" class="chiudi" aria-label={t('Chiudi', 'Close')} data-chiudi>✕</button>
 </div>
 <script>

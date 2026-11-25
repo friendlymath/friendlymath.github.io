@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import { sezioniL, aggiornatoL } from '../lib/sito';
+import { lezioniPubblicate, pubblicati } from '../lib/contenuti';
+import { macroargomentiL } from '../lib/mondo';
+import { formuleL } from '../lib/palestra';
+import { linguaDa, traduttore, href } from '../lib/lingua';
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const P = l === 'en' ? '/en' : '';
+const SEZIONI = sezioniL(l), MACROARGOMENTI = macroargomentiL(l), FORMULE = formuleL(l);
+const lezioni = await lezioniPubblicate(l);
+const curiosita = await pubblicati('curiosita', l), storia = await pubblicati('storia', l), esperimenti = await pubblicati('esperimenti', l);
+---
+<Base titolo={t('Mappa del sito', 'Site map')} descrizione={t('Tutte le pagine di FriendlyMath in un solo elenco.', 'Every page of FriendlyMath in a single list.')}>
+  <section class="contenitore">
+    <h1>🗺️ {t('Mappa del sito', 'Site map')}</h1>
+    <p class="tenue">{t('Ogni pagina di FriendlyMath, in un elenco. Ultimo aggiornamento', 'Every page of FriendlyMath, in one list. Last updated')}: {aggiornatoL(l)}.</p>
+    <div class="griglia g4 sezioni">
+      {SEZIONI.map((s) => (
+        <div class="scheda"><h2>{s.icona} {s.gruppo}</h2><ul>{s.voci.map((v) => <li><a href={href(l, v.href)}>{v.testo}</a> <span class="tenue">— {v.nota}</span></li>)}</ul></div>
+      ))}
+    </div>
+    <h2>📖 {t('Tutte le lezioni del Libro', 'Every lesson in the Book')}</h2>
+    <div class="griglia g3">
+      {MACROARGOMENTI.filter((m) => lezioni.some((x) => x.data.macroargomento === m.slug)).map((m) => (
+        <div class="scheda"><h3>{m.nome}</h3><ul>{lezioni.filter((x) => x.data.macroargomento === m.slug).map((x) => <li><a href={`${P}/libro/${x.id}/`}>{x.data.titolo}</a></li>)}</ul></div>
+      ))}
+    </div>
+    <h2>🏋️ {t('Palestra', 'Training Ground')}</h2>
+    <ul class="colonne">{FORMULE.map((f) => <li><a href={`${P}/palestra/${f.slug}/`}>{f.titolo}</a></li>)}</ul>
+    <div class="griglia g3">
+      <div class="scheda"><h3>✨ {t('Curiosità', 'Curiosities')}</h3><ul>{curiosita.map((c) => <li><a href={`${P}/curiosita/${c.id}/`}>{c.data.titolo}</a></li>)}</ul></div>
+      <div class="scheda"><h3>🏛️ {t('Storia', 'History')}</h3><ul>{storia.map((c) => <li><a href={`${P}/storia/${c.id}/`}>{c.data.titolo}</a></li>)}</ul></div>
+      <div class="scheda"><h3>🧪 {t('Esperimenti', 'Experiments')}</h3><ul>{esperimenti.map((c) => <li><a href={`${P}/esperimenti/${c.id}/`}>{c.data.titolo}</a></li>)}</ul></div>
+    </div>
+  </section>
+</Base>
+<style>
+  .sezioni h2 { font-size: 1.2rem; margin-top: 0; }
+  .scheda h3 { margin-top: 0; }
+  .scheda ul { padding-left: 1.1rem; margin: 0; }
+  .colonne { columns: 2 16rem; }
+</style>

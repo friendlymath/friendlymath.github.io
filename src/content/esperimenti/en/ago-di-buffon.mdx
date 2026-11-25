@@ -1,0 +1,53 @@
+---
+titolo: "Buffon’s needle: finding π by dropping needles"
+descrizione: "A striped floor, a pile of needles and a little patience: chance turns into geometry."
+icona: "🪡"
+lezioniCollegate: []
+fonti:
+  - titolo: "Buffon's needle problem"
+    url: "https://en.wikipedia.org/wiki/Buffon%27s_needle_problem"
+    editore: "Wikipedia, the free encyclopedia"
+    consultato: "2026-11-25"
+  - titolo: "La misteriosa macchina del pi greco. Imbroglio o scherzo? (in Italian)"
+    url: "https://www.cicap.org/n/articolo.php?id=1800798"
+    editore: "CICAP, Query no. 47"
+    autore: "Hans van Maanen"
+    consultato: "2026-11-22"
+  - titolo: "Georges Louis Leclerc Comte de Buffon"
+    url: "https://mathshistory.st-andrews.ac.uk/Biographies/Buffon/"
+    editore: "MacTutor History of Mathematics, University of St Andrews"
+    consultato: "2026-11-22"
+---
+
+In the 18th century the French naturalist **Georges-Louis Leclerc, Comte de Buffon**, asked himself a question: if I drop a needle at random onto a floor
+with parallel stripes, what is the probability that the needle touches a line? The experiment was described in **1777**.
+
+## The (surprising) answer
+
+If the needle has length $\ell$ and the lines are a distance $t$ apart, with $\ell \le t$, the probability that the needle touches a line is
+
+$$
+p = \frac{2\ell}{\pi\, t}
+$$
+
+**π** appears, even though there is no circle! The reason is that the needle can land at **any angle**, and angles “go round” as in a circle.
+Turning the formula around, if you drop $n$ needles and $m$ of them touch a line:
+
+$$
+\pi \approx \frac{2\ell\, n}{t\, m}
+$$
+
+<Interattivo tipo="buffon" titolo="Drop the needles" didascalia="The orange needles touch a line. Here the needle is as long as the distance between the lines: the more you drop, the closer the estimate gets to π (but slowly!)." altezza={420} />
+
+<Curiosita titolo="The Lazzarini case">
+In 1901 the Italian teacher Mario Lazzarini reported that with 3408 drops he had obtained $\pi \approx 3.1415929$: exactly the fraction
+$355/113$, correct to six decimal places. Too good to be true: with so few drops the typical error is around a hundredth.
+In 1994 the mathematician Lee Badger showed that the result must have been “adjusted”, for example by stopping at just the right moment.
+Others, such as the journalist Hans van Maanen in the magazine of CICAP (the Italian skeptics’ association), think rather of a joke played on fellow teachers.
+Either way the lesson stands: in statistics, an experiment that is too perfect is a warning sign. Try it above: how many drops do you need for two correct decimals?
+</Curiosita>
+
+<Esempio titolo="Why it matters">
+Buffon’s needle is one of the first examples of the **Monte Carlo method**: using chance, repeated a huge number of times, to calculate a number.
+Today methods of this kind are used in physics, finance and meteorology.
+</Esempio>

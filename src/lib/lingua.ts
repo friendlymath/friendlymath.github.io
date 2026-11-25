@@ -4,11 +4,9 @@
  */
 export type Lingua = 'it' | 'en';
 
-/** Percorsi (senza /en) che hanno già la versione inglese. Gli altri, in inglese, rimandano all'italiano con un avviso. */
-export const TRADOTTE = new Set<string>(['/', '/privacy/', '/studio/', '/libro/', '/cammino/', '/eroe/', '/zaino/', '/palestra/']);
-/** Gruppi di pagine tradotte (per esempio tutte le lezioni). */
-const GRUPPI_TRADOTTI: RegExp[] = [/^\/libro\/.+/, /^\/cammino\/.+/, /^\/palestra\/.+/];
-const tradotta = (p: string) => TRADOTTE.has(p) || GRUPPI_TRADOTTI.some((r) => r.test(p));
+/** Tutte le pagine hanno la versione inglese (un test controlla che ogni pagina italiana abbia la sua gemella). */
+const ESCLUSE = new Set<string>(['/404/']);
+const tradotta = (p: string) => !ESCLUSE.has(p);
 
 const normalizza = (p: string) => (p.endsWith('/') ? p : `${p}/`);
 

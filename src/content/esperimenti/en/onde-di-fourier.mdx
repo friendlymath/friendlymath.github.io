@@ -1,0 +1,34 @@
+---
+titolo: "Fourier waves: building a square wave out of circles"
+descrizione: "By adding simple waves you can get any shape. It’s the idea behind Wi-Fi, digital music and JPEG photos."
+icona: "🌊"
+lezioniCollegate: []
+fonti:
+  - titolo: "Jean Baptiste Joseph Fourier"
+    url: "https://mathshistory.st-andrews.ac.uk/Biographies/Fourier/"
+    editore: "MacTutor History of Mathematics, University of St Andrews"
+    consultato: "2026-11-22"
+  - titolo: "Fourier series"
+    url: "https://en.wikipedia.org/wiki/Fourier_series"
+    editore: "Wikipedia"
+    consultato: "2026-11-22"
+---
+
+In the early 19th century the Frenchman **Joseph Fourier**, studying how heat spreads, had an idea that seemed crazy:
+**any periodic wave, even one with sharp corners, can be written as a sum of sine waves** of different frequencies.
+
+Below, each circle is a wave: it turns at a certain speed and has a certain radius. Stacking the circles one on top of another, the tip of the last one draws the sum.
+With a single wave you get a smooth sine curve; adding the frequencies 3, 5, 7… with ever smaller radii, the curve becomes almost a **square wave**.
+
+<Interattivo tipo="fourier" titolo="Fourier’s circles" didascalia="Each circle is a sine wave. Add waves with the slider and watch the curve turn square." altezza={340} />
+
+<Esempio titolo="Where you use it every day">
+**Wi-Fi** and 4G/5G split data across many neighbouring waves and separate them with the Fourier transform; **MP3s** and **JPEG** photos throw away the waves the ear or eye doesn’t notice;
+music **equalisers** raise or lower single frequencies. See also <a href="/en/matematica-ovunque/">Everything is maths</a>.
+</Esempio>
+
+<Curiosita titolo="Corners that won’t go away">
+Near the jumps of the square wave the sum always “overshoots” a little past the edge, even with a great many waves: it’s called the **Gibbs phenomenon**. Try taking the slider to 25 and look at the corners.
+</Curiosita>
+
+For an animated and rigorous introduction, the Italian channel <a href="https://www.youtube.com/@ClearMath1" rel="noopener">ClearMath</a> has a video that builds Fourier series from scratch.

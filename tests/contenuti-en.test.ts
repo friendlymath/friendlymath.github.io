@@ -9,7 +9,7 @@ const valore = (testo: string, campo: string) => testo.match(new RegExp(`^${camp
 const risposte = (testo: string) => [...testo.matchAll(/risposta:\s*([\d.]+)/g)].map((m) => m[1]);
 
 describe('ogni contenuto italiano ha la sua versione inglese', () => {
-  for (const c of ['lezioni']) {
+  for (const c of ['lezioni', 'curiosita', 'storia', 'esperimenti']) {
     const it_ = `src/content/${c}/it`;
     for (const f of elenca(it_)) {
       it(`${c}/${f}`, () => {

@@ -1,0 +1,64 @@
+---
+import Base from '../layouts/Base.astro';
+import { elencoMappe, type NodoMappa } from '../lib/mappe';
+
+import { linguaDa, traduttore } from '../lib/lingua';
+interface Props { slug: string }
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const P = l === 'en' ? '/en' : '';
+const m = elencoMappe(l).find((x) => x.slug === Astro.props.slug)!;
+const mappa = m.mappa!;
+const json = JSON.stringify(mappa, null, 2);
+const scarica = `data:application/json;charset=utf-8,${encodeURIComponent(json)}`;
+---
+<Base titolo={`${t('Mappa', 'Map')}: ${m.nome}`} descrizione={t(`Mappa mentale di ${m.nome}.`, `Mind map of ${m.nome}.`)}>
+  <section class="contenitore">
+    <nav class="tenue"><a href={`${P}/mappe/`}>🧠 {t('Mappe', 'Maps')}</a> › {m.nome}</nav>
+    <h1>{m.nome}</h1>
+    <p class="tenue">{t('Clicca sui pallini per aprire o chiudere i rami. I nodi con 🔗 portano a una lezione o a una scheda.', 'Click the dots to open or close the branches. Nodes with 🔗 lead to a lesson or a page.')}</p>
+    <div class="azioni">
+      <button class="btn vuoto" type="button" data-tutto>{t('Apri tutto', 'Open all')}</button>
+      <button class="btn vuoto" type="button" data-niente>{t('Chiudi tutto', 'Close all')}</button>
+      <a class="btn vuoto" href={scarica} download={t(`mappa-${m.slug}.json`, `map-${m.slug}.json`)}>⬇️ {t('Scarica JSON', 'Download JSON')}</a>
+    </div>
+    <div id="mappa" class="tela scheda" data-mappa={json}></div>
+    <noscript>
+      <Fragment set:html={(function lista(n: NodoMappa): string {
+        const t = n.link ? `<a href="${n.link}">${n.topic}</a>` : n.topic;
+        return `<li>${t}${n.children?.length ? `<ul>${n.children.map(lista).join('')}</ul>` : ''}</li>`;
+      })(mappa.data).replace(/^/, '<ul>') + '</ul>'} />
+    </noscript>
+    <p class="tenue suggerimento">{t('Su telefono puoi trascinare la mappa con un dito.', 'On a phone you can drag the map with one finger.')}</p>
+  </section>
+</Base>
+
+<script>
+  import jsMind from 'jsmind';
+  import 'jsmind/style/jsmind.css';
+  const el = document.getElementById('mappa')!;
+  const dati = JSON.parse(el.dataset.mappa!);
+  const segnaLink = (n: any) => { if (n.link) n.topic = `${n.topic} 🔗`; n.children?.forEach(segnaLink); };
+  segnaLink(dati.data);
+  const jm = new (jsMind as any)({ container: 'mappa', editable: false, view: { draggable: true, hide_scrollbars_when_draggable: true, line_width: 3, line_color: '#7b5cd6' }, layout: { hspace: 40, vspace: 16 } });
+  jm.show(dati);
+  const trova = (n: any, id: string): any => (n.id === id ? n : n.children?.map((c: any) => trova(c, id)).find(Boolean));
+  el.addEventListener('click', (e) => {
+    const nodo = (e.target as HTMLElement).closest('jmnode');
+    if (!nodo || (e.target as HTMLElement).tagName === 'JMEXPANDER') return;
+    const n = trova(dati.data, nodo.getAttribute('nodeid')!);
+    if (n?.link) location.href = n.link;
+  });
+  document.querySelector('[data-tutto]')!.addEventListener('click', () => jm.expand_all());
+  document.querySelector('[data-niente]')!.addEventListener('click', () => { jm.collapse_all(); jm.expand_node('root'); });
+</script>
+
+<style>
+  .azioni { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+  .tela { height: 70vh; min-height: 420px; padding: 0; overflow: hidden; position: relative; }
+  :global(.tela jmnode) { font-family: var(--font); font-weight: 700; border-radius: 12px; background: var(--superficie) !important; color: var(--testo) !important; border: 2px solid var(--magia); box-shadow: var(--ombra) !important; }
+  :global(.tela jmnode:hover) { background: var(--curiosita-bg) !important; }
+  :global(.tela jmnode[nodeid="root"]) { font-size: 1.2rem; background: var(--fiducia) !important; color: #fff !important; border-color: var(--fiducia); }
+  :global(.tela jmexpander) { background: var(--sole) !important; border-color: var(--testo) !important; color: #3a2a00 !important; }
+  .suggerimento { font-size: .9rem; }
+</style>

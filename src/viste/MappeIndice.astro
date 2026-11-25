@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import { elencoMappe } from '../lib/mappe';
+import { linguaDa, traduttore } from '../lib/lingua';
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const P = l === 'en' ? '/en' : '';
+const mappe = elencoMappe(l);
+---
+<Base titolo={t('Mappe mentali', 'Mind maps')} descrizione={t('Mappe mentali esplorabili dei grandi argomenti della matematica, anche in formato JSON.', 'Explorable mind maps of the big topics in mathematics, also in JSON format.')}>
+  <section class="contenitore">
+    <h1>🧠 {t('Mappe mentali', 'Mind maps')}</h1>
+    <p class="tenue stretto" set:html={t('Ogni grande argomento ha la sua mappa: apri i rami, chiudili, segui i collegamenti alle lezioni. Sono anche file <b>JSON</b> (formato jsMind) che puoi scaricare e riaprire con altri strumenti.', 'Every big topic has its own map: open the branches, close them, follow the links to the lessons. They are also <b>JSON</b> files (jsMind format) you can download and open with other tools.')} />
+    <div class="griglia g4">
+      {mappe.map((m) => (
+        m.mappa
+          ? <a class="scheda voce" href={`${P}/mappe/${m.slug}/`}><h2>{m.nome}</h2><p class="tenue">{m.descrizione}</p><span class="pillola">{t('Apri la mappa →', 'Open the map →')}</span></a>
+          : <div class="scheda voce nebbia"><h2>{m.nome}</h2><p class="tenue">🌫️ {t('Mappa in arrivo.', 'Map coming soon.')}</p></div>
+      ))}
+    </div>
+  </section>
+</Base>
+<style>
+  .voce { text-decoration: none; color: var(--testo); display: flex; flex-direction: column; gap: .3rem; align-items: flex-start; }
+  .voce .pillola { margin-top: auto; }
+  .voce h2 { margin: 0 0 .3rem; font-size: 1.2rem; }
+  a.voce:hover { border-color: var(--magia); }
+  .nebbia { opacity: .65; border-style: dashed; }
+</style>

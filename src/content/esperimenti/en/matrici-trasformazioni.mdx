@@ -1,0 +1,35 @@
+---
+titolo: "Matrices as transformations: bending the plane"
+descrizione: "A 2 × 2 matrix isn’t a table of numbers: it’s a way of deforming the whole plane. The determinant tells you how much areas change."
+icona: "🔷"
+lezioniCollegate: []
+fonti:
+  - titolo: "Transformation matrix"
+    url: "https://en.wikipedia.org/wiki/Transformation_matrix"
+    editore: "Wikipedia"
+    consultato: "2026-11-22"
+  - titolo: "Determinant"
+    url: "https://en.wikipedia.org/wiki/Determinant"
+    editore: "Wikipedia"
+    consultato: "2026-11-22"
+---
+
+A matrix $\begin{pmatrix} a & b \\ c & d \end{pmatrix}$ tells you where the two basis vectors end up:
+the green vector $(1, 0)$ goes to $(a, c)$, the red vector $(0, 1)$ goes to $(b, d)$. **The whole rest of the plane follows them**: lines stay lines, parallel lines stay parallel.
+
+<Interattivo tipo="matrice" titolo="Deform the plane" didascalia="Pick a transformation: the grid deforms smoothly. The yellow square shows how the area changes." altezza={440} />
+
+## The determinant: how much areas grow
+
+The yellow square starts with area 1. After the transformation its area is the **determinant** $ad - bc$:
+
+- scale ×2 → area ×4;
+- shear → area ×1 (the shape tilts but doesn’t grow);
+- reflection → negative determinant: the plane has been “turned inside out like a glove”.
+
+<Esempio titolo="Where you use it">
+Every time you **rotate or zoom a photo** on your phone, a **video game** moves its camera, or a graphics program warps an image,
+the computer multiplies the coordinates of points by a matrix. Graphics cards are designed precisely to do millions of these products a second.
+</Esempio>
+
+If you want to go deeper into linear algebra with animations, the channel <a href="https://www.youtube.com/@ClearMath1" rel="noopener">ClearMath</a> (in Italian) tells it exactly this way: matrices as functions.

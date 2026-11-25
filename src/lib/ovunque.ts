@@ -51,3 +51,8 @@ export function percorsoMinimo(g: Grafo, da: string, a: string): { percorso: str
 
 export const mcd = (a: number, b: number): number => (b === 0 ? Math.abs(a) : mcd(b, a % b));
 export const mcm = (a: number, b: number) => (a / mcd(a, b)) * b;
+
+/** Nomi inglesi delle fermate dell'esperimento (gli identificativi restano italiani). */
+export const NOMI_FERMATE_EN: Record<string, string> = {
+  Stazione: 'Station', Piazza: 'Square', Ospedale: 'Hospital', 'Università': 'University', Stadio: 'Stadium', Fiera: 'Expo', Parco: 'Park',
+};

@@ -1,31 +1,38 @@
 ---
-import { TIMELINE } from '../data/timeline';
-const ere = [...new Set(TIMELINE.map((t) => t.era))];
+import { TIMELINE as TIMELINE_IT } from '../data/timeline';
+import { TIMELINE_EN, ERE_EN } from '../data/timeline-en';
+import { linguaDa, traduttore } from '../lib/lingua';
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const TIMELINE = l === 'en' ? TIMELINE_EN : TIMELINE_IT;
+const nomeEra = (e: string) => (l === 'en' ? ERE_EN[e as keyof typeof ERE_EN] : e);
+const ere = [...new Set(TIMELINE.map((x) => x.era))];
 const colori: Record<string, string> = {
   Preistoria: '#8d6e63', Antichità: '#c9a24a', Medioevo: '#1f9d5c', Rinascimento: '#d64545',
   'Età moderna': '#3f7fd8', Ottocento: '#7b5cd6', Novecento: '#f07a2c', Oggi: '#1f4e9c',
 };
 const tappe = [...TIMELINE].sort((a, b) => a.anno - b.anno);
+const titolo = t('⏳ La linea del tempo: dalle tacche su un osso ai computer', '⏳ The timeline: from notches on a bone to computers');
 ---
 <section class="linea-tempo" data-linea aria-labelledby="titolo-linea">
-  <h2 id="titolo-linea">⏳ La linea del tempo: dalle tacche su un osso ai computer</h2>
-  <p class="tenue">Venti millenni di idee in {tappe.length} tappe. Filtra per epoca, scorri, e apri le schede per saperne di più. Ogni tappa ha la sua fonte.</p>
-  <div class="filtri" role="group" aria-label="Filtra per epoca">
-    <button type="button" class="filtro attivo" data-era="tutte">Tutte</button>
-    {ere.map((e) => <button type="button" class="filtro" data-era={e} style={`--c:${colori[e]}`}>{e}</button>)}
+  <h2 id="titolo-linea">{titolo}</h2>
+  <p class="tenue">{t(`Venti millenni di idee in ${tappe.length} tappe. Filtra per epoca, scorri, e apri le schede per saperne di più. Ogni tappa ha la sua fonte.`, `Twenty millennia of ideas in ${tappe.length} stages. Filter by era, scroll, and open the pages to find out more. Every stage has its source.`)}</p>
+  <div class="filtri" role="group" aria-label={t('Filtra per epoca', 'Filter by era')}>
+    <button type="button" class="filtro attivo" data-era="tutte">{t('Tutte', 'All')}</button>
+    {ere.map((e) => <button type="button" class="filtro" data-era={e} style={`--c:${colori[e]}`}>{nomeEra(e)}</button>)}
   </div>
   <ol class="tappe">
-    {tappe.map((t, i) => (
-      <li class={`tappa ${i % 2 ? 'destra' : 'sinistra'}`} data-era-tappa={t.era} style={`--c:${colori[t.era]}`}>
+    {tappe.map((x, i) => (
+      <li class={`tappa ${i % 2 ? 'destra' : 'sinistra'}`} data-era-tappa={x.era} style={`--c:${colori[x.era]}`}>
         <div class="perno" aria-hidden="true"></div>
         <article class="carta-tempo">
-          <p class="quando"><span class="anno">{t.quando}</span> <span class="era">{t.era}</span></p>
-          <h3>{t.titolo}</h3>
-          <p class="chi">{t.chi && <b>{t.chi}</b>}{t.chi && ' · '}{t.luogo}</p>
-          <p>{t.testo}</p>
+          <p class="quando"><span class="anno">{x.quando}</span> <span class="era">{nomeEra(x.era)}</span></p>
+          <h3>{x.titolo}</h3>
+          <p class="chi">{x.chi && <b>{x.chi}</b>}{x.chi && ' · '}{x.luogo}</p>
+          <p>{x.testo}</p>
           <p class="link-tappa">
-            {t.link && <a href={t.link}>Approfondisci su FriendlyMath →</a>}
-            <a class="fonte-tappa" href={t.fonte.url} rel="noopener" target="_blank">📚 {t.fonte.titolo}</a>
+            {x.link && <a href={x.link}>{t('Approfondisci su FriendlyMath →', 'Read more on FriendlyMath →')}</a>}
+            <a class="fonte-tappa" href={x.fonte.url} rel="noopener" target="_blank">📚 {x.fonte.titolo}</a>
           </p>
         </article>
       </li>

@@ -43,7 +43,7 @@ const verso = altraLingua(Astro.url);
       <a href={verso} class="tema lingua-link" hreflang={l === 'en' ? 'it' : 'en'} lang={l === 'en' ? 'it' : 'en'} aria-label={l === 'en' ? 'Leggi in italiano' : 'Read in English'} title={l === 'en' ? 'Italiano' : 'English'}>{l === 'en' ? 'IT' : 'EN'}</a>
       <a href={href(l, '/studio/')} class="tema studio-link" aria-label={t('Il tuo modo di studiare: lettura, strumenti, focus', 'Your way of learning: reading, tools, focus')} title={t('Il tuo modo di studiare', 'Your way of learning')}>Aa</a>
       <button class="tema" type="button" aria-label={t('Cambia tema chiaro/scuro', 'Switch light/dark theme')} title={t('Tema chiaro/scuro', 'Light/dark theme')}>🌓</button>
-      <a href="/zaino/" class="zaino" aria-label={t("Zaino dell'eroe: progressi e Pergamena", 'Hero’s backpack: progress and Scroll')}>
+      <a href={href(l, '/zaino/')} class="zaino" aria-label={t("Zaino dell'eroe: progressi e Pergamena", 'Hero’s backpack: progress and Scroll')}>
         <span class="mini-avatar" data-mini-avatar aria-hidden="true">🎒</span>
         <span class="zaino-grado pillola" data-grado-attuale>{t('Recluta', 'Recruit')}</span>
         <span class="non-salvato" data-non-salvato hidden title={t('Progressi non salvati nella Pergamena', 'Progress not yet saved in your Scroll')}>!</span>

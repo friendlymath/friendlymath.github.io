@@ -1,0 +1,6 @@
+---
+import MappaPagina from '../../../viste/MappaPagina.astro';
+import { elencoMappe } from '../../../lib/mappe';
+export function getStaticPaths() { return elencoMappe('en').filter((m) => m.mappa).map((m) => ({ params: { slug: m.slug } })); }
+---
+<MappaPagina slug={Astro.params.slug!} />

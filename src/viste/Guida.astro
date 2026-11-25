@@ -1,0 +1,439 @@
+---
+import Base from '../layouts/Base.astro';
+import Civetta from '../components/arte/Civetta.astro';
+import Stemma from '../components/arte/Stemma.astro';
+import SegretoPersonaggi from '../components/SegretoPersonaggi.astro';
+import Ritratto from '../components/arte/Ritratto.astro';
+import { gradiL, distrattoriL } from '../lib/mondo';
+import { linguaDa, traduttore } from '../lib/lingua';
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const GRADI = gradiL(l), DISTRATTORI = distrattoriL(l);
+const indiceEn = [
+  ['inizio', '🚀', 'Where do I start'], ['libro', '📖', 'The Book'], ['cammino', '🗺️', 'The Quest'], ['mappa', '🎮', 'Map controls'],
+  ['stanza', '🚪', 'What a room looks like'], ['loci', '🏛️', 'The memory palace'], ['palestra', '🏋️', 'The Training Ground'], ['studio', '⚙️', 'Your way of learning'], ['eroe', '🎲', 'Your hero'], ['gradi', '🛡️', 'Grades and Guardians'], ['distrattori', '🎭', 'The Distractors'],
+  ['zaino', '🎒', 'Backpack and Scroll'], ['legenda', '🔣', 'Key to the symbols'], ['adulti', '👩‍🏫', 'For parents and teachers'],
+];
+const indiceIt = [
+  ['inizio', '🚀', 'Da dove comincio'], ['libro', '📖', 'Il Libro'], ['cammino', '🗺️', 'Il Cammino'], ['mappa', '🎮', 'Comandi della mappa'],
+  ['stanza', '🚪', "Com'è fatta una stanza"], ['loci', '🏛️', 'Il palazzo della memoria'], ['palestra', '🏋️', 'La Palestra'], ['studio', '⚙️', 'Il tuo modo di studiare'], ['eroe', '🎲', 'Il tuo eroe'], ['gradi', '🛡️', 'Gradi e Guardiani'], ['distrattori', '🎭', 'I Distrattori'],
+  ['zaino', '🎒', 'Zaino e Pergamena'], ['legenda', '🔣', 'Legenda dei simboli'], ['adulti', '👩‍🏫', 'Per genitori e insegnanti'],
+];
+const indice = l === 'en' ? indiceEn : indiceIt;
+---
+<Base titolo={t('Guida del sito', 'Site guide')} descrizione={t('Come si usa FriendlyMath: Libro, Cammino, mappa, stanze, sfide, gradi e Pergamena.', 'How to use FriendlyMath: Book, Quest, map, rooms, challenges, grades and Scroll.')}>
+  <section class="testa-guida">
+    <div class="contenitore testa-riga">
+      <Civetta taglia={120} />
+      <div>
+        <p class="pillola">🧭 {t('Guida del sito', 'Site guide')}</p>
+        <h1>{t('Come funziona FriendlyMath', 'How FriendlyMath works')}</h1>
+        <p class="sottotitolo">{t('Cinque minuti di lettura, e poi via nella Nebbia. Se ti perdi, torna qui: Ottavia lascia sempre la porta aperta.', 'Five minutes of reading, and then off into the Fog. If you get lost, come back here: Ottavia always leaves the door open.')}</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="contenitore guida">
+    <nav class="indice scheda" aria-label={t('Indice della guida', 'Guide contents')}>
+      <p class="indice-titolo">{t('Indice', 'Contents')}</p>
+      <ol>{indice.map(([id, i, x]) => <li><a href={`#${id}`}><span aria-hidden="true">{i}</span> {x}</a></li>)}</ol>
+    </nav>
+
+    <div class="capitoli">
+      {l === 'en' ? (<>
+      <section id="inizio" class="capitolo">
+        <h2>🚀 Where do I start</h2>
+        <div class="griglia g3 passi">
+          <div class="scheda passo"><span class="num">1</span><h3>Choose your path</h3><p>On the home page there are two doors: the <b>Book</b> to study a specific topic, the <b>Quest</b> for a journey in stages with a story.</p></div>
+          <div class="scheda passo"><span class="num">2</span><h3>Read, try, make mistakes</h3><p>Every lesson has worked examples, animations to touch and a common mistake to unmask. Getting things wrong is expected: that’s how you learn.</p></div>
+          <div class="scheda passo"><span class="num">3</span><h3>Complete the challenge</h3><p>At the end there’s a challenge. Complete it to conquer the room. Your progress saves itself in your browser.</p></div>
+        </div>
+      </section>
+
+      <section id="libro" class="capitolo">
+        <h2>📖 The Book</h2>
+        <p>The Book is the open library: <b>no locks</b>. Topics are divided into eight big chapters (Numbers, Geometry, Algebra, Functions and calculus,
+        Probability and statistics, Logic and sets, Linear algebra, Advanced structures) and then into subtopics.</p>
+        <ul>
+          <li>The <b>coloured dot</b> next to each lesson shows its level, from the Recruit’s yellow to the Winged Knight’s purple.</li>
+          <li>The ✅ marks the lessons you have already completed.</li>
+          <li>Each chapter has its own <a href="/en/mappe/">mind map</a> so you can see everything at a glance.</li>
+          <li>In the Book the challenge is called “Test yourself”: if you complete it, the matching room in the Quest will already be conquered.</li>
+        </ul>
+      </section>
+
+      <section id="cammino" class="capitolo">
+        <h2>🗺️ The Quest</h2>
+        <p>The Quest is an adventure in the <b>Kingdom of Numeria</b>. Each region corresponds to a level of study; each topic is a <b>room</b>
+        (a camp on the map); the last room of every region is the <b>Guardian’s fortress</b>.</p>
+        <ul>
+          <li>Within a region the rooms are tackled <b>in order</b>: conquer one and the next one opens.</li>
+          <li>Regions you haven’t reached yet are covered by the <b>Fog</b>. It lifts when you defeat the Guardian of the previous region.</li>
+          <li><b>Already ahead?</b> The Guardians’ fortresses can be seen through the Fog: challenge the one of the region before the one you want to start from. It’s your entrance test.</li>
+        </ul>
+      </section>
+
+      <section id="mappa" class="capitolo">
+        <h2>🎮 Map controls</h2>
+        <div class="tabella-comandi scheda">
+          <div><b>Drag</b> with mouse or finger</div><div>Explore the map</div>
+          <div><b>Scroll wheel</b>, <kbd>+</kbd> <kbd>−</kbd> or pinch with two fingers</div><div>Zoom in and out</div>
+          <div>Keyboard <b>arrows</b></div><div>Move the view</div>
+          <div>🎯</div><div>Go back to where your hero is (“YOU”)</div>
+          <div>🗺️</div><div>Show the whole map</div>
+          <div><b>Minimap</b> bottom right</div><div>Click a point to go there</div>
+          <div><b>Click</b> a camp or a fortress</div><div>Opens the stage card, with the button to enter</div>
+        </div>
+        <p>At the top you’ll see the <b>hero bar</b>: grade, rooms conquered 🚩 and Guardians defeated 🐉. Below the map there is always the <b>list view</b>, handy with a keyboard or a screen reader.</p>
+      </section>
+
+      <section id="stanza" class="capitolo">
+        <h2>🚪 What a room looks like</h2>
+        <div class="griglia g3">
+          <div class="box scena-demo"><p class="box-titolo">💬 The scene</p><p>A character tells you what’s happening. Only in the Quest.</p></div>
+          <div class="box esempio"><p class="box-titolo">🍕 Worked example</p><p>Maths in real life: shopping, recipes, maps, discounts.</p></div>
+          <div class="box sfida"><p class="box-titolo">🎮 Interactive</p><p>Animations and experiments to try with your own hands.</p></div>
+          <div class="box attenzione"><p class="box-titolo">⚠️ Common mistake</p><p>A Distractor tries to trick you with the most common error.</p></div>
+          <div class="box curiosita"><p class="box-titolo">✨ Did you know?</p><p>A curiosity or a connection, with its source.</p></div>
+          <div class="box storia"><p class="box-titolo">⚔️ The challenge</p><p>Multiple-choice or numerical questions, with explanations. Try again as often as you like.</p></div>
+        </div>
+      </section>
+
+      <section id="loci" class="capitolo">
+        <h2>🏛️ The memory palace</h2>
+        <p>Many lessons open with an <b>illustrated room</b>: a workshop, a library, a market, a fortress. Each numbered object keeps a concept
+        (the shelf of bricks = ones, tens and hundreds; the empty chair with the 0 = zero keeps the place). It’s the <b>method of loci</b>, a very ancient memory technique:
+        you tie each idea to an object in a precise place, and to remember you just “walk through” the room in your mind.</p>
+        <ul>
+          <li>Tap an object to jump to the paragraph that explains that concept.</li>
+          <li>Before a test, close your eyes and try to see the room again: object 1, object 2… what does each one remind you of?</li>
+        </ul>
+      </section>
+
+      <section id="palestra" class="capitolo">
+        <h2>🏋️ The Training Ground</h2>
+        <p>At the <a href="/en/palestra/">Training Ground</a> formulas are <b>taken apart</b>: you tap each piece (for example the “2ab” of the square of a binomial) and read what it means.
+        Then you practise with six ever-new exercises, with the steps explained.</p>
+        <ul>
+          <li><b>New set</b>: six more exercises. Each set has a number: the same set can be redone from its link.</li>
+          <li><b>Print the worksheet</b>: exercises with room for working and, on a separate sheet, the solutions. From the print window you can also save it as a PDF.</li>
+          <li><b>Download (.txt)</b>: exercises and solutions in a text file.</li>
+        </ul>
+      </section>
+
+      <section id="studio" class="capitolo">
+        <h2>⚙️ Your way of learning</h2>
+        <p>The first time you enter the Quest we ask how you like to learn (you can also choose it when creating your hero, or skip).
+        The profile adapts the whole path: lessons, Guardian challenges, Training Ground (fewer exercises, keypad, more readable printed sheets) and map.</p>
+        <p>From the <b>Aa</b> button at the top, or from the <a href="/en/studio/">Your way of learning</a> page, you adapt the site to you. You can start from a profile
+        (dyslexia, dyscalculia, dysgraphia and dysorthographia, ADHD, autism) that turns on the recommended settings, and then turn each setting on or off:</p>
+        <ul>
+          <li><b>High-readability text</b>, <b>Read aloud</b> (🔊 your device’s voice reads the lesson) and the <b>reading ruler</b> (📏).</li>
+          <li><b>Calculation tools</b> (🧮): calculator, times table and formula sheet, bottom left.</li>
+          <li><b>Shorter challenges</b> and a <b>large keypad</b> for numerical answers.</li>
+          <li><b>Focus mode</b>: the lesson is split into steps, with Next and Back and a progress bar.</li>
+          <li><b>Essential lessons</b>: at the top of each lesson choose between <b>📜 Full</b> and <b>✂️ Essentials</b> (key ideas, one example, the challenge).
+          With the setting on, lessons open straight in the essentials version.</li>
+          <li><b>No surprise motion</b> and <b>plain language</b>, with a list of what you will do at the start of every lesson.</li>
+        </ul>
+        <p>🔒 Your learning profile stays only in your browser and <b>never goes into the Scroll</b>. Whoever runs the site cannot know whether you are neurodivergent.</p>
+      </section>
+
+      <section id="eroe" class="capitolo">
+        <h2>🎲 Your hero</h2>
+        <p>On the <a href="/en/eroe/">Create your hero</a> page you choose, as in a role-playing game: who you are (heroine, hero, or neither), your <b>lineage</b>,
+        your <b>class</b>, your looks and four abilities: Logic, Intuition, Patience, Curiosity. Your character appears on the Quest map and in the Backpack,
+        and changes equipment as you rise in grade. The name is optional and never leaves your device, except inside your Scroll.</p>
+        <p><b>Lineages</b> (friendly peoples only), each with a gift in the challenges: Humans (one extra ability charge), Elves (numbers highlighted in the questions),
+        Dwarves (the Tenacity badge if you win after a mistake), Halflings (your first mistake costs no stars), Half-elves (choose another lineage’s gift).</p>
+        <p><b>Classes and abilities</b>: each class has a help to use in the challenges.</p>
+        <ul>
+          <li>⚔️ Warrior of Numbers: <b>Second assault</b>, check your answers without using up an attempt.</li>
+          <li>🪄 Sorceress or Wizard of Formulas: <b>Arcane hint</b>, the first step of the reasoning (the answer stays hidden).</li>
+          <li>🧭 Explorer of Shapes: <b>Map of knowledge</b>, the lesson’s key ideas next to the challenge.</li>
+          <li>🎶 Bard of Problems: <b>Tell it again</b>, the lesson’s worked example.</li>
+          <li>🎲 Seer of Chance: <b>Glimpse of chance</b>, removes a wrong answer or tells you whether your number is too high or too low.</li>
+          <li>🗝️ Trickster of Shortcuts: <b>Honest shortcut</b>, the first digit and size of the answer, or two answers to choose between.</li>
+        </ul>
+        <p>You have <b>1 charge</b> per challenge, one more if your ability’s characteristic is at least 5, and one more with the human gift. Against the Guardians you always have 1.
+        Using an ability isn’t cheating: you still conquer the room. <b>Stars</b> (1 to 3), on the other hand, reward getting it right on the first attempt.</p>
+      </section>
+
+      <section id="gradi" class="capitolo">
+        <h2>🛡️ Grades and Guardians</h2>
+        <div class="griglia g3">
+          {GRADI.map((g) => (
+            <div class="scheda grado">
+              <Stemma numero={g.numero} taglia={56} />
+              <div><h3>{g.numero}. {g.nome}</h3><p class="tenue">{g.regione} · {g.fase}</p><p>Equipment: {g.equipaggiamento}</p></div>
+            </div>
+          ))}
+        </div>
+        <p>You rise in grade <b>only</b> by defeating the Guardian in the Quest. When you go up a grade, a reminder appears to save your Scroll.</p>
+      </section>
+
+      <section id="distrattori" class="capitolo">
+        <h2>🎭 The Distractors</h2>
+        <p>They aren’t villains: they are the mistakes and habits that hold us back, in disguise. Recognising them is half the work.</p>
+        <div class="griglia g3">
+          {Object.entries(DISTRATTORI).map(([k, d]) => <div class="scheda ritratto-scheda"><Ritratto chi={k} taglia={72} alt={d.nome} /><h3>{d.nome.charAt(0).toUpperCase() + d.nome.slice(1)}</h3><p class="tenue">{d.motto}</p></div>)}
+        </div>
+      </section>
+
+      <section id="segreto" class="capitolo">
+        <h2>🕯️ Who the characters really are</h2>
+        <SegretoPersonaggi />
+      </section>
+
+      <section id="zaino" class="capitolo">
+        <h2>🎒 Backpack and Scroll</h2>
+        <p class="avviso-guida">⚠️ <b>Save your Scroll often to your computer or phone.</b> Without it, if you clear your browser data, use a private window or change device, <b>you lose all your progress</b>. The red dot on the Backpack tells you when there is something to save.</p>
+        <p>No account: progress stays in the browser you are using. In the <a href="/en/zaino/">Hero’s backpack</a> you’ll find your grade, badges and completed stages.</p>
+        <ol>
+          <li><b>Save the Scroll</b>: download a small <code>.json</code> file with your progress (no personal data).</li>
+          <li>On another device, or after clearing your browser data, press <b>Resume your journey</b> and choose the file.</li>
+          <li>Decide whether to <b>merge</b> it with your current progress or <b>replace</b> it.</li>
+        </ol>
+      </section>
+
+      <section id="legenda" class="capitolo">
+        <h2>🔣 Key to the symbols</h2>
+        <div class="tabella-comandi scheda">
+          <div>⛺ orange with a yellow flag</div><div>Room to conquer (pulsing)</div>
+          <div>⛺ green</div><div>Room conquered</div>
+          <div>⛺ grey</div><div>Room still closed</div>
+          <div>🏰 with 🐉</div><div>Guardian’s fortress</div>
+          <div>🌫️</div><div>Fog: region not reached yet or under construction</div>
+          <div>✅</div><div>Lesson completed</div>
+          <div>🔗</div><div>In mind maps: leads to a lesson or a page</div>
+        </div>
+      </section>
+
+      <section id="adulti" class="capitolo">
+        <h2>👩‍🏫 For parents and teachers</h2>
+        <ul>
+          <li>The <b>Book</b> is good for revising a specific topic or preparing a lesson; the <b>Quest</b> for those who need motivation and a thread to follow.</li>
+          <li>Challenges don’t give marks: they give <b>explanations</b>. The goal is for a mistake to become a clue, not a verdict.</li>
+          <li>Every curiosity, history page and experiment has verifiable <a href="/en/fonti/">sources</a>.</li>
+          <li>The site collects no data: it can be used in class without any sign-up.</li>
+          <li>The curriculum follows the Italian school system; the <a href="/en/libro/">Book</a> shows the age for each school year.</li>
+        </ul>
+        <p><a class="btn gioco" href="/en/cammino/">Ready? Start the Quest →</a> <a class="btn vuoto" href="/en/libro/">Open the Book</a></p>
+      </section>
+      </>) : (<>
+      <section id="inizio" class="capitolo">
+        <h2>🚀 Da dove comincio</h2>
+        <div class="griglia g3 passi">
+          <div class="scheda passo"><span class="num">1</span><h3>Scegli la strada</h3><p>In homepage trovi due porte: il <b>Libro</b> per studiare un argomento preciso, il <b>Cammino</b> per un percorso a tappe con una storia.</p></div>
+          <div class="scheda passo"><span class="num">2</span><h3>Leggi, prova, sbaglia</h3><p>Ogni lezione ha esempi pratici, animazioni da toccare e un errore tipico da smascherare. Sbagliare è previsto: è così che si impara.</p></div>
+          <div class="scheda passo"><span class="num">3</span><h3>Supera la sfida</h3><p>Alla fine c'è una sfida. Superala per conquistare la stanza. I progressi si salvano da soli nel tuo browser.</p></div>
+        </div>
+      </section>
+
+      <section id="libro" class="capitolo">
+        <h2>📖 Il Libro</h2>
+        <p>Il Libro è la biblioteca aperta: <b>nessun lucchetto</b>. Gli argomenti sono divisi in otto grandi capitoli (Numeri, Geometria, Algebra, Funzioni e analisi,
+        Probabilità e statistica, Logica e insiemi, Algebra lineare, Strutture avanzate) e poi in sottoargomenti.</p>
+        <ul>
+          <li>Il <b>pallino colorato</b> accanto a ogni lezione indica il livello, dal giallo della Recluta al viola del Cavaliere alato.</li>
+          <li>La ✅ indica le lezioni che hai già completato.</li>
+          <li>Ogni capitolo ha la sua <a href="/mappe/">mappa mentale</a> per vedere tutto in un colpo d'occhio.</li>
+          <li>Nel Libro la sfida si chiama «Mettiti alla prova»: se la superi, la stanza corrispondente del Cammino risulterà già conquistata.</li>
+        </ul>
+      </section>
+
+      <section id="cammino" class="capitolo">
+        <h2>🗺️ Il Cammino</h2>
+        <p>Il Cammino è un'avventura nel <b>Regno di Numeria</b>. Ogni regione corrisponde a un livello di studio; ogni argomento è una <b>stanza</b>
+        (un accampamento sulla mappa); l'ultima stanza di ogni regione è la <b>fortezza del Guardiano</b>.</p>
+        <ul>
+          <li>Dentro una regione le stanze si affrontano <b>in ordine</b>: conquistata una, si apre la successiva.</li>
+          <li>Le regioni non ancora raggiunte sono coperte dalla <b>Nebbia</b>. Si diradano quando sconfiggi il Guardiano della regione precedente.</li>
+          <li><b>Sei già avanti?</b> Le fortezze dei Guardiani si vedono anche attraverso la Nebbia: sfida quella della regione precedente a quella da cui vuoi partire. È la tua prova d'ingresso.</li>
+        </ul>
+      </section>
+
+      <section id="mappa" class="capitolo">
+        <h2>🎮 Comandi della mappa</h2>
+        <div class="tabella-comandi scheda">
+          <div><b>Trascina</b> con mouse o dito</div><div>Esplora la mappa</div>
+          <div><b>Rotellina</b>, <kbd>+</kbd> <kbd>−</kbd> o pizzico con due dita</div><div>Zoom avanti e indietro</div>
+          <div><b>Frecce</b> della tastiera</div><div>Sposta la vista</div>
+          <div>🎯</div><div>Torna dove si trova il tuo eroe («TU»)</div>
+          <div>🗺️</div><div>Mostra tutta la mappa</div>
+          <div><b>Minimappa</b> in basso a destra</div><div>Clicca un punto per andarci</div>
+          <div><b>Clic</b> su un accampamento o una fortezza</div><div>Apre la scheda della tappa, con il pulsante per entrare</div>
+        </div>
+        <p>In alto vedi la <b>barra dell'eroe</b>: grado, stanze conquistate 🚩 e Guardiani sconfitti 🐉. Sotto la mappa c'è sempre la <b>vista elenco</b>, comoda da tastiera o con un lettore di schermo.</p>
+      </section>
+
+      <section id="stanza" class="capitolo">
+        <h2>🚪 Com'è fatta una stanza</h2>
+        <div class="griglia g3">
+          <div class="box scena-demo"><p class="box-titolo">💬 La scena</p><p>Un personaggio racconta cosa succede. Solo nel Cammino.</p></div>
+          <div class="box esempio"><p class="box-titolo">🍕 Esempio pratico</p><p>La matematica nella vita vera: spesa, ricette, scale, sconti.</p></div>
+          <div class="box sfida"><p class="box-titolo">🎮 Interattivo</p><p>Animazioni ed esperimenti da toccare con mano.</p></div>
+          <div class="box attenzione"><p class="box-titolo">⚠️ Errore tipico</p><p>Un Distrattore prova a ingannarti con l'errore più comune.</p></div>
+          <div class="box curiosita"><p class="box-titolo">✨ Lo sapevi?</p><p>Una curiosità o un collegamento, con la fonte.</p></div>
+          <div class="box storia"><p class="box-titolo">⚔️ La sfida</p><p>Domande a scelta o numeriche, con spiegazione. Riprova quante volte vuoi.</p></div>
+        </div>
+      </section>
+
+      <section id="loci" class="capitolo">
+        <h2>🏛️ Il palazzo della memoria</h2>
+        <p>Molte lezioni si aprono con una <b>stanza illustrata</b>: una bottega, una biblioteca, un mercato, una fortezza. Ogni oggetto numerato custodisce un concetto
+        (lo scaffale con i mattoncini = unità, decine e centinaia; la sedia vuota con lo 0 = lo zero tiene il posto). È il <b>metodo dei loci</b>, una tecnica di memoria antichissima:
+        si lega ogni idea a un oggetto in un luogo preciso, e per ricordare basta «ripercorrere» la stanza con la mente.</p>
+        <ul>
+          <li>Tocca un oggetto per saltare al paragrafo che spiega quel concetto.</li>
+          <li>Prima di una verifica, chiudi gli occhi e prova a rivedere la stanza: oggetto 1, oggetto 2… che cosa ti ricorda ciascuno?</li>
+        </ul>
+      </section>
+
+      <section id="palestra" class="capitolo">
+        <h2>🏋️ La Palestra</h2>
+        <p>Nella <a href="/palestra/">Palestra</a> le formule si <b>smontano</b>: tocchi ogni pezzo (per esempio il «2ab» del quadrato del binomio) e leggi che cosa significa.
+        Poi ti alleni con sei esercizi sempre nuovi, con i passaggi spiegati.</p>
+        <ul>
+          <li><b>Nuova serie</b>: altri sei esercizi. Ogni serie ha un numero: la stessa serie si può rifare dal link.</li>
+          <li><b>Stampa la scheda</b>: esercizi con lo spazio per i calcoli e, su un foglio a parte, le soluzioni. Dalla finestra di stampa puoi anche salvarla in PDF.</li>
+          <li><b>Scarica (.txt)</b>: esercizi e soluzioni in un file di testo.</li>
+        </ul>
+      </section>
+
+      <section id="studio" class="capitolo">
+        <h2>⚙️ Il tuo modo di studiare</h2>
+        <p>La prima volta che entri nel Cammino ti chiediamo com'è il tuo modo di studiare (puoi anche sceglierlo creando l'eroe, oppure saltare).
+        Il profilo adatta tutto il percorso: lezioni, sfide dei Guardiani, Palestra (meno esercizi, tastierino, schede stampate più leggibili) e mappa.</p>
+        <p>Dal pulsante <b>Aa</b> in alto, o dalla pagina <a href="/studio/">Il tuo modo di studiare</a>, adatti il sito a te. Puoi partire da un profilo
+        (dislessia, discalculia, disgrafia e disortografia, ADHD, autismo) che accende le regolazioni consigliate, e poi accendere o spegnere ciascuna regolazione:</p>
+        <ul>
+          <li><b>Testo ad alta leggibilità</b>, <b>Leggimi</b> (🔊 la voce del dispositivo legge la lezione) e <b>righello di lettura</b> (📏).</li>
+          <li><b>Strumenti di calcolo</b> (🧮): calcolatrice, tavola pitagorica e formulario, in basso a sinistra.</li>
+          <li><b>Sfide più brevi</b> e <b>tastierino grande</b> per le risposte numeriche.</li>
+          <li><b>Modalità focus</b>: la lezione si divide in passi, con Avanti e Indietro e una barra di avanzamento.</li>
+          <li><b>Lezioni essenziali</b>: in cima a ogni lezione scegli tra <b>📜 Completa</b> e <b>✂️ Essenziale</b> (idee chiave, un esempio, la sfida).
+          Con la regolazione attiva le lezioni si aprono già nella versione essenziale.</li>
+          <li><b>Niente movimenti a sorpresa</b> e <b>linguaggio diretto</b>, con l’elenco di cosa farai all’inizio di ogni lezione.</li>
+        </ul>
+        <p>🔒 Il profilo di studio resta solo nel tuo browser e <b>non entra nella Pergamena</b>. Chi gestisce il sito non può sapere se hai una neurodivergenza.</p>
+      </section>
+
+      <section id="eroe" class="capitolo">
+        <h2>🎲 Il tuo eroe</h2>
+        <p>Nella pagina <a href="/eroe/">Crea il tuo eroe</a> scegli, come in un gioco di ruolo: chi sei (eroina, eroe, o nessuno dei due), la <b>stirpe</b>,
+        la <b>classe</b>, l'aspetto e quattro caratteristiche: Logica, Intuizione, Pazienza, Curiosità. Il tuo personaggio compare sulla mappa del Cammino e nello Zaino,
+        e cambia equipaggiamento salendo di grado. Il nome è facoltativo e non lascia mai il tuo dispositivo, se non dentro la tua Pergamena.</p>
+        <p><b>Stirpi</b> (solo popoli amici), ognuna con un dono nelle sfide: Umani (una carica di abilità in più), Elfi (numeri evidenziati nelle domande),
+        Nani (distintivo della Tenacia se vinci dopo un errore), Halfling (il primo errore non costa stelle), Mezzelfi (scelgono il dono di un'altra stirpe).</p>
+        <p><b>Classi e abilità</b>: ogni classe ha un aiuto da usare nelle sfide.</p>
+        <ul>
+          <li>⚔️ Guerriera/o dei Numeri: <b>Secondo assalto</b>, controlli le risposte senza consumare un tentativo.</li>
+          <li>🪄 Maga/o delle Formule: <b>Indizio arcano</b>, il primo passo del ragionamento (la risposta resta nascosta).</li>
+          <li>🧭 Esploratrice/ore delle Forme: <b>Mappa del sapere</b>, le idee chiave della lezione accanto alla sfida.</li>
+          <li>🎶 Barda/o dei Problemi: <b>Racconta di nuovo</b>, l'esempio svolto della lezione.</li>
+          <li>🎲 Veggente del Caso: <b>Sguardo del caso</b>, scarta una risposta sbagliata o ti dice se il numero è troppo alto o basso.</li>
+          <li>🗝️ Scaltra/o dei Trucchi: <b>Scorciatoia onesta</b>, la prima cifra e la grandezza della risposta, o due risposte tra cui scegliere.</li>
+        </ul>
+        <p>Hai <b>1 carica</b> per sfida, una in più se la caratteristica della tua abilità è almeno 5, e una in più con il dono umano. Contro i Guardiani le cariche sono sempre 1.
+        Usare un'abilità non è barare: la stanza si conquista lo stesso. Le <b>stelle</b> (da 1 a 3) premiano invece chi ci riesce al primo tentativo.</p>
+      </section>
+
+      <section id="gradi" class="capitolo">
+        <h2>🛡️ Gradi e Guardiani</h2>
+        <div class="griglia g3">
+          {GRADI.map((g) => (
+            <div class="scheda grado">
+              <Stemma numero={g.numero} taglia={56} />
+              <div><h3>{g.numero}. {g.nome}</h3><p class="tenue">{g.regione} · {g.fase}</p><p>Equipaggiamento: {g.equipaggiamento}</p></div>
+            </div>
+          ))}
+        </div>
+        <p>Sali di grado <b>solo</b> sconfiggendo il Guardiano nel Cammino. Al passaggio di grado compare un promemoria per salvare la Pergamena.</p>
+      </section>
+
+      <section id="distrattori" class="capitolo">
+        <h2>🎭 I Distrattori</h2>
+        <p>Non sono cattivi: sono gli errori e le abitudini che ci bloccano, travestiti. Riconoscerli è metà del lavoro.</p>
+        <div class="griglia g3">
+          {Object.entries(DISTRATTORI).map(([k, d]) => <div class="scheda ritratto-scheda"><Ritratto chi={k} taglia={72} alt={d.nome} /><h3>{d.nome.charAt(0).toUpperCase() + d.nome.slice(1)}</h3><p class="tenue">{d.motto}</p></div>)}
+        </div>
+      </section>
+
+      <section id="segreto" class="capitolo">
+        <h2>🕯️ Chi sono davvero i personaggi</h2>
+        <SegretoPersonaggi />
+      </section>
+
+      <section id="zaino" class="capitolo">
+        <h2>🎒 Zaino e Pergamena</h2>
+        <p class="avviso-guida">⚠️ <b>Salva spesso la Pergamena sul tuo PC o telefono.</b> Senza di essa, se cancelli i dati del browser, usi l'incognito o cambi dispositivo, <b>perdi tutti i progressi</b>. Il pallino rosso sullo Zaino ti avvisa quando hai qualcosa da salvare.</p>
+        <p>Nessun account: i progressi restano nel browser che stai usando. Nello <a href="/zaino/">Zaino dell'eroe</a> trovi grado, badge e tappe completate.</p>
+        <ol>
+          <li><b>Salva la Pergamena</b>: scarica un piccolo file <code>.json</code> con i tuoi progressi (nessun dato personale).</li>
+          <li>Su un altro dispositivo, o dopo aver cancellato i dati del browser, premi <b>Riprendi il cammino</b> e scegli il file.</li>
+          <li>Decidi se <b>unire</b> i progressi a quelli attuali o <b>sostituirli</b>.</li>
+        </ol>
+      </section>
+
+      <section id="legenda" class="capitolo">
+        <h2>🔣 Legenda dei simboli</h2>
+        <div class="tabella-comandi scheda">
+          <div>⛺ arancione con bandiera gialla</div><div>Stanza da conquistare (pulsa)</div>
+          <div>⛺ verde</div><div>Stanza conquistata</div>
+          <div>⛺ grigio</div><div>Stanza ancora chiusa</div>
+          <div>🏰 con 🐉</div><div>Fortezza del Guardiano</div>
+          <div>🌫️</div><div>Nebbia: regione non ancora raggiunta o in costruzione</div>
+          <div>✅</div><div>Lezione completata</div>
+          <div>🔗</div><div>Nelle mappe mentali: porta a una lezione o a una scheda</div>
+        </div>
+      </section>
+
+      <section id="adulti" class="capitolo">
+        <h2>👩‍🏫 Per genitori e insegnanti</h2>
+        <ul>
+          <li>Il <b>Libro</b> va bene per ripassare un argomento preciso o per preparare una lezione; il <b>Cammino</b> per chi ha bisogno di motivazione e di un filo da seguire.</li>
+          <li>Le sfide non danno voti: danno <b>spiegazioni</b>. L'obiettivo è che l'errore diventi un indizio, non una condanna.</li>
+          <li>Ogni curiosità, scheda storica ed esperimento ha le sue <a href="/fonti/">fonti</a> verificabili.</li>
+          <li>Il sito non raccoglie dati: si può usare in classe senza registrazioni.</li>
+        </ul>
+        <p><a class="btn gioco" href="/cammino/">Pronto? Inizia il Cammino →</a> <a class="btn vuoto" href="/libro/">Apri il Libro</a></p>
+      </section>
+      </>)}
+    </div>
+  </div>
+</Base>
+
+<style>
+  .testa-guida { background: radial-gradient(900px 300px at 20% 0%, var(--scena-bg), transparent 70%); padding: 2rem 0 1rem; }
+  .testa-riga { display: flex; gap: 1.2rem; align-items: center; }
+  .sottotitolo { font-size: 1.15rem; max-width: 42rem; margin-top: 0; }
+  .guida { display: grid; gap: 2rem; }
+  @media (min-width: 980px) { .guida { grid-template-columns: 16rem 1fr; align-items: start; } .indice { position: sticky; top: 84px; } }
+  .indice ol { list-style: none; padding: 0; margin: 0; display: grid; gap: .15rem; }
+  .indice a { display: block; padding: .3rem .5rem; border-radius: var(--raggio-s); text-decoration: none; color: var(--testo); font-weight: 700; }
+  .indice a:hover { background: var(--fiducia-chiaro); color: var(--fiducia); }
+  .indice-titolo { margin: 0 0 .4rem; font-family: var(--font-titoli); font-weight: 800; font-size: 1.15rem; }
+  .capitolo { scroll-margin-top: 84px; margin-bottom: 2.4rem; }
+  .capitolo h2 { margin-top: .5rem; }
+  .passo { position: relative; padding-top: 1.6rem; }
+  .passo .num { position: absolute; top: -14px; left: 16px; width: 34px; height: 34px; border-radius: 50%; background: var(--gioco); color: #fff; font-weight: 900; display: grid; place-items: center; box-shadow: 0 3px 0 rgba(0,0,0,.15); }
+  .passo h3 { margin: 0 0 .3rem; }
+  .passo p { margin: 0; }
+  .passi { margin-top: 1.4rem; }
+  .tabella-comandi { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 0; padding: 0; overflow: hidden; }
+  .tabella-comandi > div { padding: .55rem .9rem; border-bottom: 1px solid var(--bordo); }
+  .tabella-comandi > div:nth-child(odd) { background: var(--superficie-2); font-weight: 700; }
+  .tabella-comandi > div:nth-last-child(-n+2) { border-bottom: 0; }
+  kbd { font: inherit; font-weight: 800; border: 2px solid var(--bordo); border-bottom-width: 4px; border-radius: 6px; padding: 0 .35rem; background: var(--superficie); }
+  .box { margin: 0; height: 100%; }
+  .scena-demo { background: var(--scena-bg); border-color: var(--scena-bd); }
+  .scena-demo .box-titolo { color: var(--scena-tx); }
+  .grado { display: flex; gap: .8rem; align-items: flex-start; }
+  .grado h3 { margin: 0; }
+  .grado p { margin: .1rem 0; }
+  .griglia h3 { margin-top: 0; }
+  .avviso-guida { background: var(--attenzione-bg); border: 2px solid var(--attenzione-bd); border-radius: 12px; padding: .6rem .9rem; }
+  .ritratto-scheda h3 { margin-top: .5rem; }
+  @media (max-width: 560px) { .testa-riga :global(svg) { width: 80px; height: 80px; flex: none; } }
+</style>

@@ -1,0 +1,254 @@
+---
+import Base from '../layouts/Base.astro';
+import Fonti from '../components/Fonti.astro';
+const fonti = [
+  { titolo: 'Il Saggiatore', url: 'https://it.wikipedia.org/wiki/Il_Saggiatore', editore: 'Wikipedia', autore: 'Galileo Galilei (1623)', consultato: '2026-11-22' },
+  { titolo: 'Luhn algorithm', url: 'https://en.wikipedia.org/wiki/Luhn_algorithm', editore: 'Wikipedia', consultato: '2026-11-22' },
+  { titolo: 'Dijkstra’s algorithm', url: 'https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm', editore: 'Wikipedia', consultato: '2026-11-22' },
+  { titolo: 'Global Positioning System', url: 'https://en.wikipedia.org/wiki/Global_Positioning_System', editore: 'Wikipedia', consultato: '2026-11-22' },
+  { titolo: 'Orthogonal frequency-division multiplexing', url: 'https://en.wikipedia.org/wiki/Orthogonal_frequency-division_multiplexing', editore: 'Wikipedia', consultato: '2026-11-22' },
+  { titolo: 'QR code', url: 'https://en.wikipedia.org/wiki/QR_code', editore: 'Wikipedia', consultato: '2026-11-22' },
+  { titolo: 'JPEG', url: 'https://en.wikipedia.org/wiki/JPEG', editore: 'Wikipedia', consultato: '2026-11-22' },
+  { titolo: 'Public-key cryptography', url: 'https://en.wikipedia.org/wiki/Public-key_cryptography', editore: 'Wikipedia', consultato: '2026-11-22' },
+  { titolo: 'Claude E Shannon', url: 'https://mathshistory.st-andrews.ac.uk/Biographies/Shannon/', editore: 'MacTutor History of Mathematics', consultato: '2026-11-22' },
+];
+const fermate = ['Stazione', 'Piazza', 'Ospedale', 'Università', 'Stadio', 'Fiera', 'Parco'];
+import { linguaDa, traduttore } from '../lib/lingua';
+import { NOMI_FERMATE_EN } from '../lib/ovunque';
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const P = l === 'en' ? '/en' : '';
+const nomeFermata = (f: string) => (l === 'en' ? NOMI_FERMATE_EN[f] : f);
+---
+<Base titolo={t('Tutto è matematica', 'Everything is maths')} descrizione={t('Wi-Fi, telefono, carte di credito, spesa, autobus, foto: la matematica nascosta nella vita di tutti i giorni, con esperimenti interattivi.', 'Wi-Fi, phones, credit cards, shopping, buses, photos: the maths hidden in everyday life, with interactive experiments.')}>
+  <section class="testa-ovunque">
+    <div class="contenitore stretto">
+      <p class="pillola">🌍 {t('Tutto è matematica', 'Everything is maths')}</p>
+      <h1>{t('La matematica che usi senza saperlo', 'The maths you use without knowing it')}</h1>
+      <blockquote class="citazione">
+        {t("«[L'universo] è scritto in lingua matematica, e i caratteri son triangoli, cerchi, ed altre figure geometriche»", '“[The universe] is written in the language of mathematics, and its characters are triangles, circles and other geometric figures”')}
+        <cite>— Galileo Galilei, <i>Il Saggiatore</i>{l === 'en' && ' (The Assayer)'}, 1623{l === 'en' && ', our translation'}</cite>
+      </blockquote>
+      <p>{t("Ogni volta che accendi il telefono, paghi con la carta o cerchi l'autobus più veloce, qualcuno ha già fatto dei conti per te. Qui li apriamo, uno per uno. Prova gli esperimenti: sono veri algoritmi, solo in versione mini.", 'Every time you switch on your phone, pay by card or look for the fastest bus, someone has already done the sums for you. Here we open them up, one by one. Try the experiments: they are real algorithms, just in mini versions.')}</p>
+    </div>
+  </section>
+
+  <div class="contenitore stretto ovunque">
+    <nav class="indice-ovunque" aria-label={t('Argomenti', 'Topics')}>
+      <a href="#wifi">📶 {t('Wi-Fi e telefono', 'Wi-Fi and phone')}</a><a href="#gps">📍 GPS</a><a href="#carte">💳 {t('Carte di pagamento', 'Payment cards')}</a><a href="#spesa">🛒 {t('Spesa', 'Shopping')}</a>
+      <a href="#mezzi">🚌 {t('Mezzi pubblici', 'Public transport')}</a><a href="#orari">⏱️ {t('Orari', 'Timetables')}</a><a href="#foto">📷 {t('Foto e QR', 'Photos and QR')}</a>
+    </nav>
+
+    <section id="wifi" class="blocco">
+      <h2>📶 {t('Wi-Fi, telefono e internet', 'Wi-Fi, phones and the internet')}</h2>
+      {l === 'en'
+        ? <p>Wi-Fi carries data on radio waves. To fit a lot through at once, modern versions split the signal into a great many waves at neighbouring frequencies
+          (a technique called <b>OFDM</b>), which are separated with the <b>Fourier transform</b>: the idea that every complicated signal is a sum of simple waves.
+          Measuring information in <b>bits</b>, and the limits on how much can be sent over a channel, were set out by Claude Shannon in 1948.</p>
+        : <p>Il Wi-Fi trasporta i dati con onde radio. Per farne passare tanti insieme, le versioni moderne dividono il segnale in moltissime onde a frequenze vicine
+          (una tecnica chiamata <b>OFDM</b>), che si separano con la <b>trasformata di Fourier</b>: l'idea che ogni segnale complicato sia una somma di onde semplici.
+          La misura dell'informazione in <b>bit</b> e i limiti di quanta se ne può trasmettere su un canale li ha fissati Claude Shannon nel 1948.</p>}
+      <p class="collega">{t('Collegato a', 'Linked to')}: <a href={`${P}/esperimenti/onde-di-fourier/`}>{t('Esperimento: sommare onde (Fourier)', 'Experiment: adding waves (Fourier)')}</a> · <a href={`${P}/libro/numeri/potenze/`}>{t('Potenze di 2 e bit', 'Powers of 2 and bits')}</a></p>
+    </section>
+
+    <section id="gps" class="blocco">
+      <h2>📍 {t('Il GPS del telefono', 'Your phone’s GPS')}</h2>
+      {l === 'en'
+        ? <p>Every GPS satellite broadcasts the exact time and its position. Your phone measures how long the signal takes to arrive, works out its <b>distance</b>
+          from each satellite and finds the only point that fits all the distances (trilateration). It needs at least four satellites: three for the position, one to correct the phone’s clock.</p>
+        : <p>Ogni satellite GPS trasmette l'ora esatta e la sua posizione. Il telefono misura quanto ci mette il segnale ad arrivare, ne ricava la <b>distanza</b>
+          da ciascun satellite e trova l'unico punto compatibile con tutte le distanze (trilaterazione). Servono almeno quattro satelliti: tre per la posizione, uno per correggere l'orologio del telefono.</p>}
+      <p class="collega">{t('Collegato a', 'Linked to')}: <a href={`${P}/libro/geometria/teorema-di-pitagora/`}>{t('Distanze e Pitagora', 'Distances and Pythagoras')}</a> · <a href={`${P}/libro/geometria/cerchio-e-pi/`}>{t('Cerchi e sfere', 'Circles and spheres')}</a></p>
+    </section>
+
+    <section id="carte" class="blocco">
+      <h2>💳 {t('Carte di pagamento: la cifra che smaschera gli errori', 'Payment cards: the digit that catches mistakes')}</h2>
+      {l === 'en'
+        ? <p>The last digit of a payment card number isn’t random: it’s a <b>check digit</b> worked out with the Luhn algorithm.
+          If you mistype a digit, the website notices before it even contacts the bank. And the security of online payments relies on <b>public-key cryptography</b>,
+          which uses properties of prime numbers and modular arithmetic.</p>
+        : <p>L'ultima cifra del numero di una carta di pagamento non è casuale: è una <b>cifra di controllo</b> calcolata con l'algoritmo di Luhn.
+          Se sbagli a digitare una cifra, il sito se ne accorge prima ancora di contattare la banca. E la sicurezza dei pagamenti online si basa sulla <b>crittografia a chiave pubblica</b>,
+          che usa proprietà dei numeri primi e dell'aritmetica modulare.</p>}
+      <div class="scheda esperimento" data-luhn>
+        <p class="box-titolo">🧪 {t("Prova l'algoritmo di Luhn", 'Try the Luhn algorithm')}</p>
+        <p class="tenue avviso">⚠️ {t('Non scrivere il numero di una tua carta vera! Usa l’esempio:', 'Don’t type the number of one of your real cards! Use the example:')} <button type="button" class="link-btn" data-esempio>79927398713</button> ({t('o cambiane una cifra', 'or change one digit')}).</p>
+        <input type="text" inputmode="numeric" maxlength="23" placeholder={t('Scrivi un numero di prova', 'Type a test number')} data-input aria-label={t('Numero da controllare', 'Number to check')} />
+        <div class="cifre" data-cifre aria-hidden="true"></div>
+        <p class="esito-luhn" aria-live="polite" data-esito></p>
+        <details><summary>{t('Come funziona', 'How it works')}</summary>
+          {l === 'en'
+            ? <ol><li>Start from the last digit on the right and move left.</li><li>Every other digit (starting from the second-to-last) is <b>doubled</b>; if the double is more than 9, subtract 9.</li>
+              <li>Add everything up. If the total is a multiple of 10, the number is valid.</li></ol>
+            : <ol><li>Parti dall'ultima cifra a destra e vai verso sinistra.</li><li>Una cifra sì e una no (a partire dalla penultima) va <b>raddoppiata</b>; se il doppio supera 9, togli 9.</li>
+              <li>Somma tutto. Se il totale è un multiplo di 10, il numero è valido.</li></ol>}
+        </details>
+      </div>
+    </section>
+
+    <section id="spesa" class="blocco">
+      <h2>🛒 {t('La spesa di tutti i giorni', 'Everyday shopping')}</h2>
+      {l === 'en'
+        ? <ul>
+            <li><b>Price per kilo</b>: compare different packs with a <a href="/en/libro/numeri/proporzioni/">proportion</a>. 300 g for €2.40 costs €8 per kilo; 1 kg for €7.50 is the better deal.</li>
+            <li><b>Offers</b>: “3 for 2” is a 33% discount, “30% off the second one” is only 15% on the pair. Do the sums with <a href="/en/libro/numeri/percentuali/">percentages</a>.</li>
+            <li><b>VAT</b>: in Italy the standard rate is 22%, already included in the shelf price.</li>
+          </ul>
+        : <ul>
+            <li><b>Prezzo al kg</b>: confronta confezioni diverse con una <a href="/libro/numeri/proporzioni/">proporzione</a>. 300 g a 2,40 € costano 8 € al kg; 1 kg a 7,50 € conviene.</li>
+            <li><b>Sconti</b>: «3×2» è uno sconto del 33%, «−30% sul secondo» è solo il 15% sulla coppia. Fai i conti con le <a href="/libro/numeri/percentuali/">percentuali</a>.</li>
+            <li><b>IVA</b>: in Italia l'aliquota ordinaria è il 22%, già compresa nel prezzo che vedi sullo scaffale.</li>
+          </ul>}
+    </section>
+
+    <section id="mezzi" class="blocco">
+      <h2>🚌 {t('Il percorso più veloce', 'The fastest route')}</h2>
+      {l === 'en'
+        ? <p>Transport apps see the city as a <b>graph</b>: stops connected by links, each with its own travel time. To find the quickest route they use algorithms
+          from the family of the one invented by Edsger Dijkstra in 1956: you explore the stops starting from the nearest, updating as you go the best time to reach each one.</p>
+        : <p>Le app dei trasporti vedono la città come un <b>grafo</b>: fermate collegate da tratte, ognuna con il suo tempo. Per trovare il percorso più rapido usano algoritmi
+          della famiglia di quello inventato da Edsger Dijkstra nel 1956: si esplorano le fermate partendo dalle più vicine, aggiornando man mano il tempo migliore per raggiungere ciascuna.</p>}
+      <div class="scheda esperimento" data-percorso>
+        <p class="box-titolo">🧪 {t('Trova il percorso più veloce', 'Find the fastest route')}</p>
+        <div class="scelte-percorso">
+          <label>{t('Da', 'From')} <select data-da>{fermate.map((f, i) => <option value={f} selected={i === 0}>{nomeFermata(f)}</option>)}</select></label>
+          <label>{t('A', 'To')} <select data-a>{fermate.map((f, i) => <option value={f} selected={i === 4}>{nomeFermata(f)}</option>)}</select></label>
+        </div>
+        <svg viewBox="0 0 420 260" data-rete role="img" aria-label={t('Rete di fermate con i tempi di percorrenza', 'Network of stops with travel times')}></svg>
+        <p class="esito-luhn" aria-live="polite" data-esito-percorso></p>
+        <p class="tenue">{t('Nota: la strada con meno fermate non è sempre la più veloce!', 'Note: the route with the fewest stops isn’t always the fastest!')}</p>
+      </div>
+    </section>
+
+    <section id="orari" class="blocco">
+      <h2>⏱️ {t('Quando passano insieme due autobus?', 'When do two buses come together?')}</h2>
+      {l === 'en'
+        ? <p>If line A comes every 12 minutes and line B every 18, starting together at 8:00 they meet again after the <b>lowest common multiple</b> of the two intervals: 36 minutes.
+          That’s how connections between trains, buses and underground lines are planned.</p>
+        : <p>Se la linea A passa ogni 12 minuti e la B ogni 18, partendo insieme alle 8:00 si ritrovano dopo il <b>minimo comune multiplo</b> dei due intervalli: 36 minuti.
+          È così che si progettano le coincidenze tra treni, bus e metropolitane.</p>}
+      <div class="scheda esperimento" data-orari>
+        <p class="box-titolo">🧪 {t('Le coincidenze', 'Connections')}</p>
+        <label>{t('Linea A ogni', 'Line A every')} <b data-va>12</b> min <input type="range" min="4" max="30" value="12" data-a-int /></label>
+        <label>{t('Linea B ogni', 'Line B every')} <b data-vb>18</b> min <input type="range" min="4" max="30" value="18" data-b-int /></label>
+        <svg viewBox="0 0 420 110" data-linea-orari role="img" aria-label={t("Passaggi delle due linee nell'arco di due ore", 'Departures of the two lines over two hours')}></svg>
+        <p class="esito-luhn" aria-live="polite" data-esito-orari></p>
+      </div>
+    </section>
+
+    <section id="foto" class="blocco">
+      <h2>📷 {t('Foto, musica e QR code', 'Photos, music and QR codes')}</h2>
+      {l === 'en' ? <ul>
+        <li><b>JPEG photos</b>: the picture is split into 8 × 8 pixel squares and each is written as a sum of “waves” (discrete cosine transform). The least visible waves are thrown away: the file becomes much lighter.</li>
+        <li><b>QR codes</b>: they contain backup information calculated with Reed–Solomon codes. That’s why a slightly damaged QR code, or one with a logo in the middle, can still be read.</li>
+        <li><b>Music</b>: an octave higher is double the frequency; chords that “sound good” correspond to simple frequency ratios, such as 3:2.</li>
+      </ul> : <ul>
+        <li><b>Foto JPEG</b>: l'immagine viene divisa in quadratini di 8 × 8 pixel e ciascuno scritto come somma di «onde» (trasformata discreta del coseno). Le onde meno visibili si scartano: il file diventa molto più leggero.</li>
+        <li><b>QR code</b>: contengono informazioni di riserva calcolate con i codici di Reed–Solomon. Per questo un QR un po' rovinato o con un logo al centro si legge lo stesso.</li>
+        <li><b>Musica</b>: un'ottava più alta è una frequenza doppia; gli accordi che «suonano bene» corrispondono a rapporti tra frequenze semplici, come 3:2.</li>
+      </ul>}
+    </section>
+
+    <section class="blocco natura">
+      <h2>🌿 {t('Il linguaggio della natura', 'The language of nature')}</h2>
+      <p>{t('Nei semi del girasole e nelle scaglie delle pigne le spirali si contano spesso in numeri di Fibonacci (21, 34, 55…). Gli alveari usano celle esagonali, le onde del mare seguono le funzioni trigonometriche, le popolazioni crescono come potenze. Galileo aveva ragione: per leggere il libro della natura bisogna conoscere la sua lingua.', 'In sunflower seeds and pine-cone scales the spirals often come in Fibonacci numbers (21, 34, 55…). Beehives use hexagonal cells, sea waves follow trigonometric functions, populations grow like powers. Galileo was right: to read the book of nature you need to know its language.')}</p>
+    </section>
+
+    <Fonti fonti={fonti} />
+  </div>
+</Base>
+
+<script>
+  import { luhnValido, luhnPassaggi, percorsoMinimo, mcm, NOMI_FERMATE_EN, type Grafo } from '../lib/ovunque';
+  const EN = document.documentElement.lang === 'en';
+  const TT = (it: string, en: string) => (EN ? en : it);
+  const nomeF = (f: string) => (EN ? NOMI_FERMATE_EN[f] : f);
+
+  // --- Luhn ---
+  const L = document.querySelector<HTMLElement>('[data-luhn]')!;
+  const inp = L.querySelector<HTMLInputElement>('[data-input]')!;
+  const aggiornaLuhn = () => {
+    const v = inp.value.replace(/\D/g, '');
+    const passi = luhnPassaggi(v);
+    L.querySelector('[data-cifre]')!.innerHTML = passi.map((p) => `<span class="${p.raddoppia ? 'doppia' : ''}"><b>${p.cifra}</b><i>${p.raddoppia ? '×2→' + p.vale : p.vale}</i></span>`).join('');
+    const somma = passi.reduce((s, p) => s + p.vale, 0);
+    const e = L.querySelector<HTMLElement>('[data-esito]')!;
+    if (v.length < 2) { e.textContent = TT('Scrivi almeno due cifre.', 'Type at least two digits.'); e.className = 'esito-luhn'; return; }
+    const ok = luhnValido(v);
+    e.textContent = `${TT('Somma', 'Sum')} = ${somma} → ${ok ? TT('✅ multiplo di 10: numero coerente', '✅ multiple of 10: the number checks out') : TT('❌ non è multiplo di 10: c’è un errore di battitura', '❌ not a multiple of 10: there’s a typo')}`;
+    e.className = 'esito-luhn ' + (ok ? 'ok' : 'no');
+  };
+  inp.addEventListener('input', aggiornaLuhn);
+  L.querySelector('[data-esempio]')!.addEventListener('click', () => { inp.value = '79927398713'; aggiornaLuhn(); });
+
+  // --- Percorso ---
+  const P = document.querySelector<HTMLElement>('[data-percorso]')!;
+  const pos: Record<string, [number, number]> = { Stazione: [40, 130], Piazza: [140, 60], Ospedale: [150, 200], Università: [260, 120], Stadio: [380, 130], Fiera: [270, 230], Parco: [280, 30] };
+  const archi: [string, string, number][] = [['Stazione', 'Piazza', 6], ['Stazione', 'Ospedale', 4], ['Piazza', 'Università', 9], ['Piazza', 'Parco', 5], ['Ospedale', 'Università', 4], ['Ospedale', 'Fiera', 7], ['Università', 'Stadio', 8], ['Parco', 'Stadio', 14], ['Fiera', 'Stadio', 6], ['Università', 'Fiera', 3]];
+  const g: Grafo = {};
+  for (const n of Object.keys(pos)) g[n] = {};
+  for (const [a, b, w] of archi) { g[a][b] = w; g[b][a] = w; }
+  const disegnaRete = () => {
+    const da = P.querySelector<HTMLSelectElement>('[data-da]')!.value, a = P.querySelector<HTMLSelectElement>('[data-a]')!.value;
+    const r = percorsoMinimo(g, da, a);
+    const nelPercorso = (x: string, y: string) => !!r && r.percorso.some((n, i) => (n === x && r.percorso[i + 1] === y) || (n === y && r.percorso[i + 1] === x));
+    let s = '';
+    for (const [x, y, w] of archi) {
+      const [x1, y1] = pos[x], [x2, y2] = pos[y], on = nelPercorso(x, y);
+      s += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${on ? 'var(--gioco)' : 'var(--bordo)'}" stroke-width="${on ? 7 : 4}" stroke-linecap="round"/>`;
+      s += `<g transform="translate(${(x1 + x2) / 2} ${(y1 + y2) / 2})"><circle r="11" fill="var(--superficie)" stroke="${on ? 'var(--gioco)' : 'var(--bordo)'}" stroke-width="2"/><text y="4" text-anchor="middle" font-size="11" font-weight="800" fill="var(--testo)">${w}</text></g>`;
+    }
+    for (const [n, [x, y]] of Object.entries(pos)) {
+      const on = r?.percorso.includes(n);
+      s += `<circle cx="${x}" cy="${y}" r="9" fill="${on ? 'var(--fiducia)' : 'var(--superficie)'}" stroke="var(--fiducia)" stroke-width="3"/><text x="${x}" y="${y - 14}" text-anchor="middle" font-size="12" font-weight="800" fill="var(--testo)">${nomeF(n)}</text>`;
+    }
+    P.querySelector('[data-rete]')!.innerHTML = s;
+    P.querySelector('[data-esito-percorso]')!.textContent = r ? `🚌 ${r.percorso.map(nomeF).join(' → ')} · ${r.minuti} ${TT('minuti', 'minutes')}` : TT('Nessun percorso.', 'No route.');
+  };
+  P.querySelectorAll('select').forEach((s) => s.addEventListener('change', disegnaRete));
+  disegnaRete();
+
+  // --- Orari ---
+  const O = document.querySelector<HTMLElement>('[data-orari]')!;
+  const disegnaOrari = () => {
+    const a = Number(O.querySelector<HTMLInputElement>('[data-a-int]')!.value), b = Number(O.querySelector<HTMLInputElement>('[data-b-int]')!.value);
+    O.querySelector('[data-va]')!.textContent = String(a); O.querySelector('[data-vb]')!.textContent = String(b);
+    const m = mcm(a, b), T = 120, X = (t: number) => 10 + (t / T) * 400;
+    let s = `<line x1="10" y1="35" x2="410" y2="35" stroke="var(--bordo)" stroke-width="2"/><line x1="10" y1="75" x2="410" y2="75" stroke="var(--bordo)" stroke-width="2"/>`;
+    s += `<text x="10" y="20" font-size="11" font-weight="800" fill="var(--fiducia)">A</text><text x="10" y="100" font-size="11" font-weight="800" fill="var(--gioco)">B</text>`;
+    for (let t = 0; t <= T; t += a) s += `<circle cx="${X(t)}" cy="35" r="5" fill="var(--fiducia)"/>`;
+    for (let t = 0; t <= T; t += b) s += `<circle cx="${X(t)}" cy="75" r="5" fill="var(--gioco)"/>`;
+    for (let t = 0; t <= T; t += m) s += `<line x1="${X(t)}" y1="22" x2="${X(t)}" y2="88" stroke="var(--successo)" stroke-width="3" stroke-dasharray="4 3"/><text x="${X(t)}" y="108" text-anchor="middle" font-size="10" font-weight="800" fill="var(--successo)">${String(8 + Math.floor(t / 60))}:${String(t % 60).padStart(2, '0')}</text>`;
+    O.querySelector('[data-linea-orari]')!.innerHTML = s;
+    O.querySelector('[data-esito-orari]')!.textContent = TT(`mcm(${a}, ${b}) = ${m}: passano insieme ogni ${m} minuti.`, `LCM(${a}, ${b}) = ${m}: they come together every ${m} minutes.`);
+  };
+  O.querySelectorAll('input').forEach((i) => i.addEventListener('input', disegnaOrari));
+  disegnaOrari();
+</script>
+
+<style>
+  .testa-ovunque { background: radial-gradient(900px 300px at 50% 0%, var(--scena-bg), transparent 70%); padding: 2rem 0 .5rem; }
+  .citazione { margin: 1rem 0; padding: .9rem 1.1rem; border-left: 6px solid var(--storia-bd); background: var(--storia-bg); border-radius: 12px; font-size: 1.1rem; font-style: italic; }
+  .citazione cite { display: block; font-style: normal; font-size: .9rem; margin-top: .4rem; color: var(--testo-tenue); }
+  .indice-ovunque { display: flex; flex-wrap: wrap; gap: .35rem; margin: 1rem 0 1.5rem; }
+  .indice-ovunque a { text-decoration: none; font-weight: 800; padding: .3rem .7rem; border-radius: 999px; background: var(--superficie); border: 2px solid var(--bordo); color: var(--testo); }
+  .blocco { scroll-margin-top: 84px; margin-bottom: 2rem; }
+  .collega { font-size: .92rem; color: var(--testo-tenue); }
+  .esperimento { border-top: 6px solid var(--gioco); margin-top: 1rem; }
+  .esperimento input[type="text"] { font: inherit; font-size: 1.2rem; letter-spacing: .08em; width: 100%; padding: .5rem .8rem; border-radius: 12px; border: 2px solid var(--bordo); background: var(--superficie); color: var(--testo); }
+  .avviso { font-size: .9rem; }
+  .link-btn { border: 0; background: none; color: var(--fiducia); font: inherit; font-weight: 800; text-decoration: underline; cursor: pointer; padding: 0; }
+  .cifre { display: flex; flex-wrap: wrap; gap: 4px; margin: .6rem 0; }
+  .cifre :global(span) { display: flex; flex-direction: column; align-items: center; min-width: 2rem; padding: .2rem; border-radius: 8px; background: var(--superficie-2); }
+  .cifre :global(span.doppia) { background: var(--esempio-bg); outline: 2px solid var(--gioco); }
+  .cifre :global(b) { font-size: 1.1rem; }
+  .cifre :global(i) { font-style: normal; font-size: .72rem; color: var(--testo-tenue); }
+  .esito-luhn { font-weight: 800; }
+  .esito-luhn.ok { color: var(--successo); } .esito-luhn.no { color: var(--pericolo); }
+  .scelte-percorso { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .scelte-percorso select { font: inherit; padding: .3rem .5rem; border-radius: 10px; border: 2px solid var(--bordo); background: var(--superficie); color: var(--testo); }
+  .esperimento svg { width: 100%; height: auto; display: block; margin: .6rem 0; background: var(--superficie-2); border-radius: 12px; }
+  .esperimento label { display: flex; gap: .6rem; align-items: center; font-weight: 700; }
+  .esperimento input[type="range"] { flex: 1; }
+  .natura { background: var(--scena-bg); border-radius: var(--raggio); padding: 1rem 1.2rem; }
+</style>

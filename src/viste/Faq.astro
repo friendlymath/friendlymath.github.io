@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import { linguaDa, traduttore } from '../lib/lingua';
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const domandeEn = [
+  { id: 'cos-e', d: 'What is FriendlyMath?', r: "A free maths site for anyone, from primary school to advanced mathematics. You can learn in two ways: the <a href=\"/en/libro/\">Book</a>, an open index of every topic, or the <a href=\"/en/cammino/\">Quest</a>, a journey in stages where every topic is a room to conquer." },
+  { id: 'differenza', d: 'What’s the difference between the Book and the Quest?', r: "The content is the same. The Book is always open: read whatever you like, in any order. The Quest tells a story: rooms open one after another and at the end of each region there is a Guardian. A challenge completed in the Book counts in the Quest too, but only the Guardian makes you rise in grade." },
+  { id: 'gradi', d: 'What are the grades?', r: "There are six, one per region: Recruit (primary school), Squire (lower secondary), Warrior (first years of upper secondary), Knight (final years of upper secondary), Paladin (first years of university), Winged Knight (advanced mathematics). You rise in grade by defeating the Guardian of your region." },
+  { id: 'avanti', d: 'I’m already good at this: do I have to start from the Village of Digits?', r: "No. On the <a href=\"/en/cammino/\">Quest</a> page you’ll find “Already ahead?”: choose the region you want to start from and face the Guardian of the previous region. If you beat it, you go straight in." },
+  { id: 'pergamena', d: 'What is the Scroll and how do I save my progress?', r: "Progress saves itself <b>in your browser</b>. But if you change device or browser, or clear your browsing data, you would lose it. The <b>Scroll</b> is a small <code>.json</code> file that contains it: in the <a href=\"/en/zaino/\">Hero’s backpack</a> press “Save the Scroll” to download it and “Resume your journey” to load it again, even on another device. You can merge it with your current progress or replace it. <b>Remember to save it often to your computer or phone: if you don’t and your browser data is deleted, your progress is lost and cannot be recovered.</b> When you have unsaved progress, a red dot appears on the Backpack." },
+  { id: 'dati', d: 'Do you collect data about me?', r: "The site doesn’t. No account, no email, no profiling cookies, no statistics. Progress, character and learning choices (including any neurodivergence) stay only on your device: <b>whoever runs the site cannot see them</b>. The only technical data is your IP address, which GitHub (the service hosting the site) logs for security; the site owner does not receive these logs. Details on the <a href=\"/en/privacy/\">Privacy</a> page." },
+  { id: 'imbrogliare', d: 'What if I edit the Scroll by hand?', r: "You can: there are no leaderboards or prizes, so you would only be cheating yourself. The Fog says thank you." },
+  { id: 'fonti', d: 'Where do the curiosities and historical facts come from?', r: "Every curiosity, history page and experiment cites its sources, with links and the date they were accessed. If no source can be found, the fact doesn’t go in. The full list is on the <a href=\"/en/fonti/\">Sources and credits</a> page." },
+  { id: 'siti', d: 'Did you copy from other maths sites?', r: "No. Italian sites such as <a href=\"https://matepratica.it\">matepratica.it</a>, <a href=\"https://www.youmath.it\">youmath.it</a> and <a href=\"https://www.matematika.it\">matematika.it</a> are excellent and we recommend them for further reading: they inspire us, but every text here is written from scratch." },
+  { id: 'inglese', d: 'Is the site in other languages?', r: "FriendlyMath is written in Italian and fully translated into English. Use the <b>IT</b> button at the top to switch (on a phone it’s in the “Site map” menu). Progress and the Scroll work in both languages." },
+  { id: 'js', d: 'Does it work without JavaScript?', r: "Book lessons can be read without it. Challenges, animations, mind maps and progress, however, need JavaScript." },
+];
+const domandeIt = [
+  { id: 'cos-e', d: "Che cos'è FriendlyMath?", r: "Un sito gratuito di matematica per chiunque, dalle elementari alla matematica avanzata. Puoi studiare in due modi: il <a href=\"/libro/\">Libro</a>, un indice libero di tutti gli argomenti, oppure il <a href=\"/cammino/\">Cammino</a>, un viaggio a tappe in cui ogni argomento è una stanza da conquistare." },
+  { id: 'differenza', d: 'Che differenza c’è tra Libro e Cammino?', r: "I contenuti sono gli stessi. Il Libro è sempre aperto: leggi quello che vuoi, nell'ordine che vuoi. Il Cammino racconta una storia: le stanze si aprono una dopo l'altra e alla fine di ogni regione c'è un Guardiano. Una sfida superata nel Libro vale anche nel Cammino, ma solo il Guardiano ti fa salire di grado." },
+  { id: 'gradi', d: 'Cosa sono i gradi?', r: "Sono sei, uno per regione: Recluta (elementari), Scudiero (medie), Guerriero (biennio superiori), Cavaliere (triennio e maturità), Paladino (primi anni di università), Cavaliere alato (matematica avanzata). Sali di grado battendo il Guardiano della tua regione." },
+  { id: 'avanti', d: 'Sono già bravo: devo per forza partire dal Villaggio delle Cifre?', r: "No. Nella pagina del <a href=\"/cammino/\">Cammino</a> trovi «Sei già avanti?»: scegli la regione da cui partire e affronta il Guardiano della regione precedente. Se lo batti, entri direttamente." },
+  { id: 'pergamena', d: 'Cos’è la Pergamena e come salvo i miei progressi?', r: "I progressi si salvano da soli <b>nel tuo browser</b>. Però, se cambi dispositivo o browser, o se cancelli i dati di navigazione, li perderesti. La <b>Pergamena</b> è un piccolo file <code>.json</code> che li contiene: nello <a href=\"/zaino/\">Zaino dell'eroe</a> premi «Salva la Pergamena» per scaricarla e «Riprendi il cammino» per ricaricarla, anche su un altro dispositivo. Puoi unirla ai progressi attuali o sostituirli. <b>Ricordati di salvarla spesso sul tuo PC o telefono: se non lo fai e i dati del browser vengono cancellati, i progressi si perdono e non c'è modo di recuperarli.</b> Quando hai progressi non salvati, sullo Zaino compare un pallino rosso." },
+  { id: 'dati', d: 'Raccogliete dati su di me?', r: "Il sito no. Niente account, niente email, niente cookie di profilazione, niente statistiche. Progressi, personaggio e scelte di studio (comprese eventuali neurodivergenze) restano solo sul tuo dispositivo: <b>chi gestisce il sito non può vederli</b>. L'unico dato tecnico è l'indirizzo IP, che GitHub (il servizio che ospita il sito) registra per sicurezza; il gestore del sito non riceve questi registri. Dettagli nella pagina <a href=\"/privacy/\">Privacy</a>." },
+  { id: 'imbrogliare', d: 'Ma se modifico la Pergamena a mano?', r: "Puoi farlo: non ci sono classifiche né premi, quindi imbroglieresti solo te stesso. La Nebbia ringrazia." },
+  { id: 'fonti', d: 'Da dove vengono curiosità e notizie storiche?', r: "Ogni curiosità, scheda storica ed esperimento cita le sue fonti, con link e data di consultazione. Se una fonte non si trova, la notizia non entra. L'elenco completo è nella pagina <a href=\"/fonti/\">Fonti e crediti</a>." },
+  { id: 'siti', d: 'Avete copiato da altri siti di matematica?', r: "No. Siti come <a href=\"https://matepratica.it\">matepratica.it</a>, <a href=\"https://www.youmath.it\">youmath.it</a> e <a href=\"https://www.matematika.it\">matematika.it</a> sono ottimi e li consigliamo come approfondimento: ci ispirano, ma tutti i testi qui sono scritti da zero." },
+  { id: 'inglese', d: 'Il sito è anche in inglese?', r: "Sì: tutto il sito è disponibile anche in inglese. Usa il pulsante <b>EN</b> in alto (su telefono lo trovi nel menu «Mappa del sito»). Progressi e Pergamena valgono in entrambe le lingue." },
+  { id: 'js', d: 'Funziona senza JavaScript?', r: "Le lezioni del Libro si leggono anche senza. Sfide, animazioni, mappe mentali e progressi invece hanno bisogno di JavaScript." },
+];
+const domande = l === 'en' ? domandeEn : domandeIt;
+---
+<Base titolo={t('Domande frequenti', 'Frequently asked questions')} descrizione={t('Come funzionano Libro, Cammino, gradi e Pergamena. E perché non raccogliamo nessun dato.', 'How the Book, the Quest, grades and the Scroll work. And why we collect no data.')}>
+  <section class="contenitore stretto">
+    <h1>❓ {t('Domande frequenti', 'Frequently asked questions')}</h1>
+    <p class="tenue">{t('Se hai una domanda che non trovi qui, Ottavia la Civetta sta probabilmente cercando la risposta nel posto sbagliato. Ma la troverà.', 'If your question isn’t here, Ottavia the Owl is probably looking for the answer in the wrong place. But she’ll find it.')}</p>
+    {domande.map((q) => (
+      <details class="scheda faq" id={q.id} open={q.id === 'pergamena'}>
+        <summary>{q.d}</summary>
+        <p set:html={q.r} />
+      </details>
+    ))}
+  </section>
+</Base>
+<style>
+  .faq { margin: .7rem 0; scroll-margin-top: 80px; }
+  .faq summary { cursor: pointer; font-weight: 800; }
+  .faq p { margin-bottom: 0; }
+</style>
+<script>
+  if (location.hash) document.querySelector<HTMLDetailsElement>(location.hash)?.setAttribute('open', '');
+</script>

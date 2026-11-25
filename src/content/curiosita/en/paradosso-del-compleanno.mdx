@@ -1,0 +1,37 @@
+---
+titolo: "The birthday paradox"
+descrizione: "With just 23 people, it is more likely than not that two of them share a birthday."
+macroargomento: probabilita-statistica
+icona: "🎂"
+fonti:
+  - titolo: "Birthday problem"
+    url: "https://en.wikipedia.org/wiki/Birthday_problem"
+    editore: "Wikipedia, the free encyclopedia"
+    consultato: "2026-11-25"
+  - titolo: "Birthday Problem"
+    url: "https://mathworld.wolfram.com/BirthdayProblem.html"
+    editore: "Wolfram MathWorld"
+    autore: "Eric W. Weisstein"
+    consultato: "2026-11-22"
+---
+
+In a class of **23** people, what are the chances that at least two share a birthday? Instinct says “tiny”.
+Maths says: **about 51%**. With 30 people it goes above 70%, with 50 it gets to around 97%.
+
+## Why intuition gets it wrong
+
+Think about **pairs**, not people. With 23 people there are $\tfrac{23 \times 22}{2} = 253$ possible pairs: plenty of chances for a coincidence.
+
+The clever calculation is the **opposite** one: the probability that all the birthdays are different. The second person must avoid 1 day, the third 2, and so on:
+
+$$
+P(\text{all different}) = \frac{365}{365} \cdot \frac{364}{365} \cdot \frac{363}{365} \cdots \frac{343}{365} \approx 0.49
+$$
+
+So $P(\text{at least one pair}) \approx 1 - 0.49 = 0.51$.
+
+<Esempio titolo="Try it yourself">
+At the next party with more than 23 people, go round asking for birthdays. It’s not guaranteed, but betting on a coincidence is (slightly) favourable.
+</Esempio>
+
+The calculation assumes 365 equally likely days. In reality births are not spread perfectly evenly, and that makes coincidences a little more likely, not less.

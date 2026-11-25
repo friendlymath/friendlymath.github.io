@@ -1,0 +1,32 @@
+{
+  "meta": { "name": "Numbers and arithmetic", "author": "FriendlyMath", "version": "1" },
+  "format": "node_tree",
+  "data": {
+    "id": "root", "topic": "🔢 Numbers and arithmetic",
+    "children": [
+      { "id": "naturali", "topic": "Natural numbers ℕ", "direction": "right", "expanded": true, "children": [
+        { "id": "posizionale", "topic": "Place value", "link": "/en/libro/numeri/valore-posizionale/" },
+        { "id": "operazioni", "topic": "The four operations", "children": [
+          { "id": "add", "topic": "Addition" }, { "id": "sot", "topic": "Subtraction" },
+          { "id": "mol", "topic": "Multiplication" }, { "id": "div", "topic": "Division" } ] },
+        { "id": "proprieta", "topic": "Properties (commutative, associative, distributive)" },
+        { "id": "potenze", "topic": "Powers" }
+      ]},
+      { "id": "divisibilita", "topic": "Divisibility", "direction": "right", "expanded": false, "children": [
+        { "id": "multipli", "topic": "Multiples and divisors" },
+        { "id": "primi", "topic": "Prime numbers" },
+        { "id": "mcd", "topic": "GCD and LCM" },
+        { "id": "criteri", "topic": "Divisibility rules" } ] },
+      { "id": "frazioni", "topic": "Fractions", "direction": "left", "expanded": true, "children": [
+        { "id": "equivalenti", "topic": "Equivalent fractions", "link": "/en/libro/numeri/frazioni-equivalenti/" },
+        { "id": "opfraz", "topic": "Operations with fractions" },
+        { "id": "decimali", "topic": "Decimal numbers" },
+        { "id": "percentuali", "topic": "Percentages" } ] },
+      { "id": "insiemi", "topic": "Number sets", "direction": "left", "expanded": false, "children": [
+        { "id": "interi", "topic": "Integers ℤ" },
+        { "id": "razionali", "topic": "Rationals ℚ" },
+        { "id": "reali", "topic": "Reals ℝ (√2, π…)" },
+        { "id": "complessi", "topic": "Complex numbers ℂ", "children": [ { "id": "quaternioni", "topic": "…and beyond: quaternions ℍ", "link": "/en/storia/hamilton-quaternioni/" } ] } ] }
+    ]
+  }
+}

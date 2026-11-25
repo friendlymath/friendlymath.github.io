@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import Timeline from '../components/Timeline.astro';
+import { pubblicati } from '../lib/contenuti';
+import { RACCOLTE, type Raccolta } from '../lib/raccolte';
+import { linguaDa, traduttore } from '../lib/lingua';
+interface Props { raccolta: Raccolta }
+const { raccolta } = Astro.props;
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const P = l === 'en' ? '/en' : '';
+const R = RACCOLTE[raccolta];
+const testi = R[l];
+const voci = (await pubblicati(raccolta, l)).sort((a: any, b: any) => (a.data.ordine ?? 0) - (b.data.ordine ?? 0) || a.data.titolo.localeCompare(b.data.titolo, l));
+---
+<Base titolo={testi.titolo} descrizione={testi.descrizione}>
+  <section class="contenitore">
+    <h1>{R.icona} {testi.h1}</h1>
+    <p class="tenue stretto" set:html={testi.intro} />
+    <div class="griglia g3">
+      {voci.map((v: any) => (
+        <a class="scheda voce" href={`${P}/${raccolta}/${v.id}/`} style={`--c:${R.colore}`}>
+          <p class="icona" aria-hidden="true">{v.data.icona ?? R.icona}</p>
+          <h2>{v.data.titolo}</h2>
+          <p class="tenue">{v.data.descrizione}</p>
+          {v.data.epoca && <span class="pillola">{v.data.epoca}</span>}
+          <span class="apri">{t('Apri →', 'Open →')}</span>
+        </a>
+      ))}
+    </div>
+    {raccolta === 'storia' && <Timeline />}
+  </section>
+</Base>
+<style>
+  .voce { text-decoration: none; color: var(--testo); display: flex; flex-direction: column; gap: .3rem; align-items: flex-start; border-top: 6px solid var(--c); }
+  .voce:hover { transform: translateY(-2px); }
+  .voce h2 { font-size: 1.15rem; margin: .2rem 0; }
+  .icona { font-size: 2rem; margin: 0; }
+  .apri { margin-top: auto; padding-top: .4rem; font-weight: 800; color: var(--fiducia); }
+</style>

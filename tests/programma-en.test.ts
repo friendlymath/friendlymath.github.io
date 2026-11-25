@@ -6,3 +6,8 @@ describe('programma in inglese', () => {
     for (const a of PROGRAMMA_EN) { expect(a.classe).not.toMatch(/ª|elementare|media|superiore/); expect(a.ciclo).not.toMatch(/Scuola/); }
   });
 });
+
+import { tappeSenzaTraduzione } from '../src/data/timeline-en';
+describe('linea del tempo in inglese', () => {
+  it('ogni tappa ha il testo inglese', () => expect(tappeSenzaTraduzione()).toEqual([]));
+});

@@ -1,26 +1,4 @@
 ---
-import Base from '../../layouts/Base.astro';
-import { elencoMappe } from '../../lib/mappe';
-const mappe = elencoMappe();
+import MappeIndice from '../../viste/MappeIndice.astro';
 ---
-<Base titolo="Mappe mentali" descrizione="Mappe mentali esplorabili dei grandi argomenti della matematica, anche in formato JSON.">
-  <section class="contenitore">
-    <h1>🧠 Mappe mentali</h1>
-    <p class="tenue stretto">Ogni grande argomento ha la sua mappa: apri i rami, chiudili, segui i collegamenti alle lezioni.
-    Sono anche file <b>JSON</b> (formato jsMind) che puoi scaricare e riaprire con altri strumenti.</p>
-    <div class="griglia g4">
-      {mappe.map((m) => (
-        m.mappa
-          ? <a class="scheda voce" href={`/mappe/${m.slug}/`}><h2>{m.nome}</h2><p class="tenue">{m.descrizione}</p><span class="pillola">Apri la mappa →</span></a>
-          : <div class="scheda voce nebbia"><h2>{m.nome}</h2><p class="tenue">🌫️ Mappa in arrivo.</p></div>
-      ))}
-    </div>
-  </section>
-</Base>
-<style>
-  .voce { text-decoration: none; color: var(--testo); display: flex; flex-direction: column; gap: .3rem; align-items: flex-start; }
-  .voce .pillola { margin-top: auto; }
-  .voce h2 { margin: 0 0 .3rem; font-size: 1.2rem; }
-  a.voce:hover { border-color: var(--magia); }
-  .nebbia { opacity: .65; border-style: dashed; }
-</style>
+<MappeIndice />

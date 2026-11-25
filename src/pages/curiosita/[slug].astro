@@ -3,14 +3,16 @@ import { render } from 'astro:content';
 import Scheda from '../../layouts/Scheda.astro';
 import { pubblicati } from '../../lib/contenuti';
 import { componenti } from '../../components/didattica/indice';
+import { RACCOLTE } from '../../lib/raccolte';
 export async function getStaticPaths() {
-  return (await pubblicati('curiosita')).map((v) => ({ params: { slug: v.id }, props: { v } }));
+  return (await pubblicati('curiosita', 'it')).map((v) => ({ params: { slug: v.id }, props: { v } }));
 }
 const { v } = Astro.props as any;
 const { Content } = await render(v);
+const R = RACCOLTE['curiosita'];
 ---
-<Scheda titolo={v.data.titolo} descrizione={v.data.descrizione} fonti={v.data.fonti} colore="var(--magia)"
+<Scheda titolo={v.data.titolo} descrizione={v.data.descrizione} fonti={v.data.fonti} colore={R.colore}
   etichetta={v.data.epoca ? `${v.data.personaggio ?? ''} · ${v.data.epoca}` : undefined}
-  sezione={{ href: '/curiosita/', nome: 'Curiosità', icona: '✨' }}>
+  sezione={{ href: '/curiosita/', nome: R.it.nome, icona: R.icona }}>
   <Content components={componenti} />
 </Scheda>

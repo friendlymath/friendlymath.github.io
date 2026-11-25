@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import { lezioniPubblicate, pubblicati } from '../lib/contenuti';
+import { linguaDa, traduttore } from '../lib/lingua';
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const P = l === 'en' ? '/en' : '';
+const gruppi = [
+  { nome: t('Lezioni', 'Lessons'), base: `${P}/libro/`, voci: await lezioniPubblicate(l) },
+  { nome: t('Curiosità', 'Curiosities'), base: `${P}/curiosita/`, voci: await pubblicati('curiosita', l) },
+  { nome: t('Storia', 'History'), base: `${P}/storia/`, voci: await pubblicati('storia', l) },
+  { nome: t('Esperimenti', 'Experiments'), base: `${P}/esperimenti/`, voci: await pubblicati('esperimenti', l) },
+].map((g) => ({ ...g, voci: g.voci.filter((v: any) => v.data.fonti?.length) }));
+---
+<Base titolo={t('Fonti e crediti', 'Sources and credits')} descrizione={t('Tutte le fonti citate su FriendlyMath, i siti che ci ispirano e le librerie usate.', 'Every source cited on FriendlyMath, the sites that inspire us and the libraries we use.')}>
+  <section class="contenitore stretto">
+    <h1>📚 {t('Fonti e crediti', 'Sources and credits')}</h1>
+    <p>{t('Su FriendlyMath ogni curiosità, scheda storica ed esperimento cita le proprie fonti. Qui le trovi tutte insieme. I testi del sito sono originali.', 'On FriendlyMath every curiosity, history page and experiment cites its own sources. Here you’ll find them all together. The texts on the site are original.')}</p>
+
+    <h2>{t('Siti che ci ispirano', 'Sites that inspire us')}</h2>
+    <p>{t('Ottime risorse italiane, che consigliamo come approfondimento. Non ne copiamo i contenuti.', 'Excellent Italian resources, which we recommend for further reading. We don’t copy their content.')}</p>
+    <ul>
+      <li><a href="https://matepratica.it" rel="noopener">matepratica.it</a></li>
+      <li><a href="https://www.youmath.it" rel="noopener">youmath.it</a></li>
+      <li><a href="https://www.matematika.it" rel="noopener">matematika.it</a></li>
+    </ul>
+
+    {gruppi.map((g) => g.voci.length > 0 && (
+      <>
+        <h2>{g.nome}</h2>
+        {g.voci.map((v: any) => (
+          <div class="voce">
+            <h3><a href={`${g.base}${v.id}/`}>{v.data.titolo}</a></h3>
+            <ul>{v.data.fonti.map((f: any) => <li>{f.autore && <>{f.autore}, </>}<a href={f.url} rel="noopener">{f.titolo}</a>, {f.editore} <span class="tenue">({t('consultato il', 'accessed')} {f.consultato})</span></li>)}</ul>
+          </div>
+        ))}
+      </>
+    ))}
+
+    <h2>{t('Illustrazioni', 'Illustrations')}</h2>
+    {l === 'en'
+      ? <p>The vector illustrations (map, rooms, crests, objects) are drawn for FriendlyMath. The painted portraits of the characters
+        (Ottavia, Brontolo, the Merchant, the Minstrel, the Gnome) were generated with Canva’s artificial intelligence and are used under
+        <a href="https://www.canva.com/trust/legal/" rel="noopener">Canva’s Content License Agreement</a>.</p>
+      : <p>Le illustrazioni vettoriali (mappa, stanze, stemmi, oggetti) sono disegnate per FriendlyMath. I ritratti dipinti dei personaggi
+        (Ottavia, Brontolo, il Mercante, il Menestrello, lo Gnomo) sono stati generati con l'intelligenza artificiale di Canva e sono usati secondo
+        il <a href="https://www.canva.com/trust/legal/" rel="noopener">Content License Agreement di Canva</a>.</p>}
+
+    <h2>{t('Strumenti', 'Tools')}</h2>
+    <ul>
+      <li><a href="https://astro.build">Astro</a> (MIT) {t('per costruire il sito', 'to build the site')}</li>
+      <li><a href="https://katex.org">KaTeX</a> (MIT) {t('per le formule', 'for formulas')}</li>
+      <li><a href="https://jsxgraph.org">JSXGraph</a> (LGPL/MIT) {t('per la geometria interattiva', 'for interactive geometry')}</li>
+      <li><a href="https://github.com/hizzgdev/jsmind">jsMind</a> (BSD-3-Clause) {t('per le mappe mentali', 'for mind maps')}</li>
+    </ul>
+  </section>
+</Base>
+<style>.voce h3 { font-size: 1.05rem; margin-bottom: .2rem; }</style>
