@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+import Stemma from '../components/arte/Stemma.astro';
+import Fabbro from '../components/arte/Fabbro.astro';
+import katex from 'katex';
+import { formuleL } from '../lib/palestra';
+import { gradiL } from '../lib/mondo';
+import { linguaDa, traduttore } from '../lib/lingua';
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const P = l === 'en' ? '/en' : '';
+const FORMULE = formuleL(l);
+const GRADI = gradiL(l);
+const tex = (f: (typeof FORMULE)[number]) => katex.renderToString(f.membri.map((m) => m.tex).join(' '), { throwOnError: false });
+const gruppi = GRADI.map((g) => ({ g, formule: FORMULE.filter((f) => f.grado === g.numero) })).filter((x) => x.formule.length);
+---
+<Base titolo={t('Vai in palestra', 'Training Ground')} descrizione={t('Allena formule ed equazioni capendo ogni pezzo: spiegazioni membro per membro ed esercizi infiniti, anche da stampare.', 'Practise formulas and equations by understanding every piece: part-by-part explanations and endless exercises, printable too.')}>
+  <section class="testa-palestra">
+    <div class="contenitore testa-riga">
+      <Fabbro taglia={120} />
+      <div>
+        <p class="pillola">🏋️ {t('Vai in palestra', 'Training Ground')}</p>
+        <h1>{t('La Palestra delle formule', 'The Formula Training Ground')}</h1>
+        <p class="sottotitolo" set:html={t('Qui le formule non si imparano a memoria: si <b>smontano</b> pezzo per pezzo, si capisce cosa vuol dire ogni lettera, e poi ci si allena. Esercizi sempre nuovi, con i passaggi spiegati. Puoi anche stamparli o scaricarli.', 'Here you don’t learn formulas by heart: you <b>take them apart</b> piece by piece, understand what every letter means, and then you practise. Ever-new exercises, with the steps explained. You can print or download them too.')} />
+        <p class="tenue">{t('«Muscoli? No. Neuroni. Ma il principio è lo stesso: poco e spesso.» — Brontolo il Fabbro', '“Muscles? No. Neurons. But the principle is the same: a little and often.” — Brontolo the Blacksmith')}</p>
+      </div>
+    </div>
+  </section>
+  <section class="contenitore">
+    {gruppi.map(({ g, formule }) => (
+      <section class="livello">
+        <h2><Stemma numero={g.numero} taglia={36} /> {g.nome} · {g.fase}</h2>
+        <div class="griglia g3">
+          {formule.map((f) => (
+            <a class="scheda attrezzo" href={`${P}/palestra/${f.slug}/`}>
+              <span class="tipo">🏋️ {t('Attrezzo', 'Equipment')}</span>
+              <h3>{f.titolo}</h3>
+              <div class="formula-mini" set:html={tex(f)} />
+              <p class="tenue">{f.quando}</p>
+              <span class="vai">{t('Allenati →', 'Train →')}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+  </section>
+</Base>
+<style>
+  .testa-palestra { background: radial-gradient(900px 300px at 20% 0%, var(--esempio-bg), transparent 70%); padding: 2rem 0 1rem; }
+  .testa-riga { display: flex; gap: 1.2rem; align-items: center; }
+  .sottotitolo { font-size: 1.15rem; max-width: 44rem; margin-top: 0; }
+  .livello h2 { display: flex; align-items: center; gap: .5rem; }
+  .attrezzo { text-decoration: none; color: var(--testo); display: flex; flex-direction: column; gap: .3rem; border-top: 6px solid var(--gioco); }
+  .attrezzo h3 { margin: 0; }
+  .tipo { font-size: .8rem; font-weight: 800; text-transform: uppercase; color: var(--gioco); }
+  .formula-mini { background: var(--superficie-2); border-radius: 10px; padding: .6rem; text-align: center; font-size: 1.15rem; overflow-x: auto; }
+  .vai { margin-top: auto; font-weight: 800; color: var(--fiducia); }
+  @media (max-width: 560px) { .testa-riga :global(svg) { width: 80px; height: 80px; flex: none; } }
+</style>

@@ -1,0 +1,231 @@
+---
+import Base from '../layouts/Base.astro';
+import AvvisoPrivacy from '../components/AvvisoPrivacy.astro';
+import SceltaProfilo from '../components/SceltaProfilo.astro';
+import { corpiL, classiL, stirpiL, doniL, abilitaL, caratteristicheL, stiliCapelliL, PELLI, COLORI_CAPELLI, MANTELLI, PUNTI_DA_DISTRIBUIRE } from '../lib/eroe';
+import { linguaDa, traduttore, href } from '../lib/lingua';
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const CORPI = corpiL(l), CLASSI = classiL(l), STIRPI = stirpiL(l), DONI = doniL(l), ABILITA = abilitaL(l), CARATTERISTICHE = caratteristicheL(l), STILI_CAPELLI = stiliCapelliL(l);
+---
+<Base titolo={t('Crea il tuo eroe', 'Create your hero')} descrizione={t('Scegli corpo, classe, aspetto e caratteristiche del tuo personaggio per il Cammino di Numeria.', 'Choose your character’s lineage, class, looks and abilities for the Quest of Numeria.')}>
+  <section class="contenitore creazione" data-creazione>
+    <header class="testa">
+      <p class="pillola">🎲 {t('Scheda del personaggio', 'Character sheet')}</p>
+      <h1>{t('Crea il tuo eroe', 'Create your hero')}</h1>
+      <p class="tenue">{t('Come in un gioco di ruolo: scegli chi sei, che cosa sai fare meglio e come appari. Puoi cambiarlo quando vuoi.', 'As in a role-playing game: choose who you are, what you do best and how you look. You can change it whenever you like.')}</p>
+      <AvvisoPrivacy cosa={t('il tuo personaggio e i tuoi progressi', 'your character and your progress')} />
+    </header>
+
+    <div class="impaginato">
+      <aside class="anteprima scheda" aria-live="polite">
+        <div class="cornice"><div class="ritratto" data-ritratto></div></div>
+        <p class="nome-eroe" data-nome-anteprima>{t('Senza nome', 'Nameless')}</p>
+        <p class="classe-eroe" data-classe-anteprima></p>
+        <p class="abilita-anteprima" data-abilita-anteprima></p>
+        <ul class="statistiche" data-stat-anteprima></ul>
+        <button type="button" class="btn vuoto" data-dadi>🎲 {t('Tira i dadi (tutto a caso)', 'Roll the dice (all random)')}</button>
+      </aside>
+
+      <form class="passi" data-form onsubmit="return false">
+        <fieldset class="scheda passo">
+          <legend><span class="num">1</span> {t('Il tuo nome', 'Your name')} <span class="tenue">({t('facoltativo', 'optional')})</span></legend>
+          <input type="text" maxlength="24" placeholder={t('Per esempio: Ada, Leo, Ipazia…', 'For example: Ada, Leo, Hypatia…')} data-nome autocomplete="off" />
+          <p class="tenue piccolo">{t('Puoi usare un soprannome. Non viene inviato a nessuno.', 'You can use a nickname. It is never sent to anyone.')}</p>
+        </fieldset>
+
+        <fieldset class="scheda passo">
+          <legend><span class="num">2</span> {t('Chi sei', 'Who you are')}</legend>
+          <div class="scelte tre">
+            {CORPI.map((c) => <label class="carta"><input type="radio" name="corpo" value={c.id} /><span>{c.nome}</span></label>)}
+          </div>
+        </fieldset>
+
+        <fieldset class="scheda passo">
+          <legend><span class="num">3</span> {t('La tua stirpe', 'Your lineage')}</legend>
+          <p class="tenue">{t('Solo popoli amici: ognuno porta un piccolo dono nelle sfide.', 'Friendly peoples only: each brings a small gift to the challenges.')}</p>
+          <div class="scelte classi">
+            {Object.entries(STIRPI).map(([id, st]) => (
+              <label class="carta classe">
+                <input type="radio" name="stirpe" value={id} />
+                <span class="icona-classe">{st.icona}</span>
+                <b data-nome-stirpe={id}>{st.nomi.neutro}</b>
+                <span class="tenue">{st.descrizione}</span>
+                <span class="affinita">{id === 'mezzelfo' ? t('Dono: a scelta fra gli altri', 'Gift: chosen from the others') : `${t('Dono', 'Gift')}: ${DONI[id as keyof typeof DONI].nome}. ${DONI[id as keyof typeof DONI].effetto}`}</span>
+              </label>
+            ))}
+          </div>
+          <div class="dono-mezzelfo" data-dono-mezzelfo hidden>
+            <p><b>🌗 {t('Quale dono porti dai tuoi due mondi?', 'Which gift do you bring from your two worlds?')}</b></p>
+            <div class="campioni">{Object.entries(DONI).map(([id, d]) => <label class="pillola-scelta" title={d.effetto}><input type="radio" name="donoMezzelfo" value={id} /><span>{d.nome}</span></label>)}</div>
+          </div>
+        </fieldset>
+
+        <fieldset class="scheda passo">
+          <legend><span class="num">4</span> {t('La tua classe', 'Your class')}</legend>
+          <div class="scelte classi">
+            {Object.entries(CLASSI).map(([id, c]) => (
+              <label class="carta classe">
+                <input type="radio" name="classe" value={id} />
+                <span class="icona-classe">{c.icona}</span>
+                <b data-nome-classe={id}>{c.nomi.neutro}</b>
+                <span class="tenue">{c.descrizione}</span>
+                <span class="abilita-classe">{ABILITA[id as keyof typeof ABILITA].icona} <b>{ABILITA[id as keyof typeof ABILITA].nome}</b>: {ABILITA[id as keyof typeof ABILITA].spiega}</span>
+                <span class="affinita">{t('Affinità', 'Affinity')}: {c.affinita}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset class="scheda passo">
+          <legend><span class="num">5</span> {t('Aspetto', 'Looks')}</legend>
+          <div class="riga-aspetto"><span>{t('Carnagione', 'Skin tone')}</span><div class="campioni">{PELLI.map((c, i) => <label class="campione" style={`--c:${c}`}><input type="radio" name="pelle" value={i} aria-label={`${t('Carnagione', 'Skin tone')} ${i + 1}`} /></label>)}</div></div>
+          <div class="riga-aspetto"><span>{t('Capelli', 'Hair')}</span><div class="campioni">{STILI_CAPELLI.map((s, i) => <label class="pillola-scelta"><input type="radio" name="capelli" value={i} /><span>{s}</span></label>)}</div></div>
+          <div class="riga-aspetto"><span>{t('Colore capelli', 'Hair colour')}</span><div class="campioni">{COLORI_CAPELLI.map((c, i) => <label class="campione" style={`--c:${c}`}><input type="radio" name="coloreCapelli" value={i} aria-label={`${t('Colore capelli', 'Hair colour')} ${i + 1}`} /></label>)}</div></div>
+          <div class="riga-aspetto"><span>{t('Mantello', 'Cloak')}</span><div class="campioni">{MANTELLI.map((c, i) => <label class="campione" style={`--c:${c}`}><input type="radio" name="mantello" value={i} aria-label={`${t('Mantello', 'Cloak')} ${i + 1}`} /></label>)}</div></div>
+        </fieldset>
+
+        <fieldset class="scheda passo">
+          <legend><span class="num">6</span> {t('Caratteristiche', 'Abilities')}</legend>
+          {l === 'en'
+            ? <p class="tenue">You have <b data-punti>{PUNTI_DA_DISTRIBUIRE}</b> points to spend. There is no right choice: it’s a portrait of how you see yourself today. (And patience can be trained.)<br />
+              If your ability’s characteristic reaches <b>5</b>, you get one extra charge in challenges. <span data-car-abilita></span></p>
+            : <p class="tenue">Hai <b data-punti>{PUNTI_DA_DISTRIBUIRE}</b> punti da distribuire. Non c'è una scelta giusta: è il ritratto di come ti vedi oggi. (E la pazienza si allena.)<br />
+              Se la caratteristica della tua abilità arriva a <b>5</b>, nelle sfide hai una carica in più. <span data-car-abilita></span></p>}
+          <div class="car">
+            {CARATTERISTICHE.map((c) => (
+              <div class="car-riga">
+                <span class="car-nome">{c.icona} <b>{c.nome}</b><br /><span class="tenue piccolo">{c.spiega}</span></span>
+                <button type="button" class="tondo" data-meno={c.id} aria-label={t(`Togli un punto a ${c.nome}`, `Remove a point from ${c.nome}`)}>−</button>
+                <span class="pallini" data-pallini={c.id}></span>
+                <button type="button" class="tondo" data-piu={c.id} aria-label={t(`Aggiungi un punto a ${c.nome}`, `Add a point to ${c.nome}`)}>+</button>
+              </div>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset class="scheda passo">
+          <legend><span class="num">7</span> {t('Il tuo modo di studiare', 'Your way of learning')} <span class="tenue">({t('facoltativo', 'optional')})</span></legend>
+          <p class="tenue">{t('Hai dislessia, discalculia, disgrafia, ADHD o sei una persona autistica? O semplicemente ti trovi meglio con testi più grandi e passi brevi? Scegli e tutto il percorso si adatta: lezioni, sfide, Palestra e mappa. Non fa parte della scheda del personaggio.', 'Do you have dyslexia, dyscalculia, dysgraphia or ADHD, or are you autistic? Or do you simply prefer bigger text and short steps? Choose, and the whole path adapts: lessons, challenges, Training Ground and map. It is not part of the character sheet.')}</p>
+          <SceltaProfilo />
+        </fieldset>
+
+        <div class="salvataggio">
+          <button type="button" class="btn gioco grande" data-salva-eroe>💾 {t("Salva l'eroe", 'Save the hero')}</button>
+          <a class="btn vuoto" href={href(l, '/cammino/')}>{t('Vai al Cammino →', 'Go to the Quest →')}</a>
+          <p class="messaggio" role="status" data-messaggio></p>
+        </div>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { eroePredefinito, caricaEroe, salvaEroe, cambiaCar, puntiRimasti, avatarSvg, nomeClasseL, nomeStirpeL, eroeCasuale, cariche, dono, caratteristicheL, classiL, stirpiL, abilitaL, doniL, type Eroe, type Caratteristica } from '../lib/eroe';
+  const L = document.documentElement.lang === 'en' ? 'en' : 'it';
+  const T = (it: string, en: string) => (L === 'en' ? en : it);
+  const CARATTERISTICHE = caratteristicheL(L), CLASSI = classiL(L), STIRPI = stirpiL(L), ABILITA = abilitaL(L), DONI = doniL(L);
+  const nomeClasse = (x: Eroe) => nomeClasseL(x, L), nomeStirpe = (x: Eroe) => nomeStirpeL(x, L);
+  import { carica, gradoAttuale } from '../lib/progresso';
+
+  const r = document.querySelector<HTMLElement>('[data-creazione]')!;
+  const form = r.querySelector<HTMLFormElement>('[data-form]')!;
+  let e: Eroe = caricaEroe() ?? eroePredefinito();
+  const g = gradoAttuale(carica());
+
+  const disegna = () => {
+    r.querySelector('[data-ritratto]')!.innerHTML = avatarSvg(e, g, 180);
+    r.querySelector('[data-nome-anteprima]')!.textContent = e.nome || T('Senza nome', 'Nameless');
+    r.querySelector('[data-classe-anteprima]')!.textContent = `${STIRPI[e.stirpe].icona} ${nomeStirpe(e)} · ${CLASSI[e.classe].icona} ${nomeClasse(e)}`;
+    const ab = ABILITA[e.classe];
+    r.querySelector('[data-abilita-anteprima]')!.textContent = T(`${ab.icona} ${ab.nome}: ${cariche(e)} ${cariche(e) === 1 ? 'carica' : 'cariche'} per sfida · Dono: ${DONI[dono(e)].nome}`, `${ab.icona} ${ab.nome}: ${cariche(e)} charge${cariche(e) === 1 ? '' : 's'} per challenge · Gift: ${DONI[dono(e)].nome}`);
+    r.querySelector('[data-car-abilita]')!.textContent = `${T('La tua abilità usa', 'Your ability uses')}: ${CARATTERISTICHE.find((c) => c.id === ab.car)!.nome}.`;
+    r.querySelector<HTMLElement>('[data-dono-mezzelfo]')!.hidden = e.stirpe !== 'mezzelfo';
+    r.querySelectorAll<HTMLElement>('[data-nome-stirpe]').forEach((b) => (b.textContent = STIRPI[b.dataset.nomeStirpe as keyof typeof STIRPI].nomi[e.corpo]));
+    r.querySelector('[data-stat-anteprima]')!.innerHTML = CARATTERISTICHE.map((c) => `<li><span>${c.icona} ${c.nome}</span><b>${e.car[c.id]}</b></li>`).join('');
+    r.querySelector('[data-punti]')!.textContent = String(puntiRimasti(e));
+    for (const c of CARATTERISTICHE) {
+      r.querySelector(`[data-pallini="${c.id}"]`)!.innerHTML = Array.from({ length: 6 }, (_, i) => `<i class="${i < e.car[c.id] ? 'pieno' : ''}"></i>`).join('');
+    }
+    r.querySelectorAll<HTMLElement>('[data-nome-classe]').forEach((b) => (b.textContent = CLASSI[b.dataset.nomeClasse as keyof typeof CLASSI].nomi[e.corpo]));
+  };
+  const sincronizzaForm = () => {
+    (r.querySelector('[data-nome]') as HTMLInputElement).value = e.nome;
+    for (const k of ['corpo', 'stirpe', 'donoMezzelfo', 'classe', 'pelle', 'capelli', 'coloreCapelli', 'mantello'] as const) {
+      const el = form.querySelector<HTMLInputElement>(`input[name="${k}"][value="${e[k] ?? 'umano'}"]`);
+      if (el) el.checked = true;
+    }
+  };
+  form.addEventListener('change', (ev) => {
+    const t = ev.target as HTMLInputElement;
+    if (t.type !== 'radio') return;
+    const k = t.name as 'corpo' | 'stirpe' | 'donoMezzelfo' | 'classe' | 'pelle' | 'capelli' | 'coloreCapelli' | 'mantello';
+    e = { ...e, [k]: ['corpo', 'stirpe', 'donoMezzelfo', 'classe'].includes(k) ? t.value : Number(t.value) } as Eroe;
+    if (k === 'stirpe' && e.stirpe === 'mezzelfo' && !e.donoMezzelfo) { e = { ...e, donoMezzelfo: 'umano' }; sincronizzaForm(); }
+    disegna();
+  });
+  r.querySelector<HTMLInputElement>('[data-nome]')!.addEventListener('input', (ev) => { e = { ...e, nome: (ev.target as HTMLInputElement).value.replace(/[<>]/g, '').slice(0, 24) }; disegna(); });
+  r.querySelectorAll<HTMLButtonElement>('[data-piu]').forEach((b) => b.addEventListener('click', () => { e = cambiaCar(e, b.dataset.piu as Caratteristica, 1); disegna(); }));
+  r.querySelectorAll<HTMLButtonElement>('[data-meno]').forEach((b) => b.addEventListener('click', () => { e = cambiaCar(e, b.dataset.meno as Caratteristica, -1); disegna(); }));
+  r.querySelector('[data-dadi]')!.addEventListener('click', () => { const nome = e.nome; e = { ...eroeCasuale(), nome }; sincronizzaForm(); disegna(); });
+  r.querySelector('[data-salva-eroe]')!.addEventListener('click', () => {
+    const msg = r.querySelector<HTMLElement>('[data-messaggio]')!;
+    if (puntiRimasti(e) > 0) { msg.textContent = T(`Hai ancora ${puntiRimasti(e)} punti da distribuire!`, `You still have ${puntiRimasti(e)} points to spend!`); return; }
+    msg.textContent = salvaEroe(e)
+      ? T(`✅ ${e.nome || 'Il tuo eroe'} è pront${e.corpo === 'femminile' ? 'a' : e.corpo === 'maschile' ? 'o' : 'o all’avventura'}! Ora compare sulla mappa del Cammino.`, `✅ ${e.nome || 'Your hero'} is ready for adventure! Now on the Quest map.`)
+      : T('Il browser non permette di salvare: riprova da una finestra normale.', 'Your browser does not allow saving: try again from a normal window.');
+    document.dispatchEvent(new CustomEvent('friendlymath:eroe'));
+  });
+  sincronizzaForm();
+  disegna();
+</script>
+
+<style>
+  .creazione { padding-top: 1.2rem; }
+  .impaginato { display: grid; gap: 1.5rem; align-items: start; }
+  @media (min-width: 900px) { .impaginato { grid-template-columns: 300px 1fr; } .anteprima { position: sticky; top: 84px; } }
+  .anteprima { text-align: center; border-top: 6px solid var(--magia); }
+  .cornice { background: radial-gradient(circle at 50% 40%, var(--curiosita-bg), var(--superficie-2)); border: 4px solid #c9a24a; border-radius: 20px; padding: .6rem; display: grid; place-items: center; }
+  .ritratto :global(svg) { display: block; }
+  .nome-eroe { font-family: var(--font-titoli); font-size: 1.6rem; font-weight: 800; margin: .6rem 0 0; }
+  .classe-eroe { margin: 0 0 .6rem; color: var(--magia); font-weight: 800; }
+  .statistiche { list-style: none; padding: 0; margin: 0 0 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: .3rem; text-align: left; }
+  .statistiche :global(li) { display: flex; justify-content: space-between; background: var(--superficie-2); border-radius: 8px; padding: .25rem .5rem; font-size: .9rem; }
+  .passi { display: grid; gap: 1rem; }
+  .passo { border: 2px solid var(--bordo); margin: 0; }
+  .passo legend { font-family: var(--font-titoli); font-weight: 800; font-size: 1.2rem; padding: 0 .3rem; display: flex; align-items: center; gap: .4rem; }
+  .num { width: 1.8rem; height: 1.8rem; border-radius: 50%; background: var(--gioco); color: #fff; display: inline-grid; place-items: center; font-size: 1rem; }
+  .passo input[type="text"] { font: inherit; width: 100%; padding: .6rem .8rem; border-radius: 12px; border: 2px solid var(--bordo); background: var(--superficie); color: var(--testo); }
+  .piccolo { font-size: .85rem; }
+  .scelte { display: grid; gap: .6rem; }
+  .scelte.tre { grid-template-columns: repeat(3, 1fr); }
+  .scelte.classi { grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); }
+  .carta { position: relative; display: flex; flex-direction: column; gap: .2rem; border: 3px solid var(--bordo); border-radius: 14px; padding: .7rem; cursor: pointer; background: var(--superficie); text-align: center; height: 100%; }
+  .carta input { position: absolute; opacity: 0; }
+  .carta:has(input:checked) { border-color: var(--magia); background: var(--curiosita-bg); box-shadow: 0 4px 0 var(--magia); }
+  .carta:has(input:focus-visible) { outline: 3px solid var(--gioco); }
+  .classe { text-align: left; }
+  .icona-classe { font-size: 1.8rem; }
+  .abilita-classe { font-size: .85rem; background: var(--superficie-2); border-radius: 8px; padding: .3rem .45rem; }
+  .abilita-anteprima { font-size: .9rem; font-weight: 700; margin: 0 0 .8rem; }
+  .dono-mezzelfo { margin-top: .8rem; }
+  .affinita { margin-top: auto; font-size: .8rem; font-weight: 800; color: var(--magia); }
+  .riga-aspetto { display: grid; grid-template-columns: 8rem 1fr; gap: .6rem; align-items: center; margin: .5rem 0; }
+  @media (max-width: 520px) { .riga-aspetto { grid-template-columns: 1fr; } .scelte.tre { grid-template-columns: 1fr; } }
+  .campioni { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .campione { width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--c); border: 3px solid var(--bordo); cursor: pointer; position: relative; }
+  .campione input, .pillola-scelta input { position: absolute; opacity: 0; }
+  .campione:has(input:checked) { outline: 3px solid var(--magia); outline-offset: 2px; }
+  .campione:has(input:focus-visible), .pillola-scelta:has(input:focus-visible) { outline: 3px solid var(--gioco); }
+  .pillola-scelta { position: relative; border: 2px solid var(--bordo); border-radius: 999px; padding: .2rem .8rem; cursor: pointer; font-weight: 700; }
+  .pillola-scelta:has(input:checked) { background: var(--magia); color: #fff; border-color: var(--magia); }
+  .car { display: grid; gap: .6rem; }
+  .car-riga { display: grid; grid-template-columns: 1fr auto auto auto; gap: .5rem; align-items: center; }
+  .tondo { width: 2.2rem; height: 2.2rem; border-radius: 50%; border: 2px solid var(--bordo); background: var(--superficie); font: inherit; font-weight: 900; font-size: 1.1rem; cursor: pointer; color: var(--testo); }
+  .pallini { display: flex; gap: 3px; }
+  .pallini :global(i) { width: .9rem; height: .9rem; border-radius: 50%; background: var(--superficie-2); border: 2px solid var(--bordo); }
+  .pallini :global(i.pieno) { background: var(--magia); border-color: var(--magia); }
+  .salvataggio { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+  .btn.grande { font-size: 1.1rem; padding: .8em 1.4em; }
+  .messaggio { flex-basis: 100%; font-weight: 800; }
+</style>

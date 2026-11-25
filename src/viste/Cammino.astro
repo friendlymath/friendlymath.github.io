@@ -1,0 +1,192 @@
+---
+import Base from '../layouts/Base.astro';
+import Stemma from '../components/arte/Stemma.astro';
+import Ritratto from '../components/arte/Ritratto.astro';
+import MappaGioco from '../components/MappaGioco.astro';
+import SegretoPersonaggi from '../components/SegretoPersonaggi.astro';
+import SceltaProfilo from '../components/SceltaProfilo.astro';
+import { stanzeDelCammino, riferimentiStanze } from '../lib/contenuti';
+import { gradiL } from '../lib/mondo';
+import { linguaDa, traduttore } from '../lib/lingua';
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const P = l === 'en' ? '/en' : '';
+const GRADI = gradiL(l);
+
+const stanze = await stanzeDelCammino(l);
+const rif = riferimentiStanze(stanze);
+const regioni = GRADI.map((g) => ({ ...g, stanze: stanze.filter((s) => s.data.regione === g.numero) }));
+const guardianoDi = (n: number) => stanze.find((s) => s.data.regione === n && s.data.guardiano);
+const partenze = regioni.filter((r) => r.numero > 1 && guardianoDi(r.numero - 1));
+---
+<Base titolo={t('Il Cammino', 'The Quest')} descrizione={t("Il viaggio dell'eroe nel Regno di Numeria: sei regioni, stanze da conquistare, Guardiani da sconfiggere.", 'The hero’s journey through the Kingdom of Numeria: six regions, rooms to conquer, Guardians to defeat.')}>
+  <h1 class="sr-only">{t('Il Cammino: la mappa del Regno di Numeria', 'The Quest: the map of the Kingdom of Numeria')}</h1>
+  <MappaGioco stanze={stanze} />
+  <dialog class="prima-di-partire" data-prima-di-partire aria-labelledby="pdp-titolo">
+    <h2 id="pdp-titolo">🎒 {t("Prima di partire: com'è il tuo modo di studiare?", 'Before you set off: how do you like to learn?')}</h2>
+    <p>{t('Ogni eroe viaggia a modo suo. Se vuoi, scegli un profilo e il Cammino si adatta: testo più leggibile, letture ad alta voce, strumenti di calcolo, sfide più brevi, lezioni a piccoli passi, niente sorprese. Puoi cambiarlo quando vuoi. Non serve una diagnosi.', 'Every hero travels in their own way. If you like, pick a profile and the Quest adapts: more readable text, reading aloud, calculation tools, shorter challenges, lessons in small steps, no surprises. You can change it whenever you want. No diagnosis needed.')}</p>
+    <p class="pdp-privacy" set:html={t('🔒 La tua scelta resta <b>solo su questo dispositivo</b>: nessuno, nemmeno chi gestisce il sito, saprà se hai una neurodivergenza.', '🔒 Your choice stays <b>only on this device</b>: nobody, not even whoever runs the site, will know whether you are neurodivergent.')} />
+    <SceltaProfilo />
+    <div class="pdp-azioni">
+      <button type="button" class="btn vuoto" data-parti>{t('Più tardi', 'Later')}</button>
+      <button type="button" class="btn gioco" data-parti>⚔️ {t('Parti per il Cammino', 'Set off on the Quest')}</button>
+    </div>
+  </dialog>
+  <section class="contenitore">
+    <header class="intro">
+      <div class="intro-civetta"><Ritratto chi="civetta" taglia={120} alt={t('Ottavia la Civetta', 'Ottavia the Owl')} /></div>
+      <p class="pillola">📜 {t('Il diario di viaggio', 'The travel journal')}</p>
+      <h2 class="titolo-diario">{t("La storia e l'elenco delle tappe", 'The story and the list of stages')}</h2>
+      {l === 'en'
+        ? <p class="stretto">The Kingdom of Numeria has been invaded by the <b>Fog</b>: wherever it passes, people forget how to count, measure and reason.
+          And they start repeating a terrible phrase: <i>“I’m just not a maths person”</i>. You are the hero (yes, you, with that stick).
+          Cross the regions, conquer the rooms, defeat the Guardians. Ottavia the Owl goes with you. Almost always in the right direction.</p>
+        : <p class="stretto">Il Regno di Numeria è invaso dalla <b>Nebbia</b>: dove passa, la gente dimentica come si conta, si misura, si ragiona.
+          E comincia a ripetere una frase terribile: <i>«non sono portato»</i>. Tu sei l'eroe (sì, proprio tu, con quel bastone).
+          Attraversa le regioni, conquista le stanze, sconfiggi i Guardiani. Ottavia la Civetta ti accompagna. Quasi sempre nella direzione giusta.</p>}
+      <SegretoPersonaggi breve />
+    </header>
+
+    <details class="scheda percorso-studio" data-percorso-studio>
+      <summary><b>⚙️ {t('Il tuo percorso di studio', 'Your learning path')}</b> <span class="tenue" data-riassunto-studio></span></summary>
+      <SceltaProfilo compatta />
+    </details>
+
+    {partenze.length > 0 && (
+      <details class="scheda partenza">
+        <summary><b>{t('Sei già avanti?', 'Already ahead?')}</b> {t('Scegli da dove partire', 'Choose where to start')}</summary>
+        <p set:html={t("Per entrare direttamente in una regione devi battere il <b>Guardiano della regione precedente</b>: è la tua prova d'ingresso. Le regioni saltate restano sempre rigiocabili.", 'To enter a region directly you must defeat the <b>Guardian of the previous region</b>: it’s your entrance test. Skipped regions can always be replayed.')} />
+        <ul>
+          {partenze.map((r) => {
+            const g = guardianoDi(r.numero - 1)!;
+            return <li>{t('Voglio partire da', 'I want to start from')} <b>{r.regione}</b> ({r.fase}) → <a href={`${P}/cammino/${g.id}/`}>{t('sfida', 'challenge')} {g.data.nomeStanza ?? g.data.titolo}</a></li>;
+          })}
+        </ul>
+      </details>
+    )}
+
+    <details class="vista-elenco" open>
+    <summary>📋 {t('Vista elenco di tutte le tappe', 'List view of every stage')} <span class="tenue">({t('comoda da tastiera e da lettore di schermo', 'handy with a keyboard or screen reader')})</span></summary>
+    <ol class="sentiero">
+      {regioni.map((r) => (
+        <li class="regione" id={r.slugRegione} data-regione={r.numero} style={`--c:${r.colore}`}>
+          <div class="segno" aria-hidden="true"><Stemma numero={r.numero} taglia={60} /></div>
+          <div class={`corpo scheda ${r.stanze.length === 0 ? 'avvolta' : ''}`}>
+            <p class="tenue grado">{t('Grado', 'Grade')} {r.numero} · {r.nome} · {r.fase}</p>
+            <h2>{r.regione}</h2>
+            <p class="tenue equip">{t('Equipaggiamento', 'Equipment')}: {r.equipaggiamento}</p>
+            {r.stanze.length === 0 ? (
+              <p class="nebbia">🌫️ {t('Questa regione è ancora avvolta nella Nebbia. Le stanze arriveranno presto.', 'This region is still wrapped in the Fog. Its rooms are coming soon.')}</p>
+            ) : (
+              <>
+                <p class="chiusa" data-chiusa hidden>🔒 {t('Per entrare batti il Guardiano della regione precedente.', 'To enter, defeat the Guardian of the previous region.')}</p>
+                <ol class="stanze">
+                  {r.stanze.map((s) => (
+                    <li data-stanza={s.id} class="stanza">
+                      <a href={`${P}/cammino/${s.id}/`}>
+                        <span class="icona" aria-hidden="true">{s.data.guardiano ? '🐉' : '🚪'}</span>
+                        <span><b>{s.data.nomeStanza ?? s.data.titolo}</b><br /><span class="tenue">{s.data.titolo}</span></span>
+                        <span class="stato pillola" data-stato>…</span>
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </>
+            )}
+          </div>
+        </li>
+      ))}
+    </ol>
+    </details>
+  </section>
+  <script type="application/json" id="stanze-cammino" set:html={JSON.stringify(rif)} />
+</Base>
+
+<script>
+  import { carica, statoStanza, regioneAperta, type StanzaRif } from '../lib/progresso';
+  import { caricaStudio, profiliL } from '../lib/studio';
+  const EN = document.documentElement.lang === 'en';
+  const T = (it: string, en: string) => (EN ? en : it);
+  const PROFILI = profiliL(EN ? 'en' : 'it');
+  // Al primo ingresso nel Cammino chiediamo (una volta sola) se adattare il percorso
+  const CHIESTO = 'friendlymath:studio-chiesto';
+  const dlg = document.querySelector<HTMLDialogElement>('[data-prima-di-partire]')!;
+  let giaChiesto = true;
+  try { giaChiesto = !!localStorage.getItem(CHIESTO); } catch {}
+  if (!giaChiesto && caricaStudio().profili.length === 0 && typeof dlg.showModal === 'function') dlg.showModal();
+  const segnaChiesto = () => { try { localStorage.setItem(CHIESTO, '1'); } catch {} };
+  dlg.addEventListener('close', segnaChiesto);
+  dlg.querySelectorAll('[data-parti]').forEach((b) => b.addEventListener('click', () => dlg.close()));
+  const riassunto = () => {
+    const s = caricaStudio();
+    document.querySelector('[data-riassunto-studio]')!.textContent = s.profili.length
+      ? `· ${T('adattato per', 'adapted for')} ${s.profili.map((p) => PROFILI.find((x) => x.id === p)!.nome).join(', ')}`
+      : s.regolazioni.length ? T('· con regolazioni personali', '· with personal settings') : '· standard';
+  };
+  riassunto();
+  document.addEventListener('friendlymath:studio', riassunto);
+  const stanze: StanzaRif[] = JSON.parse(document.getElementById('stanze-cammino')!.textContent || '[]');
+  const p = carica();
+  const etichette = { bloccata: T('🌫️ Nella Nebbia', '🌫️ In the Fog'), aperta: T('⚔️ Da conquistare', '⚔️ To conquer'), conquistata: T('✅ Conquistata', '✅ Conquered') } as const;
+  document.querySelectorAll<HTMLElement>('[data-stanza]').forEach((li) => {
+    const s = statoStanza(p, stanze, li.dataset.stanza!);
+    li.dataset.statoStanza = s;
+    li.querySelector('[data-stato]')!.textContent = etichette[s];
+  });
+  document.querySelectorAll<HTMLElement>('[data-regione]').forEach((r) => {
+    const n = Number(r.dataset.regione);
+    const chiusa = r.querySelector<HTMLElement>('[data-chiusa]');
+    if (chiusa) chiusa.hidden = regioneAperta(p, n);
+  });
+</script>
+
+<style>
+  .intro { padding: 1.5rem 0 .5rem; position: relative; }
+  .titolo-diario { margin-top: .4rem; font-size: clamp(1.6rem, 4vw, 2.3rem); }
+  .vista-elenco > summary { cursor: pointer; font-family: var(--font-titoli); font-size: 1.25rem; font-weight: 800; margin: 1rem 0; }
+  .intro-civetta { float: right; margin: 0 0 1rem 1rem; }
+  @media (max-width: 600px) { .intro-civetta { display: none; } }
+  .partenza { margin: 1rem 0 2rem; }
+  .percorso-studio { margin: 1rem 0; }
+  .percorso-studio summary { cursor: pointer; }
+  .prima-di-partire { max-width: min(46rem, calc(100vw - 24px)); width: 100%; border: 4px solid var(--oro); border-radius: 18px; background: var(--superficie); color: var(--testo); padding: 1.2rem; max-height: 90svh; overflow: auto; }
+  .prima-di-partire::backdrop { background: rgba(20, 12, 6, .6); }
+  .prima-di-partire h2 { margin-top: 0; font-size: clamp(1.25rem, 4vw, 1.7rem); }
+  .pdp-azioni { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
+  .pdp-privacy { font-weight: 700; color: var(--successo); font-size: .95rem; }
+  .partenza summary { cursor: pointer; }
+  .sentiero { list-style: none; padding: 0; margin: 0; position: relative; }
+  .sentiero::before { content: ''; position: absolute; left: 27px; top: 30px; bottom: 30px; border-left: 6px dashed #d9b77a; opacity: .7; }
+  .regione { display: grid; grid-template-columns: 60px 1fr; gap: .8rem; margin: 0 0 1.4rem; scroll-margin-top: 80px; }
+  .segno { width: 60px; height: 64px; display: grid; place-items: center; position: relative; filter: drop-shadow(0 3px 0 rgba(0,0,0,.12)); }
+  .corpo { border-top: 6px solid var(--c); min-width: 0; position: relative; overflow: hidden; }
+  .corpo.avvolta { background: linear-gradient(180deg, var(--superficie), var(--superficie-2)); }
+  .corpo.avvolta::after { content: ''; position: absolute; inset: auto -10% -30px -10%; height: 90px; background: radial-gradient(closest-side, rgba(255,255,255,.9), transparent), radial-gradient(closest-side at 70% 60%, rgba(255,255,255,.8), transparent); filter: blur(6px); pointer-events: none; opacity: .8; }
+  :global(:root[data-theme="dark"]) .corpo.avvolta::after { opacity: .15; }
+  @media (prefers-color-scheme: dark) { :global(:root:not([data-theme="light"])) .corpo.avvolta::after { opacity: .15; } }
+  @media (prefers-reduced-motion: no-preference) { .corpo.avvolta::after { animation: nebbiola 9s ease-in-out infinite alternate; } }
+  @keyframes nebbiola { from { transform: translateX(-20px); } to { transform: translateX(20px); } }
+  .corpo h2 { margin: .1rem 0 .2rem; }
+  .grado { margin: 0; font-weight: 800; font-size: .85rem; text-transform: uppercase; letter-spacing: .04em; }
+  .equip { margin-top: 0; font-size: .95rem; }
+  .stanze { list-style: none; padding: 0; margin: .6rem 0 0; display: grid; gap: .5rem; }
+  .stanza a { display: grid; grid-template-columns: auto 1fr auto; gap: .7rem; align-items: center; text-decoration: none; color: var(--testo); background: var(--superficie-2); border-radius: var(--raggio-s); padding: .6rem .8rem; border: 2px solid transparent; }
+  .stanza a:hover { border-color: var(--c); }
+  .stanza .icona { font-size: 1.5rem; }
+  .stanza[data-stato-stanza="bloccata"] a { opacity: .6; filter: grayscale(.6); }
+  .stanza[data-stato-stanza="conquistata"] .stato { background: var(--successo); color: #fff; border: 0; }
+  .stanza[data-stato-stanza="conquistata"] a { border-color: var(--successo); }
+  .stanza[data-stato-stanza="aperta"] .icona { animation: pulsa 1.8s ease-in-out infinite; }
+  @keyframes pulsa { 50% { transform: scale(1.15); } }
+  @media (prefers-reduced-motion: reduce) { .stanza .icona { animation: none !important; } }
+  .stanza[data-stato-stanza="aperta"] .stato { background: var(--gioco); color: #fff; border: 0; }
+  .nebbia, .chiusa { background: var(--superficie-2); border: 2px dashed var(--bordo); border-radius: var(--raggio); padding: .6rem .9rem; margin: .4rem 0 0; }
+  @media (max-width: 520px) {
+    .regione { grid-template-columns: 38px 1fr; gap: .5rem; }
+    .segno { width: 38px; height: 42px; }
+    .segno :global(svg) { width: 38px; height: 38px; }
+    .sentiero::before { left: 16px; }
+    .corpo { padding: .9rem .9rem; }
+  }
+  @media (max-width: 480px) { .stanza a { grid-template-columns: auto 1fr; } .stanza .stato { grid-column: 2; justify-self: start; } }
+</style>

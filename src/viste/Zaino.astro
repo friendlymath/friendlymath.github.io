@@ -1,0 +1,208 @@
+---
+import Base from '../layouts/Base.astro';
+import Stemma from '../components/arte/Stemma.astro';
+import AvvisoPrivacy from '../components/AvvisoPrivacy.astro';
+import { gradiL } from '../lib/mondo';
+import { lezioniPubblicate } from '../lib/contenuti';
+import { linguaDa, traduttore, href } from '../lib/lingua';
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const h = (p: string) => href(l, p);
+const GRADI = gradiL(l);
+const lezioni = (await lezioniPubblicate(l)).map((x) => ({ id: x.id, titolo: x.data.titolo }));
+---
+<Base titolo={t("Zaino dell'eroe", 'Hero’s backpack')} descrizione={t('I tuoi progressi, i badge e la Pergamena per riprendere il cammino da qualsiasi dispositivo.', 'Your progress, your badges and the Scroll to pick up your journey on any device.')}>
+  <section class="contenitore stretto">
+    <h1>🎒 {t("Zaino dell'eroe", 'Hero’s backpack')}</h1>
+    <div class="scheda eroe">
+      <div class="ritratto" aria-hidden="true">{GRADI.map((g) => <span data-ritratto={g.numero} hidden={g.numero !== 1}><Stemma numero={g.numero} taglia={84} /></span>)}</div>
+      <div class="avatar-zaino" data-avatar-zaino><a href={h('/eroe/')} class="crea">🎲 {t('Crea il tuo eroe', 'Create your hero')}</a></div>
+      <div>
+        <p class="tenue" data-nome-eroe><a href={h('/eroe/')}>{t('Crea il tuo personaggio', 'Create your character')}</a></p>
+        <p class="tenue grado-riga">{t('Il tuo grado', 'Your grade')}</p>
+        <p class="nome-grado" data-nome>{t('Recluta', 'Recruit')}</p>
+        <p class="tenue" data-equip>{t('Equipaggiamento: un bastone', 'Equipment: a stick')}</p>
+      </div>
+    </div>
+
+    <p><a class="btn vuoto" href={h('/eroe/')}>🎲 {t('Modifica il personaggio', 'Edit your character')}</a></p>
+    <ol class="scala" aria-label={t('I sei gradi', 'The six grades')}>
+      {GRADI.map((g) => <li data-scala={g.numero} title={`${g.nome} — ${g.regione}`}><Stemma numero={g.numero} taglia={46} /><span class="sr-only">{g.nome}</span></li>)}
+    </ol>
+
+    <h2 id="pergamena">📜 {t('La Pergamena', 'The Scroll')}</h2>
+    <div class="avviso-salva" data-avviso-salva>
+      {l === 'en'
+        ? <p><b>⚠️ Important: save the Scroll to your computer or phone.</b> Your progress lives only in this browser and <b>is lost</b> if you clear your browsing data,
+          use a private window or switch device. Without the Scroll there is no way to get it back: we keep nothing.</p>
+        : <p><b>⚠️ Importante: salva la Pergamena sul tuo PC o telefono.</b> I progressi stanno solo in questo browser e <b>si perdono</b> se cancelli i dati di navigazione,
+          se usi la navigazione in incognito o se cambi dispositivo. Senza Pergamena non c'è modo di recuperarli: noi non conserviamo nulla.</p>}
+      <p class="stato-salvataggio" data-stato-salvataggio></p>
+    </div>
+    {l === 'en'
+      ? <p>Your progress is already saved in this browser. The <b>Scroll</b> is a small file that contains it: download it so you don’t lose it
+        if you change device or browser, or clear your browsing data. It contains no personal data. <a href={h('/faq/#pergamena')}>How does it work?</a></p>
+      : <p>I tuoi progressi restano già salvati in questo browser. La <b>Pergamena</b> è un piccolo file che li contiene: scaricala per non perderli
+        se cambi dispositivo o browser, o se cancelli i dati di navigazione. Non contiene nessun dato personale. <a href="/faq/#pergamena">Come funziona?</a></p>}
+    <div class="azioni">
+      <button class="btn gioco" type="button" data-salva>⬇️ {t('Salva la Pergamena', 'Save the Scroll')}</button>
+      <label class="btn vuoto carica">⬆️ {t('Riprendi il cammino', 'Resume your journey')} <input type="file" accept=".json,application/json" data-carica class="sr-only" /></label>
+    </div>
+    <div class="scelta scheda" data-scelta hidden>
+      <p><b>{t('Pergamena valida!', 'Valid Scroll!')}</b> {t('Contiene', 'It contains')} <span data-info></span>. {t('Cosa vuoi fare?', 'What would you like to do?')}</p>
+      <div class="azioni">
+        <button class="btn successo" type="button" data-unisci>{t('Unisci ai progressi attuali', 'Merge with current progress')}</button>
+        <button class="btn vuoto" type="button" data-sostituisci>{t('Sostituisci tutto', 'Replace everything')}</button>
+        <button class="btn vuoto" type="button" data-annulla>{t('Annulla', 'Cancel')}</button>
+      </div>
+    </div>
+    <p class="messaggio" data-messaggio role="status" aria-live="polite"></p>
+
+    <AvvisoPrivacy />
+    <h2>🏆 {t('Badge', 'Badges')}</h2>
+    <ul class="badge" data-badge><li class="tenue">{t('Ancora nessun badge: sconfiggi il primo Guardiano!', 'No badges yet: defeat the first Guardian!')}</li></ul>
+
+    <h2>🚪 {t('Stanze e lezioni completate', 'Completed rooms and lessons')}</h2>
+    <ul data-completate><li class="tenue">{t('Nessuna, per ora. Il', 'None yet. The')} <a href={h('/cammino/')}>{t('Cammino', 'Quest')}</a> {t('ti aspetta.', 'is waiting for you.')}</li></ul>
+
+    <details class="ricomincia">
+      <summary>{t('Ricominciare da zero', 'Start again from scratch')}</summary>
+      <p>{t('Cancella i progressi salvati in questo browser. Se hai una Pergamena, potrai sempre ricaricarla.', 'Deletes the progress saved in this browser. If you have a Scroll, you can always load it again.')}</p>
+      <button class="btn vuoto" type="button" data-azzera>{t('Cancella i progressi', 'Delete progress')}</button>
+    </details>
+  </section>
+  <script type="application/json" id="titoli-lezioni" set:html={JSON.stringify(lezioni)} />
+</Base>
+
+<script>
+  import { carica, salva, gradoAttuale, esportaPergamena, importaPergamena, unisci, progressoVuoto, type Progresso } from '../lib/progresso';
+  import { gradoL, gradiL } from '../lib/mondo';
+  import { caricaEroe, salvaEroe, avatarSvg, nomeClasseL } from '../lib/eroe';
+  const EN = document.documentElement.lang === 'en';
+  const T = (it: string, en: string) => (EN ? en : it);
+  const grado = (n: number) => gradoL(n, EN ? 'en' : 'it');
+  const GRADI = gradiL(EN ? 'en' : 'it');
+  const nomeClasse = (e: Parameters<typeof nomeClasseL>[0]) => nomeClasseL(e, EN ? 'en' : 'it');
+  import { segnaSalvato, ultimoSalvataggio, daSalvare } from '../lib/salvataggio';
+
+  const $ = <T extends HTMLElement>(s: string) => document.querySelector<T>(s)!;
+  const titoli: { id: string; titolo: string }[] = JSON.parse($('#titoli-lezioni').textContent || '[]');
+  const msg = (t: string, errore = false) => { const m = $('[data-messaggio]'); m.textContent = t; m.classList.toggle('errore', errore); };
+  let inArrivo: Progresso | null = null;
+
+  function mostra() {
+    const p = carica();
+    const g = grado(gradoAttuale(p));
+    document.querySelectorAll<HTMLElement>('[data-ritratto]').forEach((el) => (el.hidden = Number(el.dataset.ritratto) !== g.numero));
+    const eroe = caricaEroe();
+    const av = document.querySelector<HTMLElement>('[data-avatar-zaino]')!;
+    if (eroe) {
+      av.innerHTML = avatarSvg(eroe, g.numero, 90);
+      $('[data-nome-eroe]').textContent = `${eroe.nome || T('Senza nome', 'Nameless')} · ${nomeClasse(eroe)}`;
+    }
+    $('[data-nome]').textContent = g.nome;
+    $('[data-equip]').textContent = `${T('Equipaggiamento', 'Equipment')}: ${g.equipaggiamento} · ${T('Regione', 'Region')}: ${g.regione}`;
+    document.querySelectorAll<HTMLElement>('[data-scala]').forEach((li) => li.classList.toggle('raggiunto', Number(li.dataset.scala) <= g.numero));
+    const badge = $('[data-badge]');
+    if (p.badge.length) {
+      badge.innerHTML = '';
+      for (const b of p.badge) {
+        const n = Number(b.replace('grado-', ''));
+        const gg = GRADI.find((x) => x.numero === n);
+        const li = document.createElement('li');
+        li.textContent = gg ? T(`${gg.icona} Guardiano di ${gg.regione} sconfitto`, `${gg.icona} Guardian of the ${gg.regione} defeated`) : b === 'tenacia' ? T('⛏️ Tenacia: una sfida superata dopo essere caduti', '⛏️ Tenacity: a challenge completed after falling down') : b;
+        badge.appendChild(li);
+      }
+    }
+    const comp = $('[data-completate]');
+    if (p.completate.length) {
+      comp.innerHTML = '';
+      for (const id of p.completate) {
+        const t = titoli.find((x) => x.id === id);
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = `${EN ? '/en' : ''}/libro/${id}/`;
+        a.textContent = t ? t.titolo : id;
+        li.appendChild(a);
+        comp.appendChild(li);
+      }
+    }
+  }
+
+  $('[data-salva]').addEventListener('click', () => {
+    const eroe = caricaEroe();
+    const blob = new Blob([esportaPergamena({ ...carica(), ...(eroe ? { eroe } : {}) })], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = EN ? 'friendlymath-scroll.json' : 'pergamena-friendlymath.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    segnaSalvato();
+    document.dispatchEvent(new CustomEvent('friendlymath:salvato'));
+    mostraStato();
+    msg(T('📜 Pergamena scaricata. Conservala in un posto sicuro (la cartella Download, un cloud, o una email a te stesso).', '📜 Scroll downloaded. Keep it somewhere safe (your Downloads folder, a cloud drive, or an email to yourself).'));
+  });
+
+  $<HTMLInputElement>('[data-carica]').addEventListener('change', async (e) => {
+    const input = e.target as HTMLInputElement;
+    const f = input.files?.[0];
+    input.value = '';
+    if (!f) return;
+    if (f.size > 1_000_000) { msg(T('Questo file è troppo grande per essere una Pergamena.', 'This file is too big to be a Scroll.'), true); return; }
+    const r = importaPergamena(await f.text());
+    if (!r.ok) { msg('⚠️ ' + (EN ? 'This file could not be read as a FriendlyMath Scroll.' : r.errore) + T(' I tuoi progressi attuali non sono stati toccati.', ' Your current progress has not been touched.'), true); return; }
+    inArrivo = r.progresso;
+    $('[data-info]').textContent = T(`${r.progresso.completate.length} lezioni completate e il grado di ${grado(gradoAttuale(r.progresso)).nome}`, `${r.progresso.completate.length} completed lessons and the grade of ${grado(gradoAttuale(r.progresso)).nome}`);
+    $('[data-scelta]').hidden = false;
+    msg('');
+  });
+  const applica = (p: Progresso, t: string) => {
+    $('[data-scelta]').hidden = true; inArrivo = null;
+    if (p.eroe) salvaEroe(p.eroe);
+    msg(salva(p) ? t : T('Il browser non permette di salvare: i progressi resteranno solo finché la pagina è aperta.', 'Your browser does not allow saving: progress will only last while the page is open.'), !salva(p));
+    mostra();
+    document.dispatchEvent(new CustomEvent('friendlymath:progresso'));
+  };
+  $('[data-unisci]').addEventListener('click', () => inArrivo && applica(unisci(carica(), inArrivo), T('✅ Bentornato, eroe! Progressi uniti.', '✅ Welcome back, hero! Progress merged.')));
+  $('[data-sostituisci]').addEventListener('click', () => inArrivo && applica(inArrivo, T('✅ Bentornato, eroe! Progressi ripristinati dalla Pergamena.', '✅ Welcome back, hero! Progress restored from the Scroll.')));
+  $('[data-annulla]').addEventListener('click', () => { $('[data-scelta]').hidden = true; inArrivo = null; });
+  $('[data-azzera]').addEventListener('click', () => {
+    if (confirm(T('Vuoi davvero cancellare i progressi salvati in questo browser?', 'Do you really want to delete the progress saved in this browser?'))) { applica(progressoVuoto(), T('Progressi cancellati. Si riparte col bastone!', 'Progress deleted. Back to the stick!')); location.reload(); }
+  });
+  function mostraStato() {
+    const u = ultimoSalvataggio();
+    const el = $('[data-stato-salvataggio]');
+    const box = $('[data-avviso-salva]');
+    const pendente = daSalvare();
+    box.classList.toggle('ok', !pendente);
+    el.textContent = u
+      ? `${T('Ultimo salvataggio', 'Last saved')}: ${u.toLocaleString(EN ? 'en-GB' : 'it-IT', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}. ${pendente ? T('Da allora hai fatto altri progressi: salva di nuovo!', 'You have made more progress since then: save again!') : T('Tutto salvato ✅', 'All saved ✅')}`
+      : (pendente ? T('Non hai ancora mai salvato la Pergamena.', 'You have never saved your Scroll yet.') : T('Ancora nessun progresso da salvare.', 'No progress to save yet.'));
+  }
+  mostraStato();
+  mostra();
+</script>
+
+<style>
+  .eroe { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+  .avatar-zaino { min-width: 90px; display: grid; place-items: center; }
+  .avatar-zaino .crea { font-weight: 800; text-align: center; }
+  .ritratto { flex: none; filter: drop-shadow(0 4px 0 rgba(0,0,0,.12)); }
+  .grado-riga { margin: 0; font-size: .85rem; text-transform: uppercase; font-weight: 800; }
+  .nome-grado { margin: 0; font-family: var(--font-titoli); font-size: 2rem; font-weight: 800; }
+  .scala { list-style: none; display: flex; gap: .4rem; padding: 0; margin: 1rem 0; flex-wrap: wrap; }
+  .scala li { filter: grayscale(1); opacity: .4; transition: all .3s; }
+  .scala li.raggiunto { filter: none; opacity: 1; }
+  .azioni { display: flex; flex-wrap: wrap; gap: .6rem; }
+  .avviso-salva { background: var(--attenzione-bg); border: 3px solid var(--attenzione-bd); border-radius: var(--raggio); padding: .8rem 1rem; margin-bottom: 1rem; }
+  .avviso-salva.ok { background: var(--scena-bg); border-color: var(--scena-bd); }
+  .avviso-salva p { margin: .3rem 0; }
+  .stato-salvataggio { font-weight: 800; }
+  .carica { cursor: pointer; }
+  .carica:focus-within { outline: 3px solid var(--gioco); }
+  .scelta { margin-top: 1rem; }
+  .messaggio { font-weight: 700; min-height: 1.5em; }
+  :global(.messaggio.errore) { color: var(--pericolo); }
+  .ricomincia { margin-top: 2.5rem; }
+  .ricomincia summary { cursor: pointer; color: var(--testo-tenue); }
+</style>

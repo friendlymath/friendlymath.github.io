@@ -1,11 +1,11 @@
 ---
 /** Strumenti compensativi a comparsa: Leggimi, righello di lettura, calcolatrice, tavola pitagorica, formulario. */
 import katex from 'katex';
-import { FORMULE } from '../lib/palestra';
+import { FORMULE, formulaL } from '../lib/palestra';
 import { linguaDa, traduttore, href } from '../lib/lingua';
 const l = linguaDa(Astro.url);
 const t = traduttore(l);
-const formulario = FORMULE.map((f) => ({ titolo: f.titolo, slug: f.slug, html: katex.renderToString(f.membri.map((m) => m.tex).join(' '), { throwOnError: false }) }));
+const formulario = FORMULE.map((f) => ({ titolo: formulaL(f, l).titolo, slug: f.slug, html: katex.renderToString(f.membri.map((m) => m.tex).join(' '), { throwOnError: false }) }));
 ---
 <div class="dock" data-dock aria-label={t('Strumenti di studio', 'Learning tools')}>
   <button type="button" class="dock-btn solo-leggimi" data-leggimi aria-pressed="false" title={t('Leggimi ad alta voce', 'Read aloud')}>🔊<span> {t('Leggimi', 'Read aloud')}</span></button>
@@ -39,7 +39,7 @@ const formulario = FORMULE.map((f) => ({ titolo: f.titolo, slug: f.slug, html: k
     </table>
   </div>
   <div data-pannello="formule" hidden>
-    <ul class="formulario">{formulario.map((f) => <li><a href={`/palestra/${f.slug}/`}>{f.titolo}</a><div set:html={f.html} /></li>)}</ul>
+    <ul class="formulario">{formulario.map((f) => <li><a href={href(l, `/palestra/${f.slug}/`)}>{f.titolo}</a><div set:html={f.html} /></li>)}</ul>
   </div>
 </section>
 

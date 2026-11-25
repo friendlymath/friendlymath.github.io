@@ -5,9 +5,9 @@
 export type Lingua = 'it' | 'en';
 
 /** Percorsi (senza /en) che hanno già la versione inglese. Gli altri, in inglese, rimandano all'italiano con un avviso. */
-export const TRADOTTE = new Set<string>(['/', '/privacy/', '/studio/', '/libro/']);
+export const TRADOTTE = new Set<string>(['/', '/privacy/', '/studio/', '/libro/', '/cammino/', '/eroe/', '/zaino/', '/palestra/']);
 /** Gruppi di pagine tradotte (per esempio tutte le lezioni). */
-const GRUPPI_TRADOTTI: RegExp[] = [/^\/libro\/.+/, /^\/cammino\/.+/];
+const GRUPPI_TRADOTTI: RegExp[] = [/^\/libro\/.+/, /^\/cammino\/.+/, /^\/palestra\/.+/];
 const tradotta = (p: string) => TRADOTTE.has(p) || GRUPPI_TRADOTTI.some((r) => r.test(p));
 
 const normalizza = (p: string) => (p.endsWith('/') ? p : `${p}/`);

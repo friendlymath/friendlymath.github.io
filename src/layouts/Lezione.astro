@@ -6,7 +6,7 @@ import type { Lezione } from '../lib/contenuti';
 import Fonti from '../components/Fonti.astro';
 import Stemma from '../components/arte/Stemma.astro';
 import StanzaLoci from '../components/StanzaLoci.astro';
-import { FORMULE } from '../lib/palestra';
+import { FORMULE, formulaL } from '../lib/palestra';
 import { mini } from '../lib/mini';
 
 interface Props {
@@ -93,7 +93,7 @@ const altroHref = contesto === 'libro' ? `${P}/cammino/${lezione.id}/` : `${P}/l
       <aside class="box esempio palestra-link">
         <p class="box-titolo">🏋️ {t('Vai in palestra', 'Go to the training ground')}</p>
         <p>{t('Allena questa lezione con esercizi sempre nuovi, anche da stampare:', 'Practise this lesson with ever-new exercises, printable too:')}
-          {attrezzi.map((f, i) => <>{i > 0 && ', '}<a href={href(l, `/palestra/${f.slug}/`)}>{l === 'en' ? (f as any).titoloEn ?? f.titolo : f.titolo}</a></>)}.</p>
+          {attrezzi.map((f, i) => <>{i > 0 && ', '}<a href={href(l, `/palestra/${f.slug}/`)}>{formulaL(f, l).titolo}</a></>)}.</p>
       </aside>
     )}
 

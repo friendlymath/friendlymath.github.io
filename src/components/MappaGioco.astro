@@ -5,11 +5,17 @@
  */
 import type { Lezione } from '../lib/contenuti';
 import { REGIONI_MAPPA, SENTIERO, LARGHEZZA, ALTEZZA, regioneMappa } from '../lib/mappa-mondo';
-import { GRADI, DISTRATTORI } from '../lib/mondo';
+import { gradiL, distrattoriL } from '../lib/mondo';
+import { linguaDa, traduttore, href } from '../lib/lingua';
 import { TEXTURE } from '../lib/texture';
 
 interface Props { stanze: Lezione[] }
 const { stanze } = Astro.props;
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const P = l === 'en' ? '/en' : '';
+const GRADI = gradiL(l);
+const DISTRATTORI = distrattoriL(l);
 
 // posizione di ogni stanza sulla mappa
 const nodi = stanze.map((s) => {
@@ -39,7 +45,7 @@ const case_ = sparsi(1340, 400, 130, 90, 18).filter(([x, y]) => !occupato(x, y))
 const nuvole = sparsi(1420, 110, 190, 70, 9);
 const stelle = sparsi(1400, 100, 230, 100, 22);
 ---
-<section class="campo-gioco" aria-label="Mappa del Cammino" data-gioco>
+<section class="campo-gioco" aria-label={t('Mappa del Cammino', 'Map of the Quest')} data-gioco>
   <svg class="mondo-svg" viewBox={`0 0 ${LARGHEZZA} ${ALTEZZA}`} preserveAspectRatio="xMidYMid meet" data-mondo role="application" aria-roledescription="mappa esplorabile">
     <defs>
       <pattern id="onde" width="60" height="30" patternUnits="userSpaceOnUse">
@@ -132,7 +138,7 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
       <!-- titolo nel cartiglio -->
       <g transform="translate(330 300)">
         <path d="M-150 -26h300l-14 26 14 26h-300l14 -26z" fill="#f4e6cc" stroke="#8a5a3c" stroke-width="3" />
-        <text y="9" text-anchor="middle" font-size="28" font-weight="900" fill="#5b3a26" font-family="var(--font-titoli)">Regno di Numeria</text>
+        <text y="9" text-anchor="middle" font-size="28" font-weight="900" fill="#5b3a26" font-family="var(--font-titoli)">{t('Regno di Numeria', 'Kingdom of Numeria')}</text>
       </g>
       <!-- etichette delle regioni -->
       {REGIONI_MAPPA.map((r) => {
@@ -140,7 +146,7 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
         return (
           <g transform={`translate(${r.etichetta[0]} ${r.etichetta[1]})`} class="etichetta-regione">
             <rect x={-g.regione.length * 6.2 - 18} y="-19" width={g.regione.length * 12.4 + 36} height="34" rx="17" fill="rgba(31,35,51,.78)" />
-            <text y="5" text-anchor="middle" font-size="19" font-weight="800" fill="#fff">{g.regione.replace(' e Torre dell\'Infinito', '')}</text>
+            <text y="5" text-anchor="middle" font-size="19" font-weight="800" fill="#fff">{g.regione.replace(' e Torre dell\'Infinito', '').replace(' and Tower of Infinity', '')}</text>
           </g>
         );
       })}
@@ -162,18 +168,18 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
             ))}
           </g>
           <text x={r.testoNebbia[0]} y={r.testoNebbia[1]} text-anchor="middle" font-size="22" font-weight="900" fill="#7a8194">
-            {regioniConStanze.has(r.numero) ? '🔒 Terre nella Nebbia' : 'Terre inesplorate'}
+            {regioniConStanze.has(r.numero) ? t('🔒 Terre nella Nebbia', '🔒 Lands in the Fog') : t('Terre inesplorate', 'Unexplored lands')}
           </text>
           <text x={r.testoNebbia[0]} y={r.testoNebbia[1] + 26} text-anchor="middle" font-size="15" font-weight="700" fill="#8a90a2">
-            {regioniConStanze.has(r.numero) ? 'Batti il Guardiano precedente' : 'Presto nuove stanze'}
+            {regioniConStanze.has(r.numero) ? t('Batti il Guardiano precedente', 'Defeat the previous Guardian') : t('Presto nuove stanze', 'New rooms coming soon')}
           </text>
         </g>
       ))}
 
       <!-- stanze e fortezze -->
       {[...nodi].sort((a, b) => Number(a.guardiano) - Number(b.guardiano)).map((n) => (
-        <a href={`/cammino/${n.id}/`} class={`nodo ${n.guardiano ? 'fortezza' : 'accampamento'}`} data-nodo={n.id} data-regione-nodo={n.regione}
-          aria-label={`${n.guardiano ? 'Guardiano' : 'Stanza'}: ${n.nome}`}
+        <a href={`${P}/cammino/${n.id}/`} class={`nodo ${n.guardiano ? 'fortezza' : 'accampamento'}`} data-nodo={n.id} data-regione-nodo={n.regione}
+          aria-label={`${n.guardiano ? t('Guardiano', 'Guardian') : t('Stanza', 'Room')}: ${n.nome}`}
           data-nome={n.nome} data-titolo={n.titolo} data-descrizione={n.descrizione} data-distrattore={n.distrattore}>
           <g transform={`translate(${n.x} ${n.y})`}>
             <circle r={n.guardiano ? 40 : 30} class="alone" />
@@ -224,7 +230,7 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
           <path d="M-10 -21h20l3 24h-26z" fill="#f07a2c" stroke="#1f2333" stroke-width="2" />
           <path d="M14 -40l4 52" stroke="#8a5a3c" stroke-width="4" stroke-linecap="round" />
           <path d="M-20 -60h40v-0" />
-          <g transform="translate(0 -58)"><rect x="-22" y="-14" width="44" height="18" rx="9" fill="#ffc93c" stroke="#1f2333" stroke-width="2" /><text y="0" text-anchor="middle" font-size="11" font-weight="900" fill="#1f2333">TU</text></g>
+          <g transform="translate(0 -58)"><rect x="-22" y="-14" width="44" height="18" rx="9" fill="#ffc93c" stroke="#1f2333" stroke-width="2" /><text y="0" text-anchor="middle" font-size="11" font-weight="900" fill="#1f2333">{t('TU', 'YOU')}</text></g>
         </g>
       </g>
     </g>
@@ -234,20 +240,20 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
   <div class="hud hud-alto">
     <div class="hud-eroe">
       <span class="hud-icona" data-hud-icona aria-hidden="true">🪵</span>
-      <div><p class="hud-etichetta">Grado</p><p class="hud-valore" data-hud-grado>Recluta</p></div>
+      <div><p class="hud-etichetta">{t('Grado', 'Grade')}</p><p class="hud-valore" data-hud-grado>{t('Recluta', 'Recruit')}</p></div>
     </div>
-    <div class="hud-risorsa" title="Stanze conquistate"><span aria-hidden="true">🚩</span><span data-hud-stanze>0/0</span></div>
-    <div class="hud-risorsa" title="Guardiani sconfitti"><span aria-hidden="true">🐉</span><span data-hud-guardiani>0/6</span></div>
-    <a class="hud-btn" href="/eroe/" title="Il tuo personaggio">🎲<span class="hud-testo"> Eroe</span></a>
-    <a class="hud-btn salva-hud" href="/zaino/#pergamena" title="Salva la Pergamena sul tuo dispositivo" data-salva-hud>💾<span class="hud-testo"> Salva</span><span class="ns-hud" data-ns-hud hidden>!</span></a>
-    <a class="hud-btn" href="/guida/#mappa" title="Come si gioca">❓<span class="hud-testo"> Guida</span></a>
+    <div class="hud-risorsa" title={t('Stanze conquistate', 'Rooms conquered')}><span aria-hidden="true">🚩</span><span data-hud-stanze>0/0</span></div>
+    <div class="hud-risorsa" title={t('Guardiani sconfitti', 'Guardians defeated')}><span aria-hidden="true">🐉</span><span data-hud-guardiani>0/6</span></div>
+    <a class="hud-btn" href={href(l, '/eroe/')} title={t('Il tuo personaggio', 'Your character')}>🎲<span class="hud-testo"> {t('Eroe', 'Hero')}</span></a>
+    <a class="hud-btn salva-hud" href={href(l, '/zaino/#pergamena')} title={t('Salva la Pergamena sul tuo dispositivo', 'Save your Scroll to your device')} data-salva-hud>💾<span class="hud-testo"> {t('Salva', 'Save')}</span><span class="ns-hud" data-ns-hud hidden>!</span></a>
+    <a class="hud-btn" href={href(l, '/guida/#mappa')} title={t('Come si gioca', 'How to play')}>❓<span class="hud-testo"> {t('Guida', 'Guide')}</span></a>
   </div>
 
-  <div class="hud hud-zoom" role="group" aria-label="Zoom della mappa">
-    <button type="button" data-zoom="1" aria-label="Avvicina">＋</button>
-    <button type="button" data-zoom="-1" aria-label="Allontana">－</button>
-    <button type="button" data-centra aria-label="Centra sull'eroe">🎯</button>
-    <button type="button" data-tutto aria-label="Mostra tutta la mappa">🗺️</button>
+  <div class="hud hud-zoom" role="group" aria-label={t('Zoom della mappa', 'Map zoom')}>
+    <button type="button" data-zoom="1" aria-label={t('Avvicina', 'Zoom in')}>＋</button>
+    <button type="button" data-zoom="-1" aria-label={t('Allontana', 'Zoom out')}>－</button>
+    <button type="button" data-centra aria-label={t("Centra sull'eroe", 'Centre on the hero')}>🎯</button>
+    <button type="button" data-tutto aria-label={t('Mostra tutta la mappa', 'Show the whole map')}>🗺️</button>
   </div>
 
   <div class="hud minimappa" aria-hidden="true">
@@ -257,18 +263,18 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
     </svg>
   </div>
 
-  <div class="pannello" data-pannello hidden role="dialog" aria-live="polite" aria-label="Dettagli della stanza">
-    <button type="button" class="chiudi" data-chiudi-pannello aria-label="Chiudi">✕</button>
+  <div class="pannello" data-pannello hidden role="dialog" aria-live="polite" aria-label={t('Dettagli della stanza', 'Room details')}>
+    <button type="button" class="chiudi" data-chiudi-pannello aria-label={t('Chiudi', 'Close')}>✕</button>
     <p class="pannello-tipo" data-p-tipo></p>
     <h2 data-p-nome></h2>
     <p class="pannello-titolo" data-p-titolo></p>
     <p class="tenue" data-p-descrizione></p>
     <p class="pannello-distrattore" data-p-distrattore></p>
     <p class="pannello-stato" data-p-stato></p>
-    <a class="btn gioco" href="#" data-p-entra>Entra nella stanza ⚔️</a>
+    <a class="btn gioco" href="#" data-p-entra>{t('Entra nella stanza ⚔️', 'Enter the room ⚔️')}</a>
   </div>
 
-  <p class="suggerimento-mappa" data-suggerimento>Trascina per esplorare · rotellina o ＋/－ per lo zoom · tocca un accampamento</p>
+  <p class="suggerimento-mappa" data-suggerimento>{t('Trascina per esplorare · rotellina o ＋/－ per lo zoom · tocca un accampamento', 'Drag to explore · scroll wheel or ＋/－ to zoom · tap a camp')}</p>
 </section>
 
 <script type="application/json" id="nodi-mappa" set:html={JSON.stringify(nodi.map((n) => ({ id: n.id, x: n.x, y: n.y, regione: n.regione, guardiano: n.guardiano })))} />
@@ -276,7 +282,10 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
 <script>
   import { movimentoRidotto } from '../lib/studio';
   import { carica, statoStanza, regioneAperta, gradoAttuale, type StanzaRif } from '../lib/progresso';
-  import { grado } from '../lib/mondo';
+  import { gradoL } from '../lib/mondo';
+  const EN = document.documentElement.lang === 'en';
+  const T = (it: string, en: string) => (EN ? en : it);
+  const grado = (n: number) => gradoL(n, EN ? 'en' : 'it');
   import { caricaEroe, avatarInterno } from '../lib/eroe';
   import { daSalvare } from '../lib/salvataggio';
 
@@ -288,7 +297,7 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
 
   // --- stato del gioco ---
   const p = carica();
-  const etichette = { bloccata: '🌫️ Nella Nebbia', aperta: '⚔️ Da conquistare', conquistata: '🚩 Conquistata' } as const;
+  const etichette = { bloccata: T('🌫️ Nella Nebbia', '🌫️ In the Fog'), aperta: T('⚔️ Da conquistare', '⚔️ To conquer'), conquistata: T('🚩 Conquistata', '🚩 Conquered') } as const;
   for (const a of radice.querySelectorAll<SVGAElement>('[data-nodo]')) a.dataset.stato = statoStanza(p, stanze, a.dataset.nodo!);
   for (const n of radice.querySelectorAll<SVGGElement>('[data-nebbia]')) {
     const r = Number(n.dataset.nebbia);
@@ -318,7 +327,7 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
     const salta = eroe.querySelector('.salta')!;
     salta.innerHTML = `<g transform="translate(-25 -62) scale(.5)">${avatarInterno(mioEroe, gradoAttuale(p))}</g>` +
       `<g transform="translate(0 -70)"><rect x="-26" y="-14" width="52" height="18" rx="9" fill="#ffc93c" stroke="#1f2333" stroke-width="2"/><text y="0" text-anchor="middle" font-size="11" font-weight="900" fill="#1f2333"></text></g>`;
-    salta.querySelector('text')!.textContent = (mioEroe.nome || 'TU').slice(0, 10).toUpperCase();
+    salta.querySelector('text')!.textContent = (mioEroe.nome || T('TU', 'YOU')).slice(0, 10).toUpperCase();
   }
 
   // --- vista: pan e zoom con il viewBox ---
@@ -430,15 +439,15 @@ const stelle = sparsi(1400, 100, 230, 100, 22);
       if (trascinato > 6) return;
       const stato = a.dataset.stato as keyof typeof etichette;
       const fortezza = a.classList.contains('fortezza');
-      imposta('[data-p-tipo]', fortezza ? `🐉 Fortezza del Guardiano · ${grado(Number(a.dataset.regioneNodo)).regione}` : `⛺ Accampamento · ${grado(Number(a.dataset.regioneNodo)).regione}`);
+      imposta('[data-p-tipo]', fortezza ? `🐉 ${T('Fortezza del Guardiano', 'Guardian’s fortress')} · ${grado(Number(a.dataset.regioneNodo)).regione}` : `⛺ ${T('Accampamento', 'Camp')} · ${grado(Number(a.dataset.regioneNodo)).regione}`);
       imposta('[data-p-nome]', a.dataset.nome!);
       imposta('[data-p-titolo]', a.dataset.titolo!);
       imposta('[data-p-descrizione]', a.dataset.descrizione!);
-      imposta('[data-p-distrattore]', a.dataset.distrattore ? `Occhio: ti aspetta ${a.dataset.distrattore}.` : '');
-      imposta('[data-p-stato]', etichette[stato] + (fortezza && stato !== 'conquistata' ? ' · Battilo per salire di grado!' : ''));
+      imposta('[data-p-distrattore]', a.dataset.distrattore ? T(`Occhio: ti aspetta ${a.dataset.distrattore}.`, `Watch out: ${a.dataset.distrattore} is waiting for you.`) : '');
+      imposta('[data-p-stato]', etichette[stato] + (fortezza && stato !== 'conquistata' ? T(' · Battilo per salire di grado!', ' · Defeat it to rise in grade!') : ''));
       const entra = pannello.querySelector<HTMLAnchorElement>('[data-p-entra]')!;
       entra.href = a.getAttribute('href')!;
-      entra.textContent = stato === 'bloccata' ? 'Sbircia nel Libro 📖' : stato === 'conquistata' ? 'Rigioca la stanza 🔁' : fortezza ? 'Affronta il Guardiano 🐉' : 'Entra nella stanza ⚔️';
+      entra.textContent = stato === 'bloccata' ? T('Sbircia nel Libro 📖', 'Peek in the Book 📖') : stato === 'conquistata' ? T('Rigioca la stanza 🔁', 'Replay the room 🔁') : fortezza ? T('Affronta il Guardiano 🐉', 'Face the Guardian 🐉') : T('Entra nella stanza ⚔️', 'Enter the room ⚔️');
       if (stato === 'bloccata') entra.href = entra.href.replace('/cammino/', '/libro/');
       pannello.hidden = false;
       radice.querySelectorAll('.nodo.scelto').forEach((x) => x.classList.remove('scelto'));

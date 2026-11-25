@@ -57,3 +57,22 @@ describe('palestra', () => {
     expect(corretta(e, '0,3')).toBe(false);
   });
 });
+
+import { formulaL, FORMULE as TUTTE, serie as serieL } from '../src/lib/palestra';
+describe('palestra in inglese', () => {
+  it('ogni formula ha i testi inglesi per tutti i membri con nome', () => {
+    for (const f of TUTTE) expect(f.en.membri.length).toBe(f.membri.filter((m) => m.nome).length);
+  });
+  it('stessa serie, stessi numeri nelle due lingue', () => {
+    for (const f of TUTTE) {
+      const it_ = serieL(f, 77, 6, 'it'), en = serieL(f, 77, 6, 'en');
+      expect(en.map((e) => e.risposta)).toEqual(it_.map((e) => e.risposta));
+      expect(en[0].testo).not.toBe(it_[0].testo);
+    }
+  });
+  it('dopo una serie inglese, quella italiana resta italiana', () => {
+    serieL(TUTTE[0], 3, 2, 'en');
+    expect(serieL(TUTTE[0], 3, 1)[0].testo).toMatch(/stanza/);
+    expect(formulaL(TUTTE[0], 'en').titolo).toBe('Area of a rectangle');
+  });
+});

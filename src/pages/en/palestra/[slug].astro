@@ -1,0 +1,6 @@
+---
+import PalestraFormula from '../../../viste/PalestraFormula.astro';
+import { FORMULE } from '../../../lib/palestra';
+export function getStaticPaths() { return FORMULE.map((f) => ({ params: { slug: f.slug } })); }
+---
+<PalestraFormula slug={Astro.params.slug!} />
