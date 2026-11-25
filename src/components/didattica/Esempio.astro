@@ -1,6 +1,7 @@
 ---
+import { linguaDa } from '../../lib/lingua';
 interface Props { titolo?: string; }
-const { titolo = 'Esempio pratico' } = Astro.props;
+const { titolo = linguaDa(Astro.url) === 'en' ? 'Worked example' : 'Esempio pratico' } = Astro.props;
 ---
 <section class="box esempio">
   <p class="box-titolo"><span aria-hidden="true">🍕</span> {titolo}</p>

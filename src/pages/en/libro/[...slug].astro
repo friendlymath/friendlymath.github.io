@@ -1,0 +1,21 @@
+---
+import { render } from 'astro:content';
+import Lezione from '../../../layouts/Lezione.astro';
+import { lezioniPubblicate } from '../../../lib/contenuti';
+import { componenti } from '../../../components/didattica/indice';
+
+export async function getStaticPaths() {
+  const tutte = await lezioniPubblicate('en');
+  return tutte.map((lezione) => {
+    const stesse = tutte.filter((l) => l.data.macroargomento === lezione.data.macroargomento);
+    const i = stesse.findIndex((l) => l.id === lezione.id);
+    const v = (l?: typeof lezione) => (l ? { href: `/en/libro/${l.id}/`, titolo: l.data.titolo } : undefined);
+    return { params: { slug: lezione.id }, props: { lezione, precedente: v(stesse[i - 1]), successiva: v(stesse[i + 1]) } };
+  });
+}
+const { lezione, precedente, successiva } = Astro.props;
+const { Content } = await render(lezione);
+---
+<Lezione lezione={lezione} contesto="libro" precedente={precedente} successiva={successiva}>
+  <Content components={componenti} />
+</Lezione>

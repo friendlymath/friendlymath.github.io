@@ -1,9 +1,10 @@
 ---
-import { PERSONAGGI } from '../../lib/mondo';
+import { PERSONAGGI, personaggiL } from '../../lib/mondo';
+import { linguaDa } from '../../lib/lingua';
 import Ritratto from '../arte/Ritratto.astro';
 interface Props { personaggio?: keyof typeof PERSONAGGI; }
 const chi = Astro.props.personaggio ?? 'narratore';
-const p = PERSONAGGI[chi];
+const p = personaggiL(linguaDa(Astro.url))[chi];
 ---
 <aside class="box scena solo-cammino">
   <div class={`fumetto-riga ${chi}`}>

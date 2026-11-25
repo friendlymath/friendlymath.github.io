@@ -1,6 +1,7 @@
 ---
+import { linguaDa } from '../../lib/lingua';
 interface Props { titolo?: string; }
-const { titolo = 'Un po’ di storia' } = Astro.props;
+const { titolo = linguaDa(Astro.url) === 'en' ? 'A bit of history' : 'Un po’ di storia' } = Astro.props;
 ---
 <aside class="box storia">
   <p class="box-titolo"><span aria-hidden="true">🏛️</span> {titolo}</p>

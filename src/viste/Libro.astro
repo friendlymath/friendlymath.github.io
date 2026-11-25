@@ -1,0 +1,163 @@
+---
+import Base from '../layouts/Base.astro';
+import { lezioniPubblicate } from '../lib/contenuti';
+import { macroargomentiL, gradoL } from '../lib/mondo';
+import { PROGRAMMA as PROGRAMMA_IT, FONTI_PROGRAMMA } from '../data/programma';
+import { PROGRAMMA_EN } from '../data/programma-en';
+import { linguaDa, traduttore, href } from '../lib/lingua';
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const P = l === 'en' ? '/en' : '';
+const MACROARGOMENTI = macroargomentiL(l);
+const PROGRAMMA = l === 'en' ? PROGRAMMA_EN : PROGRAMMA_IT;
+const grado = (n: number) => gradoL(n, l);
+import Stemma from '../components/arte/Stemma.astro';
+
+const lezioni = await lezioniPubblicate(l);
+const esistenti = new Set(lezioni.map((x) => x.id));
+const cicli = [...new Set(PROGRAMMA.map((a) => a.ciclo))].map((c) => ({ nome: c, anni: PROGRAMMA.filter((a) => a.ciclo === c) }));
+const sezioni = MACROARGOMENTI.map((m) => {
+  const proprie = lezioni.filter((x) => x.data.macroargomento === m.slug);
+  const sotto = [...new Set(proprie.map((x) => x.data.sottoargomento))];
+  return { ...m, gruppi: sotto.map((s) => ({ nome: s, lezioni: proprie.filter((x) => x.data.sottoargomento === s) })), totale: proprie.length };
+});
+---
+<Base titolo={t('Il Libro', 'The Book')} descrizione={t('Tutti gli argomenti di matematica, dalle elementari ai quaternioni, liberi da consultare.', 'Every maths topic, from primary school to quaternions, free to browse.')}>
+  <section class="contenitore">
+    <header class="intro">
+      <p class="pillola">📖 {t('Accesso libero', 'Open access')}</p>
+      <h1>{t('Il Libro', 'The Book')}</h1>
+      <p class="tenue" set:html={t('Tutti gli argomenti in ordine, come in un buon manuale. Nessun lucchetto: apri quello che ti serve, quando ti serve. Il colore indica il livello, dalla <b>Recluta</b> (elementari) al <b>Cavaliere alato</b> (matematica avanzata).', 'Every topic in order, as in a good textbook. No locks: open what you need, when you need it. The colour shows the level, from <b>Recruit</b> (primary school) to <b>Winged Knight</b> (advanced mathematics).')} />
+      <div class="schede-vista" role="tablist" aria-label={t('Come vuoi sfogliare il Libro', 'How do you want to browse the Book')}>
+        <button type="button" role="tab" aria-selected="true" data-vista="anno">🎒 {t('Per anno scolastico', 'By school year')}</button>
+        <button type="button" role="tab" aria-selected="false" data-vista="argomento">🧩 {t('Per argomento', 'By topic')}</button>
+      </div>
+    </header>
+
+    <div data-pannello-vista="anno">
+      {l === 'en'
+        ? <p class="tenue stretto">The topics of each school year, following the Italian school system, from age 6 to university. Topics with a link already have a lesson; the others are being written
+          (<span class="nebbia-mini">🌫️ in the Fog</span>). <a href="#fonti-programma">Where does this list come from?</a></p>
+        : <p class="tenue stretto">Gli argomenti di ogni classe, dalla 1ª elementare all'università. Quelli con il link hanno già la lezione; gli altri sono in scrittura
+          (<span class="nebbia-mini">🌫️ nella Nebbia</span>). <a href="#fonti-programma">Da dove viene questo elenco?</a></p>}
+      {cicli.map((c) => (
+        <section class="ciclo">
+          <h2>{c.nome}</h2>
+          <div class="griglia g3">
+            {c.anni.map((anno) => {
+              const fatti = anno.argomenti.filter((a) => a.lezione && esistenti.has(a.lezione)).length;
+              return (
+                <div class="scheda anno" id={anno.id} style={`--c:${grado(anno.grado).colore}`}>
+                  <div class="anno-testa"><Stemma numero={anno.grado} taglia={42} /><div><h3>{anno.classe}</h3><p class="tenue">{grado(anno.grado).regione}</p></div></div>
+                  <div class="barra" title={l === 'en' ? `${fatti} of ${anno.argomenti.length} lessons ready` : `${fatti} lezioni pronte su ${anno.argomenti.length}`}><span style={`width:${Math.round((fatti / anno.argomenti.length) * 100)}%`}></span></div>
+                  <ul class="elenco-anno">
+                    {anno.argomenti.map((a) => a.lezione && esistenti.has(a.lezione)
+                      ? <li><a href={`${P}/libro/${a.lezione}/`}>{a.titolo}</a><span class="fatto" data-fatto={a.lezione} hidden>✅</span></li>
+                      : <li class="in-arrivo">🌫️ {a.titolo}</li>)}
+                  </ul>
+                  {anno.nota && <p class="tenue nota">{anno.nota}</p>}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      ))}
+      <details class="scheda fonti-programma" id="fonti-programma">
+        <summary>📚 {t('Da dove viene questo elenco?', 'Where does this list come from?')}</summary>
+        {l === 'en' && <p>The breakdown follows the Italian Ministry of Education’s national guidelines (first cycle: goals at the end of primary year 3 and 5 and of lower secondary year 3;
+        lyceums: first two years, second two years and final year, with the scientific lyceum as reference), the table of contents of an upper secondary maths course and the
+        programmes many schools publish online. The guidelines don’t fix topics year by year: this is a <b>typical distribution</b>, and each school may move things earlier or later.
+        Since 11 February 2026 new national guidelines apply to the first cycle, gradually replacing those of 2012. The sources are in Italian.</p>}
+        {l === 'it' && <p>La suddivisione segue le Indicazioni nazionali del Ministero (primo ciclo: obiettivi al termine della 3ª e 5ª primaria e della 3ª media; licei: primo biennio,
+        secondo biennio e quinto anno, con riferimento al liceo scientifico), l'indice di un corso di matematica per il biennio e le programmazioni che molte scuole pubblicano online.
+        Le Indicazioni non fissano gli argomenti anno per anno: questa è una <b>distribuzione tipica</b>, e ogni scuola può anticipare o posticipare qualcosa.
+        Dall'11 febbraio 2026 per il primo ciclo sono in vigore le nuove Indicazioni nazionali, che sostituiscono gradualmente quelle del 2012.</p>}
+        <ul>{FONTI_PROGRAMMA.map((f) => <li><a href={f.url} rel="noopener">{f.titolo}</a>, {f.editore}</li>)}</ul>
+      </details>
+    </div>
+
+    <div data-pannello-vista="argomento">
+      <nav class="salti" aria-label={t('Macroargomenti', 'Main topics')}>
+        {sezioni.map((s) => <a class="pillola" href={`#${s.slug}`}>{s.nome} <span class="tenue">({s.totale})</span></a>)}
+      </nav>
+
+    {sezioni.map((s) => (
+      <section class="capitolo" id={s.slug}>
+        <h2>{s.nome}</h2>
+        <p class="tenue">{s.descrizione} · <a href={href(l, `/mappe/${s.slug}/`)}>🧠 {t('Mappa mentale', 'Mind map')}</a></p>
+        {s.totale === 0 ? (
+          <p class="nebbia">🌫️ {t('Capitolo in scrittura: la Nebbia è ancora fitta, ma lo stiamo diradando.', 'Chapter being written: the Fog is still thick, but we are lifting it.')}</p>
+        ) : (
+          <div class="griglia g3">
+            {s.gruppi.map((g) => (
+              <div class="scheda">
+                <h3>{g.nome}</h3>
+                <ul class="elenco">
+                  {g.lezioni.map((lz) => {
+                    const gr = grado(lz.data.grado);
+                    return (
+                      <li data-lezione-voce={lz.id}>
+                        <span class="pallino" style={`background:${gr.colore}`} title={`${t('Grado', 'Grade')} ${gr.numero}: ${gr.fase}`}></span>
+                        <a href={`${P}/libro/${lz.id}/`}>{lz.data.titolo}</a>
+                        <span class="sr-only">({t('grado', 'grade')} {gr.numero}, {gr.fase})</span>
+                        <span class="fatto" hidden aria-label={t('completata', 'completed')}>✅</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+    ))}
+    </div>
+  </section>
+</Base>
+<script>
+  import { carica } from '../lib/progresso';
+  const p = carica();
+  document.querySelectorAll<HTMLElement>('[data-fatto]').forEach((el) => { el.hidden = !p.completate.includes(el.dataset.fatto!); });
+  const schede = document.querySelectorAll<HTMLButtonElement>('[data-vista]');
+  const mostraVista = (v: string) => {
+    schede.forEach((b) => b.setAttribute('aria-selected', String(b.dataset.vista === v)));
+    document.querySelectorAll<HTMLElement>('[data-pannello-vista]').forEach((p) => (p.hidden = p.dataset.pannelloVista !== v));
+    try { localStorage.setItem('friendlymath:vista-libro', v); } catch {}
+  };
+  schede.forEach((b) => b.addEventListener('click', () => mostraVista(b.dataset.vista!)));
+  let iniziale = 'anno';
+  try { iniziale = localStorage.getItem('friendlymath:vista-libro') || 'anno'; } catch {}
+  if (location.hash && document.querySelector(`[data-pannello-vista="argomento"] ${location.hash}`)) iniziale = 'argomento';
+  mostraVista(iniziale);
+  document.querySelectorAll<HTMLElement>('[data-lezione-voce]').forEach((li) => {
+    if (p.completate.includes(li.dataset.lezioneVoce!)) li.querySelector<HTMLElement>('.fatto')!.hidden = false;
+  });
+</script>
+<style>
+  .intro { padding: 1.5rem 0 .5rem; }
+  .schede-vista { display: inline-flex; gap: .3rem; background: var(--superficie); border: 2px solid var(--bordo); border-radius: 999px; padding: .3rem; margin: .5rem 0 1rem; flex-wrap: wrap; }
+  .schede-vista button { border: 0; background: none; font: inherit; font-weight: 800; padding: .5rem 1rem; border-radius: 999px; cursor: pointer; color: var(--testo); }
+  .schede-vista button[aria-selected="true"] { background: var(--fiducia); color: #fff; }
+  .ciclo h2 { margin-top: 1.8rem; }
+  .anno { border-top: 6px solid var(--c); display: flex; flex-direction: column; }
+  .anno-testa { display: flex; gap: .6rem; align-items: center; }
+  .anno-testa h3 { margin: 0; }
+  .anno-testa p { margin: 0; font-size: .85rem; }
+  .barra { height: 8px; background: var(--superficie-2); border-radius: 999px; overflow: hidden; margin: .6rem 0; }
+  .barra span { display: block; height: 100%; background: var(--c); }
+  .elenco-anno { list-style: none; padding: 0; margin: 0; display: grid; gap: .15rem; font-size: .95rem; }
+  .elenco-anno a { font-weight: 700; }
+  .in-arrivo { color: var(--testo-tenue); }
+  .nota { font-size: .82rem; margin-top: auto; padding-top: .5rem; }
+  .nebbia-mini { white-space: nowrap; }
+  .fonti-programma { margin-top: 2rem; }
+  .fonti-programma summary { cursor: pointer; font-weight: 800; }
+  .salti { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .salti a { text-decoration: none; }
+  .capitolo { scroll-margin-top: 80px; }
+  .scheda h3 { margin: 0 0 .4rem; font-size: 1.1rem; }
+  .elenco { list-style: none; padding: 0; margin: 0; }
+  .elenco li { display: flex; align-items: center; gap: .5rem; padding: .25rem 0; }
+  .pallino { width: .8rem; height: .8rem; border-radius: 50%; flex: none; }
+  .nebbia { background: var(--superficie-2); border: 2px dashed var(--bordo); border-radius: var(--raggio); padding: .8rem 1rem; }
+</style>

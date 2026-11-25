@@ -5,7 +5,10 @@
 export type Lingua = 'it' | 'en';
 
 /** Percorsi (senza /en) che hanno già la versione inglese. Gli altri, in inglese, rimandano all'italiano con un avviso. */
-export const TRADOTTE = new Set<string>(['/', '/privacy/', '/studio/']);
+export const TRADOTTE = new Set<string>(['/', '/privacy/', '/studio/', '/libro/']);
+/** Gruppi di pagine tradotte (per esempio tutte le lezioni). */
+const GRUPPI_TRADOTTI: RegExp[] = [/^\/libro\/.+/, /^\/cammino\/.+/];
+const tradotta = (p: string) => TRADOTTE.has(p) || GRUPPI_TRADOTTI.some((r) => r.test(p));
 
 const normalizza = (p: string) => (p.endsWith('/') ? p : `${p}/`);
 
@@ -24,7 +27,7 @@ export function percorsoBase(url: URL | string): string {
 export function href(l: Lingua, p: string): string {
   if (l === 'it') return p;
   const [base, ancora] = p.split('#');
-  if (!TRADOTTE.has(normalizza(base))) return p;
+  if (!tradotta(normalizza(base))) return p;
   return `/en${base === '/' ? '/' : normalizza(base)}${ancora ? `#${ancora}` : ''}`;
 }
 
@@ -32,10 +35,10 @@ export function href(l: Lingua, p: string): string {
 export function altraLingua(url: URL): string {
   const base = percorsoBase(url);
   if (linguaDa(url) === 'en') return base;
-  return TRADOTTE.has(base) ? `/en${base}` : '/en/';
+  return tradotta(base) ? `/en${base}` : '/en/';
 }
 
-export const esisteInInglese = (url: URL) => TRADOTTE.has(percorsoBase(url));
+export const esisteInInglese = (url: URL) => tradotta(percorsoBase(url));
 
 /** Restituisce la funzione di traduzione per la lingua data. */
 export const traduttore = (l: Lingua) => (it: string, en: string) => (l === 'en' ? en : it);

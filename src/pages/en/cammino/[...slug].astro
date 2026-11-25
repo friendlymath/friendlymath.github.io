@@ -1,0 +1,20 @@
+---
+import { render } from 'astro:content';
+import Lezione from '../../../layouts/Lezione.astro';
+import { stanzeDelCammino, riferimentiStanze } from '../../../lib/contenuti';
+import { componenti } from '../../../components/didattica/indice';
+
+export async function getStaticPaths() {
+  const stanze = await stanzeDelCammino('en');
+  const rif = riferimentiStanze(stanze);
+  return stanze.map((lezione, i) => {
+    const v = (l?: typeof lezione) => (l ? { href: `/en/cammino/${l.id}/`, titolo: l.data.nomeStanza ?? l.data.titolo } : undefined);
+    return { params: { slug: lezione.id }, props: { lezione, precedente: v(stanze[i - 1]), successiva: v(stanze[i + 1]), rif } };
+  });
+}
+const { lezione, precedente, successiva, rif } = Astro.props;
+const { Content } = await render(lezione);
+---
+<Lezione lezione={lezione} contesto="cammino" precedente={precedente} successiva={successiva} stanze={rif}>
+  <Content components={componenti} />
+</Lezione>

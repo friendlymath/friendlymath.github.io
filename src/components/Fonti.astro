@@ -2,19 +2,22 @@
 type Fonte = { titolo: string; url: string; editore: string; autore?: string; consultato: string };
 interface Props { fonti: Fonte[]; ispirazione?: string[]; }
 const { fonti, ispirazione = [] } = Astro.props;
-const data = (s: string) => new Date(s).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+import { linguaDa, traduttore } from '../lib/lingua';
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const data = (s: string) => new Date(s).toLocaleDateString(l === 'en' ? 'en-GB' : 'it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 <section class="fonti">
   {fonti.length > 0 && <>
-    <h2>📚 Fonti</h2>
+    <h2>📚 {t('Fonti', 'Sources')}</h2>
     <ul>
       {fonti.map((f) => (
-        <li>{f.autore && <>{f.autore}, </>}<a href={f.url} rel="noopener" target="_blank">{f.titolo}</a>, {f.editore} <span class="tenue">(consultato il {data(f.consultato)})</span></li>
+        <li>{f.autore && <>{f.autore}, </>}<a href={f.url} rel="noopener" target="_blank">{f.titolo}</a>, {f.editore} <span class="tenue">({t('consultato il', 'accessed')} {data(f.consultato)})</span></li>
       ))}
     </ul>
   </>}
   {ispirazione.length > 0 && <>
-    <h3>Per approfondire</h3>
+    <h3>{t('Per approfondire', 'Further reading')}</h3>
     <ul>{ispirazione.map((u) => <li><a href={u} rel="noopener" target="_blank">{new URL(u).hostname.replace('www.', '')}</a></li>)}</ul>
   </>}
 </section>

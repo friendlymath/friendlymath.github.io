@@ -1,3 +1,4 @@
+import type { Lingua } from './lingua';
 /**
  * Il personaggio dell'eroe, in stile gioco di ruolo: corpo, classe, aspetto e caratteristiche.
  * Resta solo nel browser (e nella Pergamena, se la salvi). Il nome è facoltativo.
@@ -223,3 +224,55 @@ export function eroeCasuale(caso: () => number = Math.random): Eroe {
   for (let i = 0; i < 40 && puntiRimasti(e2) > 0; i++) e2 = cambiaCar(e2, scegli(['logica', 'intuizione', 'pazienza', 'curiosita'] as const), 1);
   return e2;
 }
+
+/* ---------- English ---------- */
+export const CORPI_EN: Record<Corpo, string> = { femminile: 'Heroine', maschile: 'Hero', neutro: 'Neither' };
+export const CLASSI_EN: Record<Classe, { nomi: Record<Corpo, string>; affinita: string; descrizione: string }> = {
+  guerriero: { nomi: { femminile: 'Warrior of Numbers', maschile: 'Warrior of Numbers', neutro: 'Guard of Numbers' }, affinita: 'Numbers and arithmetic', descrizione: 'Faces calculations head-on. Fears neither columns of digits nor carrying.' },
+  mago: { nomi: { femminile: 'Sorceress of Formulas', maschile: 'Wizard of Formulas', neutro: 'Alchemist of Formulas' }, affinita: 'Algebra', descrizione: 'Turns letters into numbers and equations into solutions. Loves rules that always work.' },
+  esploratore: { nomi: { femminile: 'Explorer of Shapes', maschile: 'Explorer of Shapes', neutro: 'Guide of Shapes' }, affinita: 'Geometry', descrizione: 'Measures, draws, builds. Sees triangles where others see roofs and ladders.' },
+  bardo: { nomi: { femminile: 'Bard of Problems', maschile: 'Bard of Problems', neutro: 'Storyteller of Problems' }, affinita: 'Logic and problems', descrizione: 'Turns every story into a problem and every problem into a story. Good at explaining to others.' },
+  veggente: { nomi: { femminile: 'Seer of Chance', maschile: 'Seer of Chance', neutro: 'Seer of Chance' }, affinita: 'Probability and statistics', descrizione: 'Doesn’t predict the future: calculates its probabilities. Much more useful.' },
+  scaltro: { nomi: { femminile: 'Trickster of Shortcuts', maschile: 'Trickster of Shortcuts', neutro: 'Clever Mind' }, affinita: 'Mental arithmetic and shortcuts', descrizione: 'Finds the side door of every calculation: honest shortcuts, never cheating.' },
+};
+export const STIRPI_EN: Record<Stirpe, { nomi: Record<Corpo, string>; descrizione: string }> = {
+  umano: { nomi: { femminile: 'Human', maschile: 'Human', neutro: 'Human' }, descrizione: 'Versatile and adaptable: learns a bit of everything.' },
+  elfo: { nomi: { femminile: 'Elf', maschile: 'Elf', neutro: 'Elf' }, descrizione: 'Sharp eyes and a long memory: notices the details others miss.' },
+  nano: { nomi: { femminile: 'Dwarf', maschile: 'Dwarf', neutro: 'Dwarf' }, descrizione: 'Legendary stubbornness: keeps digging until the answer turns up.' },
+  halfling: { nomi: { femminile: 'Halfling', maschile: 'Halfling', neutro: 'Halfling' }, descrizione: 'Small in stature, big in luck and good humour.' },
+  mezzelfo: { nomi: { femminile: 'Half-elf', maschile: 'Half-elf', neutro: 'Half-elf' }, descrizione: 'Child of two worlds: chooses the gift of another lineage.' },
+};
+export const DONI_EN: Record<Dono, { nome: string; effetto: string }> = {
+  umano: { nome: 'Versatility', effetto: 'One extra ability charge in every challenge (not against Guardians).' },
+  elfo: { nome: 'Keen eye', effetto: 'Numbers in the questions are highlighted, so you don’t miss them.' },
+  nano: { nome: 'Tenacity', effetto: 'If you complete a challenge after at least one mistake, you earn the Tenacity badge.' },
+  halfling: { nome: 'Luck', effetto: 'Once per challenge, your first mistake doesn’t cost you stars.' },
+};
+export const ABILITA_EN: Record<Classe, { nome: string; spiega: string }> = {
+  guerriero: { nome: 'Second assault', spiega: 'Check your answers without using up an attempt: your stars stay intact.' },
+  mago: { nome: 'Arcane hint', spiega: 'Reveals the first step of the reasoning for the first unsolved question.' },
+  esploratore: { nome: 'Map of knowledge', spiega: 'Shows the lesson’s key ideas, right next to the challenge.' },
+  bardo: { nome: 'Tell it again', spiega: 'Retells the lesson’s worked example, next to the challenge.' },
+  veggente: { nome: 'Glimpse of chance', spiega: 'Removes a wrong answer, or tells you whether your number is too high or too low.' },
+  scaltro: { nome: 'Honest shortcut', spiega: 'Reveals the first digit of the answer and how big it is, or narrows the choice down to two answers.' },
+};
+export const CARATTERISTICHE_EN: Record<Caratteristica, { nome: string; spiega: string }> = {
+  logica: { nome: 'Logic', spiega: 'Following a line of reasoning step by step.' },
+  intuizione: { nome: 'Intuition', spiega: 'Glimpsing the road before walking it.' },
+  pazienza: { nome: 'Patience', spiega: 'Not giving up at the first mistake. The most underrated.' },
+  curiosita: { nome: 'Curiosity', spiega: 'Asking “what if…?”. The engine of all mathematics.' },
+};
+export const STILI_CAPELLI_EN = ['Short', 'Long', 'Tied up', 'Curly'];
+
+export const classiL = (l: Lingua) => (l === 'en'
+  ? Object.fromEntries(Object.entries(CLASSI).map(([k, c]) => [k, { ...c, ...CLASSI_EN[k as Classe] }])) as typeof CLASSI : CLASSI);
+export const stirpiL = (l: Lingua) => (l === 'en'
+  ? Object.fromEntries(Object.entries(STIRPI).map(([k, c]) => [k, { ...c, ...STIRPI_EN[k as Stirpe] }])) as typeof STIRPI : STIRPI);
+export const doniL = (l: Lingua) => (l === 'en' ? DONI_EN : DONI);
+export const abilitaL = (l: Lingua) => (l === 'en'
+  ? Object.fromEntries(Object.entries(ABILITA).map(([k, a]) => [k, { ...a, ...ABILITA_EN[k as Classe] }])) as typeof ABILITA : ABILITA);
+export const caratteristicheL = (l: Lingua) => (l === 'en' ? CARATTERISTICHE.map((c) => ({ ...c, ...CARATTERISTICHE_EN[c.id] })) : CARATTERISTICHE);
+export const corpiL = (l: Lingua) => (l === 'en' ? CORPI.map((c) => ({ ...c, nome: CORPI_EN[c.id] })) : CORPI);
+export const stiliCapelliL = (l: Lingua) => (l === 'en' ? STILI_CAPELLI_EN : STILI_CAPELLI);
+export const nomeClasseL = (e: Eroe, l: Lingua) => classiL(l)[e.classe].nomi[e.corpo];
+export const nomeStirpeL = (e: Eroe, l: Lingua) => stirpiL(l)[e.stirpe].nomi[e.corpo];

@@ -1,0 +1,73 @@
+---
+titolo: "Probability: measuring chance with dice"
+descrizione: "Favourable outcomes divided by possible outcomes: the simplest rule for putting a number on uncertainty."
+macroargomento: probabilita-statistica
+sottoargomento: "Probability"
+grado: 2
+scenaStanza:
+  ambiente: mercato
+  loci:
+    - { oggetto: dadi, concetto: "P = favourable outcomes / possible outcomes", ancora: "the-classical-definition" }
+    - { oggetto: forziere, concetto: "From 0 (impossible) to 1 (certain)", ancora: "from-0-to-1" }
+    - { oggetto: specchio, concetto: "The complementary event: 1 − P", ancora: "the-complementary-event" }
+    - { oggetto: clessidra, concetto: "Chance has no memory", ancora: "errore-tipico" }
+fonti:
+  - titolo: "Birthday problem"
+    url: "https://en.wikipedia.org/wiki/Birthday_problem"
+    editore: "Wikipedia, the free encyclopedia"
+    consultato: "2026-11-25"
+ispirazione:
+  - "https://www.youmath.it"
+essenziale:
+  idee:
+    - '**Probability** is a number that measures how likely something is to happen.'
+    - 'When all outcomes are equally likely: $P = \dfrac{\text{favourable outcomes}}{\text{possible outcomes}}$.'
+    - 'It always goes from $0$ (impossible) to $1$ (certain).'
+    - 'The probability that something does **not** happen is $1 - P$.'
+  esempio: 'Roll a die: the probability of a 6 is $\tfrac{1}{6}$; of **not** rolling a 6 it is $1 - \tfrac{1}{6} = \tfrac{5}{6}$.'
+---
+
+## The classical definition
+
+If all outcomes are **equally likely**, the probability of an event is:
+
+$$
+P = \frac{\text{favourable outcomes}}{\text{possible outcomes}}
+$$
+
+Rolling a die, the probability of a 6 is $\tfrac{1}{6}$. Of an even number ($2, 4, 6$) it is $\tfrac{3}{6} = \tfrac{1}{2}$.
+
+## From 0 to 1
+
+- $P = 0$: an **impossible** event (rolling a 7 with one die).
+- $P = 1$: a **certain** event (rolling a number between 1 and 6).
+- Everything else lies in between. It is often written as a percentage: $\tfrac{1}{2} = 50\%$.
+
+## The complementary event
+
+The probability that an event does **not** happen is $1 - P$. Probability of **not** rolling a 6: $1 - \tfrac{1}{6} = \tfrac{5}{6}$.
+It’s a very powerful trick: sometimes it’s easier to work out the opposite, as in the <a href="/en/curiosita/paradosso-del-compleanno/">birthday paradox</a>.
+
+<Esempio titolo="Worked example: two dice">
+With two dice there are $6 \times 6 = 36$ possible outcomes. A total of 7 comes up in 6 ways (1+6, 2+5, 3+4, 4+3, 5+2, 6+1): $P = \tfrac{6}{36} = \tfrac{1}{6}$.
+A total of 12 in just one way (6+6): $P = \tfrac{1}{36}$. That’s why 7 turns up so often in two-dice games.
+</Esempio>
+
+<Interattivo tipo="dadi" titolo="The dice lab" didascalia="Roll two dice many times: the frequencies get closer to the theoretical probabilities. It’s the law of large numbers, live." altezza={320} />
+
+<Attenzione>
+Common mistake: “Number 47 hasn’t come up in the lottery for 80 draws, so now it has to!” The draws are **independent**: chance has no memory.
+The probability in the next draw is the same as always.
+</Attenzione>
+
+<Applicazioni voci={[
+  { ambito: "quotidiano", titolo: "Weather forecasts", testo: "“70% chance of rain” is a probability: on days with similar conditions, it rained about 7 times out of 10." },
+  { ambito: "informatica", titolo: "Spam filters", testo: "Email filters estimate the probability that a message is spam from the words it contains." },
+  { ambito: "ingegneria", titolo: "Reliability", testo: "If a component fails with probability 1/100, two independent backup components fail together with probability 1/10,000: that’s why aircraft and hospitals have duplicate systems." }
+]} />
+
+<Sfida domande={[
+  { testo: "A bag holds 3 red balls and 7 blue ones. What is the probability of drawing a red one? (write it as a decimal)", risposta: 0.3, tolleranza: 0.001, spiegazione: "3 favourable out of 10 possible: 3/10 = 0.3." },
+  { testo: "Probability of NOT rolling a 1 with one die?", opzioni: ["1/6", "5/6", "1/2"], risposta: 1, spiegazione: "1 − 1/6 = 5/6." },
+  { testo: "With two dice, in how many ways can you get a total of 4?", risposta: 3, spiegazione: "1+3, 2+2, 3+1: three ways out of 36." }
+]} />

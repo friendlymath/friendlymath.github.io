@@ -1,6 +1,7 @@
 ---
 import Base from './Base.astro';
-import { grado, macro, DISTRATTORI } from '../lib/mondo';
+import { gradoL, macroL } from '../lib/mondo';
+import { linguaDa, traduttore, href } from '../lib/lingua';
 import type { Lezione } from '../lib/contenuti';
 import Fonti from '../components/Fonti.astro';
 import Stemma from '../components/arte/Stemma.astro';
@@ -16,19 +17,22 @@ interface Props {
   stanze?: { slug: string; grado: number; ordine: number }[];
 }
 const { lezione, contesto, precedente, successiva, stanze } = Astro.props;
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const P = l === 'en' ? '/en' : '';
 const d = lezione.data;
-const g = grado(d.grado);
-const r = d.regione ? grado(d.regione) : undefined;
-const m = macro(d.macroargomento);
+const g = gradoL(d.grado, l);
+const r = d.regione ? gradoL(d.regione, l) : undefined;
+const m = macroL(d.macroargomento, l);
 const attrezzi = FORMULE.filter((f) => f.lezione === lezione.id);
-const altroHref = contesto === 'libro' ? `/cammino/${lezione.id}/` : `/libro/${lezione.id}/`;
+const altroHref = contesto === 'libro' ? `${P}/cammino/${lezione.id}/` : `${P}/libro/${lezione.id}/`;
 ---
 <Base titolo={d.titolo} descrizione={d.descrizione}>
   <article class="contenitore stretto lezione" data-contesto={contesto} data-lezione={lezione.id} data-guardiano={d.guardiano && d.regione ? d.regione : ''}>
-    <nav class="briciole tenue" aria-label="Percorso">
+    <nav class="briciole tenue" aria-label={t('Percorso', 'Breadcrumb')}>
       {contesto === 'libro'
-        ? <><a href="/libro/">📖 Libro</a> › <a href={`/libro/#${m.slug}`}>{m.nome}</a> › {d.sottoargomento}</>
-        : <><a href="/cammino/">🗺️ Cammino</a> › <a href={`/cammino/#${r!.slugRegione}`}>{r!.regione}</a> › Stanza {d.stanza}</>}
+        ? <><a href={`${P}/libro/`}>📖 {t('Libro', 'Book')}</a> › <a href={`${P}/libro/#${m.slug}`}>{m.nome}</a> › {d.sottoargomento}</>
+        : <><a href={`${P}/cammino/`}>🗺️ {t('Cammino', 'Quest')}</a> › <a href={`${P}/cammino/#${r!.slugRegione}`}>{r!.regione}</a> › {t('Stanza', 'Room')} {d.stanza}</>}
     </nav>
 
     <header class="testa">
@@ -37,68 +41,71 @@ const altroHref = contesto === 'libro' ? `/cammino/${lezione.id}/` : `/libro/${l
       <h1>{d.titolo}</h1>
       <p class="tenue sottotitolo">{d.descrizione}</p>
       <p class="etichette">
-        <span class="pillola" style={`background:${g.colore};color:#fff;border:0`}>{g.icona} Grado {g.numero} · {g.fase}</span>
+        <span class="pillola" style={`background:${g.colore};color:#fff;border:0`}>{g.icona} {t('Grado', 'Grade')} {g.numero} · {g.fase}</span>
         <span class="pillola">{m.nome}</span>
-        <span class="pillola stato" data-stato hidden>✅ Completata</span>
+        <span class="pillola stato" data-stato hidden>✅ {t('Completata', 'Completed')}</span>
       </p>
       {contesto === 'cammino' && <div class="cancello" data-cancello hidden>
-        <p>🌫️ <b>Questa stanza è ancora avvolta nella Nebbia.</b> Conquista prima la stanza precedente
-        {d.regione! > 1 && <> (o batti il Guardiano della regione precedente)</>}. Nel frattempo puoi leggerla liberamente nel <a href={altroHref}>Libro</a>.</p>
+        {l === 'en'
+          ? <p>🌫️ <b>This room is still wrapped in the Fog.</b> Conquer the previous room first
+            {d.regione! > 1 && <> (or defeat the Guardian of the previous region)</>}. Meanwhile you can read it freely in the <a href={altroHref}>Book</a>.</p>
+          : <p>🌫️ <b>Questa stanza è ancora avvolta nella Nebbia.</b> Conquista prima la stanza precedente
+            {d.regione! > 1 && <> (o batti il Guardiano della regione precedente)</>}. Nel frattempo puoi leggerla liberamente nel <a href={altroHref}>Libro</a>.</p>}
       </div>}
     </header>
 
     {d.scenaStanza && <StanzaLoci ambiente={d.scenaStanza.ambiente} loci={d.scenaStanza.loci} nome={d.nomeStanza} contesto={contesto} />}
 
     {d.essenziale && (
-      <div class="vista-scelta" role="group" aria-label="Versione della lezione">
-        <button type="button" data-vista="completa" aria-pressed="true">📜 Completa</button>
-        <button type="button" data-vista="essenziale" aria-pressed="false">✂️ Essenziale</button>
+      <div class="vista-scelta" role="group" aria-label={t('Versione della lezione', 'Lesson version')}>
+        <button type="button" data-vista="completa" aria-pressed="true">📜 {t('Completa', 'Full')}</button>
+        <button type="button" data-vista="essenziale" aria-pressed="false">✂️ {t('Essenziale', 'Essentials')}</button>
       </div>
       <section class="box essenziale" data-box-essenziale hidden>
-        <p class="box-titolo">✂️ L’essenziale</p>
+        <p class="box-titolo">✂️ {t('L’essenziale', 'The essentials')}</p>
         <ol class="idee">{d.essenziale.idee.map((i) => <li set:html={mini(i)} />)}</ol>
-        <p class="esempio-ess"><b>Esempio.</b> <span set:html={mini(d.essenziale.esempio)} /></p>
-        <p class="tenue">Poi mettiti alla prova con la sfida qui sotto. Vuoi più storie, figure ed esperimenti? Passa alla versione <b>Completa</b>.</p>
+        <p class="esempio-ess"><b>{t('Esempio.', 'Example.')}</b> <span set:html={mini(d.essenziale.esempio)} /></p>
+        <p class="tenue" set:html={t('Poi mettiti alla prova con la sfida qui sotto. Vuoi più storie, figure ed esperimenti? Passa alla versione <b>Completa</b>.', 'Then test yourself with the challenge below. Want more stories, pictures and experiments? Switch to the <b>Full</b> version.')} />
       </section>
     )}
 
-    <aside class="box cosa-farai" aria-label="Cosa farai">
-      <p class="box-titolo">📋 Cosa farai in questa lezione</p>
+    <aside class="box cosa-farai" aria-label={t('Cosa farai', 'What you will do')}>
+      <p class="box-titolo">📋 {t('Cosa farai in questa lezione', 'What you will do in this lesson')}</p>
       <ol data-cosa-farai></ol>
-      <p class="tenue">Alla fine c’è una sfida con domande. Puoi riprovare quante volte vuoi.</p>
+      <p class="tenue">{t('Alla fine c’è una sfida con domande. Puoi riprovare quante volte vuoi.', 'At the end there is a challenge with questions. You can try again as many times as you like.')}</p>
     </aside>
 
     <div class="prosa">
       <slot />
     </div>
-    <nav class="passi-focus" data-passi-focus hidden aria-label="Passi della lezione">
+    <nav class="passi-focus" data-passi-focus hidden aria-label={t('Passi della lezione', 'Lesson steps')}>
       <div class="barra" aria-hidden="true"><span data-barra></span></div>
       <div class="pulsanti">
-        <button type="button" class="btn vuoto" data-indietro>← Indietro</button>
+        <button type="button" class="btn vuoto" data-indietro>← {t('Indietro', 'Back')}</button>
         <span data-conta aria-live="polite"></span>
-        <button type="button" class="btn" data-avanti>Avanti →</button>
+        <button type="button" class="btn" data-avanti>{t('Avanti', 'Next')} →</button>
       </div>
     </nav>
 
-    {d.prerequisiti.length > 0 && <p class="tenue">Prima di questa lezione è utile: {d.prerequisiti.map((p, i) => <>{i > 0 && ', '}<a href={`/${contesto}/${p}/`}>{p.split('/').pop()}</a></>)}</p>}
+    {d.prerequisiti.length > 0 && <p class="tenue">{t('Prima di questa lezione è utile', 'Before this lesson it helps to know')}: {d.prerequisiti.map((p, i) => <>{i > 0 && ', '}<a href={`${P}/${contesto}/${p}/`}>{p.split('/').pop()}</a></>)}</p>}
 
     {attrezzi.length > 0 && (
       <aside class="box esempio palestra-link">
-        <p class="box-titolo">🏋️ Vai in palestra</p>
-        <p>Allena questa lezione con esercizi sempre nuovi, anche da stampare:
-          {attrezzi.map((f, i) => <>{i > 0 && ', '}<a href={`/palestra/${f.slug}/`}>{f.titolo}</a></>)}.</p>
+        <p class="box-titolo">🏋️ {t('Vai in palestra', 'Go to the training ground')}</p>
+        <p>{t('Allena questa lezione con esercizi sempre nuovi, anche da stampare:', 'Practise this lesson with ever-new exercises, printable too:')}
+          {attrezzi.map((f, i) => <>{i > 0 && ', '}<a href={href(l, `/palestra/${f.slug}/`)}>{l === 'en' ? (f as any).titoloEn ?? f.titolo : f.titolo}</a></>)}.</p>
       </aside>
     )}
 
     {(d.fonti.length > 0 || d.ispirazione.length > 0) && <Fonti fonti={d.fonti} ispirazione={d.ispirazione} />}
 
-    <nav class="naviga" aria-label="Lezioni vicine">
+    <nav class="naviga" aria-label={t('Lezioni vicine', 'Nearby lessons')}>
       {precedente ? <a class="btn vuoto" href={precedente.href}>← {precedente.titolo}</a> : <span />}
       {successiva && <a class="btn gioco" href={successiva.href} data-successiva>{successiva.titolo} →</a>}
     </nav>
     <p class="altro tenue">
-      {contesto === 'libro' && d.regione ? <>Questa lezione è anche una stanza del <a href={altroHref}>Cammino</a>.</> : null}
-      {contesto === 'cammino' ? <>Vuoi solo studiare? Apri questa lezione nel <a href={altroHref}>Libro</a>.</> : null}
+      {contesto === 'libro' && d.regione ? <>{t('Questa lezione è anche una stanza del', 'This lesson is also a room of the')} <a href={altroHref}>{t('Cammino', 'Quest')}</a>.</> : null}
+      {contesto === 'cammino' ? <>{t('Vuoi solo studiare? Apri questa lezione nel', 'Just want to study? Open this lesson in the')} <a href={altroHref}>{t('Libro', 'Book')}</a>.</> : null}
     </p>
   </article>
   {stanze && <script type="application/json" id="stanze-cammino" set:html={JSON.stringify(stanze)} />}
@@ -148,7 +155,7 @@ const altroHref = contesto === 'libro' ? `/cammino/${lezione.id}/` : `/libro/${l
     let i = 0;
     const mostra = (scorri: boolean) => {
       passi.forEach((gr, k) => gr.forEach((el) => el.classList.toggle('nascosto-focus', k !== i)));
-      conta.textContent = `Passo ${i + 1} di ${passi.length}`;
+      conta.textContent = document.documentElement.lang === 'en' ? `Step ${i + 1} of ${passi.length}` : `Passo ${i + 1} di ${passi.length}`;
       barra.style.width = `${((i + 1) / passi.length) * 100}%`;
       indietro.disabled = i === 0; avanti.disabled = i === passi.length - 1;
       if (scorri) prosa.scrollIntoView({ block: 'start' });

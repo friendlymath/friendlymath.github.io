@@ -1,0 +1,82 @@
+---
+titolo: "Ratios and proportions: the scale map"
+descrizione: "When two quantities grow together, a proportion gives you the missing piece."
+macroargomento: numeri
+sottoargomento: "Ratios and proportions"
+grado: 2
+regione: 2
+stanza: 2
+nomeStanza: "The Cartographer’s Tent"
+distrattore: mercante
+prerequisiti:
+  - numeri/frazioni-equivalenti
+scenaStanza:
+  ambiente: rifugio
+  loci:
+    - { oggetto: mappa, concetto: "A ratio: a comparison by division", ancora: "what-is-a-ratio" }
+    - { oggetto: bilancia, concetto: "Proportion: two equal ratios", ancora: "the-proportion" }
+    - { oggetto: incudine, concetto: "Product of the means = product of the extremes", ancora: "the-fundamental-property" }
+    - { oggetto: cesto, concetto: "More ingredients, more biscuits: direct proportion", ancora: "direct-and-inverse-proportion" }
+ispirazione:
+  - "https://www.youmath.it"
+essenziale:
+  idee:
+    - 'A **ratio** compares two numbers by division: $6 : 3 = 2$.'
+    - 'A **proportion** says that two ratios are equal: $a : b = c : d$.'
+    - 'Golden rule: the **product of the means** equals the **product of the extremes**, $b \times c = a \times d$.'
+    - 'With this rule you find the missing term.'
+  esempio: '$2 : 5 = x : 20$. Means: $5 \times x$; extremes: $2 \times 20 = 40$. So $x = 40 \div 5 = 8$.'
+---
+
+<Scena personaggio="narratore">
+In the Cartographer’s tent there are maps everywhere. One says “scale 1 : 25,000”, another “1 : 100”. The Cartographer sighs:
+“The Fog has mixed up the scales. Now everyone thinks the forest is three fingers long.”
+</Scena>
+
+## What is a ratio
+
+The **ratio** of two numbers is their quotient: the ratio of 6 to 3 is $6 : 3 = 2$. It can also be written as a fraction, $\tfrac{6}{3}$.
+A **scale** is a ratio: “1 : 25,000” means that 1 cm on the map is 25,000 cm (that is, 250 m) in reality.
+
+## The proportion
+
+A **proportion** is an equality between two ratios:
+
+$$
+a : b = c : d \qquad\text{read “a is to b as c is to d”}
+$$
+
+$a$ and $d$ are called the **extremes**, $b$ and $c$ the **means**.
+
+## The fundamental property
+
+In every proportion **the product of the means equals the product of the extremes**: $b \cdot c = a \cdot d$.
+That’s how you find the missing term: in $3 : 4 = x : 20$ you get $4 \cdot x = 3 \cdot 20$, so $x = 60 \div 4 = 15$.
+
+<Esempio titolo="Worked example: a recipe for more people">
+For **4** people you need **300 g** of flour. For **10** people? $4 : 300 = 10 : x \Rightarrow 4x = 3000 \Rightarrow x = 750$ g.
+</Esempio>
+
+## Direct and inverse proportion
+
+- **Direct**: if one quantity doubles, the other doubles too (biscuits and flour). The **ratio** stays constant.
+- **Inverse**: if one doubles, the other halves (workers and days of work). The **product** stays constant.
+
+<Interattivo tipo="proporzionalita" titolo="Direct or inverse?" didascalia="In direct proportion the ratio stays constant (a straight line); in inverse proportion the product stays constant (the area of the orange rectangle)." altezza={340} />
+
+<Attenzione distrattore="mercante">
+“If 3 workers build a wall in 6 days, 6 workers take 12 days: it’s a proportion!” No: more workers, **fewer** days.
+It’s **inverse** proportion: $3 \cdot 6 = 6 \cdot x \Rightarrow x = 3$ days. Before setting up a proportion, always ask yourself: “if one goes up, does the other go up or down?”
+</Attenzione>
+
+<Applicazioni voci={[
+  { ambito: "ingegneria", titolo: "Scale drawings", testo: "In a 1:100 architectural drawing, 1 cm on paper is 1 m in reality: designers and surveyors work with proportions every day." },
+  { ambito: "informatica", titolo: "Resizing a photo", testo: "To avoid stretching a picture, width and height must change in the same proportion: that’s the “keep proportions” padlock in graphics software." },
+  { ambito: "quotidiano", titolo: "Price per kilo", testo: "Supermarket labels show the price per kilo precisely so you can compare different packs: 250 g for €2 costs €8 per kilo." }
+]} />
+
+<Sfida titolo="The Cartographer’s Challenge" domande={[
+  { testo: "Find x: 2 : 5 = 8 : x", risposta: 20, spiegazione: "2 · x = 5 · 8 = 40, so x = 20." },
+  { testo: "On a 1 : 100,000 map, how many real kilometres are 3 cm?", risposta: 3, spiegazione: "3 cm × 100,000 = 300,000 cm = 3,000 m = 3 km." },
+  { testo: "4 taps fill a tank in 6 hours. How many hours do 8 taps take?", risposta: 3, spiegazione: "Inverse proportion: 4 · 6 = 8 · x, x = 3 hours." }
+]} />

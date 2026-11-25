@@ -9,6 +9,10 @@ import { TEXTURE } from '../lib/texture';
 
 interface Props { ambiente: Ambiente; loci: { oggetto: TipoOggetto; concetto: string; ancora?: string }[]; nome?: string; contesto: 'libro' | 'cammino' }
 const { ambiente, loci, nome, contesto } = Astro.props;
+import { nomeOggetto } from '../lib/loci';
+import { linguaDa, traduttore } from '../lib/lingua';
+const lg = linguaDa(Astro.url);
+const t = traduttore(lg);
 
 // posizioni nella stanza (x, y del punto d'appoggio, scala): da sinistra a destra, con profondità
 const POSTI: [number, number, number][][] = [
@@ -33,10 +37,10 @@ const texMuro = { bottega: 'legno', biblioteca: 'carta', rifugio: 'pietra', merc
 const texPav = { bottega: 'legno', biblioteca: 'legno', rifugio: 'legno', mercato: 'pietra', fortezza: 'pietra', radura: 'erba' }[ambiente] as keyof typeof TEXTURE;
 const id = (k: string) => `${k}-${ambiente}`;
 ---
-<section class="stanza-loci" data-stanza-loci aria-label="Il palazzo della memoria">
+<section class="stanza-loci" data-stanza-loci aria-label={t('Il palazzo della memoria', 'The memory palace')}>
   <div class="stanza-titolo">
-    <p class="etichetta">🏛️ Il palazzo della memoria</p>
-    <p class="tenue">Ogni oggetto di questa stanza custodisce un'idea. Guardali, toccali: quando ripenserai alla stanza, le idee torneranno con loro.</p>
+    <p class="etichetta">🏛️ {t('Il palazzo della memoria', 'The memory palace')}</p>
+    <p class="tenue">{t("Ogni oggetto di questa stanza custodisce un'idea. Guardali, toccali: quando ripenserai alla stanza, le idee torneranno con loro.", 'Every object in this room keeps an idea. Look at them, touch them: when you think back to the room, the ideas will come back with them.')}</p>
   </div>
   <svg viewBox="0 0 800 460" class="stanza-svg" role="img" aria-labelledby={`legenda-${ambiente}`}>
     <defs>
@@ -102,7 +106,7 @@ const id = (k: string) => `${k}-${ambiente}`;
       const [x, y, s] = posti[i];
       const yy = MURO.has(l.oggetto) ? y - 40 : y;
       return (
-        <a href={`#${l.ancora ?? ''}`} class="locus" data-ancora={l.ancora ?? ''} data-concetto={l.concetto} aria-label={`${i + 1}. ${l.oggetto}: ${l.concetto}`}>
+        <a href={`#${l.ancora ?? ''}`} class="locus" data-ancora={l.ancora ?? ''} data-concetto={l.concetto} aria-label={`${i + 1}. ${nomeOggetto(l.oggetto, lg)}: ${l.concetto}`}>
           <g transform={`translate(${x} ${yy}) scale(${s})`}>
             <ellipse cx="0" cy="2" rx="62" ry="10" fill="rgba(0,0,0,.18)" />
             <g class="disegno" filter="url(#ombra-oggetto)"><Oggetto tipo={l.oggetto} /></g>
@@ -120,7 +124,7 @@ const id = (k: string) => `${k}-${ambiente}`;
   </svg>
   <ol class="legenda" id={`legenda-${ambiente}`}>
     {loci.map((l, i) => (
-      <li><a href={`#${l.ancora ?? ''}`} data-ancora={l.ancora ?? ''}><span class="n">{i + 1}</span><b>{l.oggetto.charAt(0).toUpperCase() + l.oggetto.slice(1)}</b> → {l.concetto}</a></li>
+      <li><a href={`#${l.ancora ?? ''}`} data-ancora={l.ancora ?? ''}><span class="n">{i + 1}</span><b>{nomeOggetto(l.oggetto, lg).charAt(0).toUpperCase() + nomeOggetto(l.oggetto, lg).slice(1)}</b> → {l.concetto}</a></li>
     ))}
   </ol>
   <p class="nuvola-concetto" data-nuvola hidden></p>
@@ -129,7 +133,7 @@ const id = (k: string) => `${k}-${ambiente}`;
 <script>
   import { movimentoRidotto } from '../lib/studio';
   const norma = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9π]+/g, '-').replace(/^-|-$/g, '');
-  const speciali: Record<string, string> = { esempio: '.box.esempio', 'errore-tipico': '.box.attenzione', sfida: '.box.sfida', interattivo: '.interattivo', curiosita: '.box.curiosita' };
+  const speciali: Record<string, string> = { esempio: '.box.esempio', 'errore-tipico': '.box.attenzione', sfida: '.box.sfida', interattivo: '.interattivo', curiosita: '.box.curiosita', storia: '.box.storia' };
   const trova = (ancora: string): HTMLElement | null => {
     if (!ancora) return document.querySelector('.prosa');
     if (speciali[ancora]) return document.querySelector(speciali[ancora]);

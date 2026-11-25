@@ -1,5 +1,9 @@
 ---
-import { DISTRATTORI, type SlugDistrattore } from '../../lib/mondo';
+import { distrattoriL, type SlugDistrattore } from '../../lib/mondo';
+import { linguaDa, traduttore } from '../../lib/lingua';
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
+const DISTRATTORI = distrattoriL(l);
 import Ritratto from '../arte/Ritratto.astro';
 interface Props { distrattore?: SlugDistrattore; }
 const d = Astro.props.distrattore ? DISTRATTORI[Astro.props.distrattore] : undefined;
@@ -8,7 +12,7 @@ const nome = d ? d.nome.charAt(0).toUpperCase() + d.nome.slice(1) : undefined;
 <aside class="box attenzione">
   <p class="box-titolo">
     <span aria-hidden="true">⚠️</span>
-    {d ? (<><span class="solo-cammino">Arriva {d.nome}!</span><span class="solo-libro">Errore tipico</span></>) : 'Errore tipico'}
+    {d ? (<><span class="solo-cammino">{t('Arriva', 'Here comes')} {d.nome}!</span><span class="solo-libro">{t('Errore tipico', 'Common mistake')}</span></>) : t('Errore tipico', 'Common mistake')}
   </p>
   {d && <div class="solo-cammino riga-distrattore"><Ritratto chi={Astro.props.distrattore!} taglia={64} alt={nome} /><p class="motto"><b>{nome}</b>: <i>{d.motto}</i></p></div>}
   <slot />

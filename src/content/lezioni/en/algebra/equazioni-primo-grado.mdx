@@ -1,0 +1,91 @@
+---
+titolo: "Linear equations: the scales that never lie"
+descrizione: "Finding the mystery number x by subtracting and dividing, always on both sides."
+macroargomento: algebra
+sottoargomento: "Equations"
+grado: 3
+regione: 3
+stanza: 1
+nomeStanza: "The Refuge of the Scales"
+distrattore: mercante
+fonti:
+  - titolo: "Abu Ja'far Muhammad ibn Musa Al-Khwarizmi"
+    url: "https://mathshistory.st-andrews.ac.uk/Biographies/Al-Khwarizmi/"
+    editore: "MacTutor History of Mathematics, University of St Andrews"
+    autore: "J J O'Connor, E F Robertson"
+    consultato: "2026-11-22"
+ispirazione:
+  - "https://www.youmath.it"
+  - "https://matepratica.it"
+scenaStanza:
+  ambiente: rifugio
+  loci:
+    - { oggetto: lavagna, concetto: "An equation: an equality with a mystery number", ancora: "what-is-an-equation" }
+    - { oggetto: bilancia, concetto: "Whatever you do to one pan, you do to the other", ancora: "the-balance-principle" }
+    - { oggetto: incudine, concetto: "The Merchant: a term that ‘moves across’ changes sign", ancora: "errore-tipico" }
+    - { oggetto: pergamena, concetto: "al-jabr: where the word algebra comes from", ancora: "storia" }
+essenziale:
+  idee:
+    - 'An **equation** is an equality with an unknown number, $x$.'
+    - 'Solving it means finding the value of $x$ that makes it true.'
+    - 'Like a pair of **scales**: if you do the same thing to both sides, it stays balanced.'
+    - 'Goal: leave $x$ on its own on one side.'
+  esempio: '$2x + 3 = 11$. Take $3$ from both sides: $2x = 8$. Divide both by $2$: $x = 4$. Check: $2 \times 4 + 3 = 11$ ✔'
+---
+
+<Scena personaggio="fabbro">
+“Bah! Another one who wants to climb the Algebra Mountains with a short sword,” grumbles the Blacksmith.
+“Up there things have no names: they’re all called **x**. I’ll forge you one tool, just one: the **scales**.
+One single rule, written in fire: *whatever you do to one pan, you do to the other too*.”
+</Scena>
+
+## What is an equation
+
+An equation is an **equality with an unknown number**, which we usually call $x$. For example:
+
+$$
+3x + 2 = 11
+$$
+
+It reads: “three times a number, plus two, makes eleven”. **Solving it** means finding that number.
+
+## The balance principle
+
+Think of the equals sign as a pair of scales in balance. You can do anything you like, **as long as you do it to both pans**:
+
+1. **Take away** 2 from both sides: $3x + 2 - 2 = 11 - 2$, that is $3x = 9$.
+2. **Divide** both sides by 3: $x = 3$.
+3. **Check**: $3 \cdot 3 + 2 = 11$. ✔️
+
+<Interattivo tipo="bilancia" titolo="The Blacksmith’s scales" didascalia="Purple = one x, orange = one unit. Take the same weight off both pans, then divide: the scales always stay balanced." altezza={320} />
+
+<Attenzione distrattore="mercante">
+“The 2 moves to the other side and **stays +2**!” shouts the Merchant. No: when you “move” a term to the other side of the equals sign, you are really
+**taking it away from both pans**, so it changes sign: $3x + 2 = 11 \Rightarrow 3x = 11 - 2$.
+Second rotten shortcut: “The 3 moves across and becomes −3!” The 3 multiplies $x$: to remove it you **divide**, $x = 9 \div 3$.
+</Attenzione>
+
+<Esempio titolo="Worked example: the taxi">
+A taxi costs **€3** to start plus **€2** for every kilometre. You paid **€19**. How many kilometres did you travel?
+$2x + 3 = 19 \Rightarrow 2x = 16 \Rightarrow x = 8$. You travelled **8 km**.
+</Esempio>
+
+<Storia titolo="Where the word “algebra” comes from">
+In the 9th century, in Baghdad, at the court of the caliph al-Ma’mun, the mathematician **al-Khwarizmi** wrote a treatise on equations whose title contains the word
+*al-jabr*, “completion”: the operation that removes negative terms from an equation. That’s where **algebra** comes from.
+The other operation, *al-muqabala*, “balancing”, removes equal quantities from both sides: exactly our scales.
+His name, Latinised as *Algoritmi*, also gave us the word **algorithm**. Read his <a href="/en/storia/al-khwarizmi/">history page</a>.
+</Storia>
+
+<Applicazioni voci={[
+  { ambito: "quotidiano", titolo: "Tariffs", testo: "Taxis, subscriptions, bills: “fixed charge + cost per use”. Working out how much you used from how much you paid is a linear equation." },
+  { ambito: "informatica", titolo: "Converting temperatures", testo: "Weather apps convert °C to °F with F = 1.8 · C + 32. To go back you solve the equation: C = (F − 32) ÷ 1.8." },
+  { ambito: "ingegneria", titolo: "Motion at constant speed", testo: "A train at constant speed: s = s₀ + v·t. “When does it arrive?” is a linear equation in the unknown t." }
+]} />
+
+<Sfida titolo="The Refuge Challenge" domande={[
+  { testo: "Solve: x + 7 = 12", risposta: 5, spiegazione: "Take 7 from both sides: x = 5." },
+  { testo: "Solve: 4x = 28", risposta: 7, spiegazione: "Divide both sides by 4: x = 7." },
+  { testo: "Solve: 5x − 3 = 22", risposta: 5, spiegazione: "Add 3: 5x = 25. Divide by 5: x = 5." },
+  { testo: "In 2x + 6 = 10, what is the correct first step?", opzioni: ["Take 6 from both sides", "Take 6 from the left only", "Divide only the x by 2"], risposta: 0, spiegazione: "Every operation goes on both pans: 2x = 4, then x = 2." }
+]} />

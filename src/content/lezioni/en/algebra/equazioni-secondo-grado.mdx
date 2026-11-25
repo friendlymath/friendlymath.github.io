@@ -1,0 +1,92 @@
+---
+titolo: "Quadratic equations: the catapult formula"
+descrizione: "ax² + bx + c = 0: the discriminant tells you in advance how many solutions there are, the formula gives them to you."
+macroargomento: algebra
+sottoargomento: "Equations"
+grado: 3
+regione: 3
+stanza: 3
+nomeStanza: "The Catapult Workshop"
+distrattore: barone
+prerequisiti:
+  - algebra/equazioni-primo-grado
+  - algebra/prodotti-notevoli
+scenaStanza:
+  ambiente: fortezza
+  loci:
+    - { oggetto: catapulta, concetto: "The trajectory is a parabola", ancora: "where-they-meet" }
+    - { oggetto: lavagna, concetto: "The form ax² + bx + c = 0", ancora: "the-general-form" }
+    - { oggetto: cannocchiale, concetto: "The discriminant Δ = b² − 4ac predicts the solutions", ancora: "the-discriminant" }
+    - { oggetto: pergamena, concetto: "The quadratic formula", ancora: "the-quadratic-formula" }
+ispirazione:
+  - "https://www.youmath.it"
+  - "https://www.matematika.it"
+essenziale:
+  idee:
+    - 'They have the form $ax^2 + bx + c = 0$, with $a$ not zero.'
+    - 'The **discriminant** $\Delta = b^2 - 4ac$ tells you how many solutions there are: two if it is positive, one if it is zero, none (among real numbers) if it is negative.'
+    - 'The **quadratic formula**: $x = \dfrac{-b \pm \sqrt{\Delta}}{2a}$.'
+  esempio: '$x^2 - 5x + 6 = 0$: $\Delta = 25 - 24 = 1$, so $x = \dfrac{5 \pm 1}{2}$, that is $x = 3$ or $x = 2$.'
+---
+
+<Scena personaggio="fabbro">
+I use this catapult to throw broken hammers over the walls. The stone rises, slows down, falls: it draws a curve called a **parabola**.
+The question is always the same: **where does it hit the ground?** To find out you need a quadratic equation. And a formula I’ll forge for you right now.
+</Scena>
+
+## The general form
+
+A quadratic equation is written like this:
+
+$$
+ax^2 + bx + c = 0 \qquad (a \neq 0)
+$$
+
+## The discriminant
+
+Before solving, work out the **discriminant**:
+
+$$
+\Delta = b^2 - 4ac
+$$
+
+- $\Delta > 0$: **two** different solutions.
+- $\Delta = 0$: **one** solution (two coinciding solutions).
+- $\Delta < 0$: **no** solutions among the real numbers.
+
+## The quadratic formula
+
+$$
+x = \frac{-b \pm \sqrt{\Delta}}{2a}
+$$
+
+Example: $x^2 - 5x + 6 = 0$. Here $a = 1, b = -5, c = 6$, so $\Delta = 25 - 24 = 1$ and $x = \tfrac{5 \pm 1}{2}$: the solutions are $x = 3$ and $x = 2$.
+Check: $9 - 15 + 6 = 0$ ✔️ and $4 - 10 + 6 = 0$ ✔️.
+
+## Where they meet
+
+The solutions are the points where the parabola $y = ax^2 + bx + c$ **touches the x-axis**: two points, just one (it barely touches it) or none (it passes above or below).
+
+<Interattivo tipo="parabola" titolo="The catapult: change a, b, c" didascalia="Move the sliders: watch the sign of the discriminant and the points where the parabola touches the x-axis." altezza={420} />
+
+<Esempio titolo="Worked example: the fence">
+You have 20 m of fencing for a rectangular pen and you want an area of 24 m². If one side is $x$, the other is $10 - x$: $x(10 - x) = 24 \Rightarrow x^2 - 10x + 24 = 0$.
+$\Delta = 100 - 96 = 4$, $x = \tfrac{10 \pm 2}{2}$: the pen is $6 \times 4$ m.
+</Esempio>
+
+<Attenzione distrattore="barone">
+The Baron of Panic sees the formula and shouts: “Too many letters, it’s impossible!” Calm down: it’s just a three-step recipe. **1)** read $a$, $b$, $c$ with their signs; **2)** work out $\Delta$; **3)** put everything into the formula.
+The most common mistake is forgetting the sign of $b$: if $b = -5$, then $-b = +5$ and $b^2 = 25$.
+</Attenzione>
+
+<Applicazioni voci={[
+  { ambito: "quotidiano", titolo: "Braking", testo: "Braking distance grows with the square of the speed: at twice the speed you need roughly four times the distance to stop." },
+  { ambito: "informatica", titolo: "3D graphics", testo: "To draw a 3D scene, the computer works out where a ray of light hits a sphere: it’s a quadratic equation, solved millions of times a second." },
+  { ambito: "ingegneria", titolo: "Trajectories and cables", testo: "A thrown object traces a parabola, and the cable of a suspension bridge with an even load takes a shape very close to a parabola." }
+]} />
+
+<Sfida titolo="The Catapult Challenge" domande={[
+  { testo: "Work out the discriminant of x² + 4x + 4 = 0.", risposta: 0, spiegazione: "Δ = 16 − 16 = 0: just one solution, x = −2." },
+  { testo: "How many real solutions does x² + x + 1 = 0 have?", opzioni: ["Two", "One", "None"], risposta: 2, spiegazione: "Δ = 1 − 4 = −3 < 0: no real solutions." },
+  { testo: "Solve x² − 7x + 12 = 0. Write the larger solution.", risposta: 4, spiegazione: "Δ = 49 − 48 = 1, x = (7 ± 1)/2 → 4 and 3." }
+]} />

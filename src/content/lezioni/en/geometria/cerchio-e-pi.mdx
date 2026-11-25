@@ -1,0 +1,78 @@
+---
+titolo: "Circumference, circle and the number π"
+descrizione: "Why every wheel, big or small, hides the same number: 3.14159…"
+macroargomento: geometria
+sottoargomento: "Circle"
+grado: 2
+scenaStanza:
+  ambiente: rifugio
+  loci:
+    - { oggetto: ruota, concetto: "Circumference = 2πr", ancora: "the-circumference" }
+    - { oggetto: pizza, concetto: "Area of a circle = πr²", ancora: "the-area-of-a-circle" }
+    - { oggetto: pergamena, concetto: "π: a number that never ends", ancora: "the-number-π" }
+    - { oggetto: dadi, concetto: "Finding π by chance: Buffon’s needle", ancora: "the-number-π" }
+ispirazione:
+  - "https://www.matematika.it"
+essenziale:
+  idee:
+    - '**π** (pi) is the ratio between the edge of a circle and its diameter: about $3.14$, for every circle.'
+    - 'The **circumference** (the edge) is $C = 2\pi r$, where $r$ is the radius.'
+    - 'The **area** of the circle is $A = \pi r^2$.'
+    - 'The **diameter** is twice the radius.'
+  esempio: 'Radius $10$ cm: circumference $2 \times 3.14 \times 10 \approx 62.8$ cm; area $3.14 \times 10^2 = 314$ cm².'
+---
+
+## The number π
+
+Take any wheel, measure the distance round it and divide by the diameter: you always get the same number, **π** (pi).
+
+$$
+\pi = 3.14159\,26535\ldots
+$$
+
+π is **irrational**: its decimal digits never end and never repeat. In calculations we often use $3.14$.
+
+## The circumference
+
+The **circumference** is the “edge” of the circle. Its length is:
+
+$$
+C = 2\pi r = \pi d
+$$
+
+where $r$ is the radius and $d = 2r$ the diameter.
+
+<Interattivo tipo="ruota" titolo="Unroll the circumference" didascalia="A wheel with diameter 1 makes one full turn: the distance travelled is π." altezza={230} />
+
+## The area of a circle
+
+$$
+A = \pi r^2
+$$
+
+One way to see it: cut the circle into lots of thin slices and fit them together, one pointing up and one pointing down. You get almost a rectangle of height $r$ and width half the circumference, $\pi r$. Area: $\pi r \cdot r = \pi r^2$.
+
+<Esempio titolo="Worked example: which pizza is the better deal?">
+One **30 cm** pizza or two **20 cm** pizzas? Areas: $\pi \cdot 15^2 \approx 707$ cm² against $2 \cdot \pi \cdot 10^2 \approx 628$ cm².
+The big pizza wins: doubling the diameter **quadruples** the area.
+</Esempio>
+
+<Attenzione>
+Common mistake: using the **diameter** instead of the **radius** in the area formula. With $d = 10$ cm the radius is 5 cm: $A = \pi \cdot 25 \approx 78.5$ cm², not $\pi \cdot 100$.
+</Attenzione>
+
+<Curiosita>
+You can even estimate π by dropping needles at random on a striped floor: try <a href="/en/esperimenti/ago-di-buffon/">Buffon’s needle</a>.
+</Curiosita>
+
+<Applicazioni voci={[
+  { ambito: "quotidiano", titolo: "The bike wheel", testo: "With every turn, a wheel of diameter d moves forward π · d: a 70 cm wheel covers about 2.2 m per turn. That’s how a bike computer works." },
+  { ambito: "ingegneria", titolo: "Pipes", testo: "How much a pipe can carry depends on the area of its cross-section, π r²: doubling the radius quadruples the cross-section." },
+  { ambito: "informatica", titolo: "Testing computers", testo: "Computing π to billions of digits is a classic way to test the power and reliability of supercomputers." }
+]} />
+
+<Sfida domande={[
+  { testo: "A circle has a radius of 10 cm. How long is the circumference (use π = 3.14)?", risposta: 62.8, tolleranza: 0.05, spiegazione: "C = 2 · 3.14 · 10 = 62.8 cm." },
+  { testo: "Area of a circle with radius 3 (use π = 3.14)?", risposta: 28.26, tolleranza: 0.05, spiegazione: "A = 3.14 · 9 = 28.26." },
+  { testo: "If the radius doubles, the area…", opzioni: ["doubles", "triples", "quadruples"], risposta: 2, spiegazione: "π(2r)² = 4πr²: the area becomes 4 times bigger." }
+]} />

@@ -1,0 +1,86 @@
+---
+titolo: "Equivalent fractions: the same pizza cut in different ways"
+descrizione: "Why 1/2, 2/4 and 3/6 are the same number, and how to spot it in a moment."
+macroargomento: numeri
+sottoargomento: "Fractions"
+grado: 2
+regione: 2
+stanza: 1
+nomeStanza: "The Pizza Clearing"
+distrattore: mercante
+prerequisiti:
+  - numeri/valore-posizionale
+ispirazione:
+  - "https://www.youmath.it"
+  - "https://www.matematika.it"
+scenaStanza:
+  ambiente: radura
+  loci:
+    - { oggetto: pizza, concetto: "Numerator and denominator: slices taken out of total slices", ancora: "what-is-a-fraction" }
+    - { oggetto: forno, concetto: "Multiply top and bottom: same pizza, smaller slices", ancora: "equivalent-fractions" }
+    - { oggetto: bilancia, concetto: "Cross-multiplication: a·d = b·c", ancora: "the-cross-multiplication-trick" }
+    - { oggetto: calderone, concetto: "Simplify by dividing by the GCD", ancora: "curiosita" }
+essenziale:
+  idee:
+    - 'A **fraction** stands for equal parts of a whole: in $\tfrac{3}{4}$ the whole is split into 4 parts and you take 3.'
+    - 'Two fractions are **equivalent** if they stand for the same amount.'
+    - 'Multiply or divide **top and bottom by the same number** and you get an equivalent fraction.'
+    - 'Quick check: $\tfrac{a}{b} = \tfrac{c}{d}$ when $a \times d = b \times c$.'
+  esempio: '$\tfrac{1}{2} = \tfrac{2}{4} = \tfrac{4}{8}$: half a pizza is always half, however you slice it.'
+---
+
+<Scena personaggio="civetta">
+In the Forest of Fractions three gnomes are arguing about who ate the most pizza. The first had **1 slice out of 2**, the second **2 out of 4**,
+the third **4 out of 8**. “They ate the same!” I say. Then I correct myself. Then I correct my correction, and I was right the first time. Come on, let’s check together.
+</Scena>
+
+## What is a fraction
+
+A fraction $\dfrac{a}{b}$ says: **split the whole into $b$ equal parts and take $a$ of them**.
+The number underneath is the **denominator** (how many parts you cut), the one on top is the **numerator** (how many parts you take).
+
+## Equivalent fractions
+
+Two fractions are **equivalent** when they stand for **the same amount**, even if they are written differently.
+If you multiply (or divide) the numerator and the denominator **by the same number**, you get an equivalent fraction:
+
+$$
+\frac{1}{2} = \frac{1 \times 2}{2 \times 2} = \frac{2}{4} = \frac{4}{8}
+$$
+
+It’s like cutting every slice in half: there are twice as many slices, but the pizza eaten is the same.
+
+<Interattivo tipo="frazioni" titolo="The magic pizza cutter" didascalia="Move the sliders: when your orange bar fills exactly as much as the blue one, you have found an equivalent fraction." altezza={300} />
+
+## The cross-multiplication trick
+
+To check whether $\dfrac{a}{b}$ and $\dfrac{c}{d}$ are equivalent, just check that $a \times d = b \times c$.
+Example: $\dfrac{3}{4}$ and $\dfrac{9}{12}$ → $3 \times 12 = 36$ and $4 \times 9 = 36$. Equal: equivalent!
+
+<Esempio titolo="Worked example: halving a recipe">
+A recipe asks for **3/4** of a litre of milk, but your measuring jug only has **1/8** marks.
+How many eighths do you need? $\dfrac{3}{4} = \dfrac{3 \times 2}{4 \times 2} = \dfrac{6}{8}$: fill the jug up to the **sixth mark**.
+</Esempio>
+
+<Attenzione distrattore="mercante">
+The Merchant offers his favourite rule: “To get an equivalent fraction, **add** the same number on top and bottom!”
+Try it: $\dfrac{1}{2} \to \dfrac{1+1}{2+1} = \dfrac{2}{3}$. But 2/3 is more than half a pizza! Adding changes the amount.
+Only **multiplying or dividing** by the same (non-zero) number works.
+</Attenzione>
+
+<Curiosita>
+Simplifying a fraction means finding its “shortest version”: you divide top and bottom by their **greatest common divisor** (GCD, also called the highest common factor).
+For example $\dfrac{18}{24}$: the GCD of 18 and 24 is 6, so $\dfrac{18}{24} = \dfrac{3}{4}$.
+</Curiosita>
+
+<Applicazioni voci={[
+  { ambito: "informatica", titolo: "The 16:9 format", testo: "A 1920 × 1080 screen and a 1280 × 720 one have the same shape: 1920/1080 and 1280/720 are both equivalent to 16/9." },
+  { ambito: "quotidiano", titolo: "Music", testo: "In music a half note lasts as long as two quarter notes: rhythm is made of equivalent fractions." },
+  { ambito: "quotidiano", titolo: "Recipes", testo: "“Half a litre” or “two quarters of a litre” of milk: same amount, different measuring cups." }
+]} />
+
+<Sfida titolo="The Clearing Challenge" domande={[
+  { testo: "Which fraction is equivalent to 2/3?", opzioni: ["3/4", "4/6", "2/6"], risposta: 1, spiegazione: "2/3 = (2×2)/(3×2) = 4/6." },
+  { testo: "Complete: 3/5 = ?/20 (write the numerator)", risposta: 12, spiegazione: "From 5 to 20 you multiply by 4: 3 × 4 = 12." },
+  { testo: "Simplify 15/25 to its lowest terms. What do you get?", opzioni: ["3/5", "5/3", "1/2"], risposta: 0, spiegazione: "The GCD of 15 and 25 is 5: 15/5 = 3, 25/5 = 5." }
+]} />

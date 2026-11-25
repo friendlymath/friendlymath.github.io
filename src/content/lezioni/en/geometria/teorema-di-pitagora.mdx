@@ -1,0 +1,71 @@
+---
+titolo: "Pythagoras’ theorem, hands-on"
+descrizione: "In a right-angled triangle, the square on the hypotenuse is as big as the squares on the other two sides put together."
+macroargomento: geometria
+sottoargomento: "Triangles"
+grado: 2
+ispirazione:
+  - "https://www.youmath.it"
+  - "https://www.matematika.it"
+scenaStanza:
+  ambiente: bottega
+  loci:
+    - { oggetto: scacchiera, concetto: "a² + b² = c²: the squares built on the sides", ancora: "the-statement" }
+    - { oggetto: torre, concetto: "Finding the hypotenuse or a leg", ancora: "how-to-use-it" }
+    - { oggetto: incudine, concetto: "The ladder and the builders’ 3-4-5 rule", ancora: "esempio" }
+    - { oggetto: specchio, concetto: "√(a² + b²) is not a + b", ancora: "errore-tipico" }
+essenziale:
+  idee:
+    - 'It only works in **right-angled triangles** (with a $90°$ angle).'
+    - 'The two sides that form the right angle are the **legs**; the longest side, opposite it, is the **hypotenuse**.'
+    - 'The theorem: $a^2 + b^2 = c^2$, where $c$ is the hypotenuse.'
+    - 'To find the hypotenuse, take the **square root** of $a^2 + b^2$.'
+  esempio: 'Legs $3$ and $4$: $3^2 + 4^2 = 9 + 16 = 25$, and $\sqrt{25} = 5$. The hypotenuse is $5$.'
+---
+
+## The statement
+
+In a **right-angled triangle** we call the two sides that form the right angle the **legs** and the opposite side, the longest one, the **hypotenuse**.
+The theorem says:
+
+$$
+a^2 + b^2 = c^2
+$$
+
+where $a$ and $b$ are the legs and $c$ is the hypotenuse. In pictures: **the area of the square on the hypotenuse equals the sum of the areas of the squares on the legs**.
+
+<Interattivo tipo="pitagora" titolo="Drag vertices A and B" didascalia="Move the orange points: the areas of the three squares change, but the two small ones always add up to the big one." altezza={460} />
+
+## How to use it
+
+**Finding the hypotenuse.** Legs 3 and 4: $c = \sqrt{3^2 + 4^2} = \sqrt{9 + 16} = \sqrt{25} = 5$.
+
+**Finding a leg.** Hypotenuse 13 and leg 5: $b = \sqrt{13^2 - 5^2} = \sqrt{169 - 25} = \sqrt{144} = 12$.
+
+<Esempio titolo="Worked example: the ladder against the wall">
+A **5 m** ladder leans against a wall, with its foot **3 m** from the wall. How high does it reach?
+The ladder is the hypotenuse: $h = \sqrt{5^2 - 3^2} = \sqrt{16} = 4$ m.
+Builders do the same calculation to check that a corner is truly square: they mark 3 and 4 on the two sides and check that the diagonal measures 5.
+</Esempio>
+
+<Attenzione>
+Common mistake: thinking that $\sqrt{a^2 + b^2} = a + b$. With 3 and 4 you’d get 7 instead of 5! The root of a sum is **not** the sum of the roots.
+And careful: the theorem works **only** for right-angled triangles.
+</Attenzione>
+
+<Curiosita titolo="Pythagorean triples">
+Three whole numbers satisfying $a^2 + b^2 = c^2$ are called a **Pythagorean triple**: (3, 4, 5), (5, 12, 13), (8, 15, 17)…
+Multiply a triple by the same number and you get another one: (6, 8, 10) is (3, 4, 5) doubled.
+</Curiosita>
+
+<Applicazioni voci={[
+  { ambito: "quotidiano", titolo: "TV inches", testo: "A screen’s “inches” measure its diagonal: you get it from the width and height with Pythagoras’ theorem." },
+  { ambito: "ingegneria", titolo: "Squaring a wall", testo: "Builders and surveyors check right angles with the 3-4-5 rule: if the diagonal measures 5, the angle is a right angle." },
+  { ambito: "informatica", titolo: "Distances in games and maps", testo: "The distance between two points (x₁, y₁) and (x₂, y₂) is √((x₂−x₁)² + (y₂−y₁)²): video games, map apps and robots all use it." }
+]} />
+
+<Sfida domande={[
+  { testo: "Legs 6 and 8: how long is the hypotenuse?", risposta: 10, spiegazione: "√(36 + 64) = √100 = 10." },
+  { testo: "Hypotenuse 10 and one leg 6: how long is the other leg?", risposta: 8, spiegazione: "√(100 − 36) = √64 = 8." },
+  { testo: "Is a triangle with sides 5, 6, 8 right-angled?", opzioni: ["Yes", "No"], risposta: 1, spiegazione: "25 + 36 = 61, but 8² = 64: it is not right-angled." }
+]} />

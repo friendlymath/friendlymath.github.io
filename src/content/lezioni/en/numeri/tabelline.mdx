@@ -1,0 +1,75 @@
+---
+titolo: "Times tables: multiplication as a shortcut"
+descrizione: "Multiplying means adding the same number many times. Times tables are the building blocks to keep in your pocket."
+macroargomento: numeri
+sottoargomento: "Operations"
+grado: 1
+regione: 1
+stanza: 2
+nomeStanza: "The Chessboard Hall"
+distrattore: sirena
+prerequisiti:
+  - numeri/valore-posizionale
+scenaStanza:
+  ambiente: biblioteca
+  loci:
+    - { oggetto: scacchiera, concetto: "The times table grid: rows × columns", ancora: "the-times-table-grid" }
+    - { oggetto: cesto, concetto: "Multiplying = adding equal groups", ancora: "multiplying-means-adding-equal-groups" }
+    - { oggetto: specchio, concetto: "3 × 4 = 4 × 3: the commutative property", ancora: "tricks-to-remember-them" }
+    - { oggetto: clessidra, concetto: "The Siren of Later: practise a little every day", ancora: "errore-tipico" }
+ispirazione:
+  - "https://matepratica.it"
+essenziale:
+  idee:
+    - 'Multiplying means **adding equal groups**: $3 \times 4$ is 3 groups of 4.'
+    - 'The order doesn’t matter: $3 \times 4 = 4 \times 3$. So the tables you need to remember are halved.'
+    - 'The **times table grid** collects every product: you can always look it up.'
+    - 'Tricks: for ×10 add a zero; for ×5 take half of ×10; for ×9 do ×10 and take the number away once.'
+  esempio: '$9 \times 7$: first $10 \times 7 = 70$, then take away $7$. Result: $63$.'
+---
+
+<Scena personaggio="civetta">
+Welcome to the Chessboard Hall! Here every square holds a number, and the numbers hold hands in rows and columns.
+I know all my times tables. Except the 7s. And the 8s. All right, let’s go over them together.
+</Scena>
+
+## Multiplying means adding equal groups
+
+If you have **4 bags** with **3 sweets** each, how many sweets do you have? You can add: $3 + 3 + 3 + 3 = 12$.
+Or, much faster, **multiply**: $4 \times 3 = 12$. The first number says *how many groups*, the second *how many in each group*.
+
+<Esempio titolo="Worked example: eggs">
+A box holds **6** eggs. You buy **5** boxes: $5 \times 6 = 30$ eggs. Nobody wants to count them one by one!
+</Esempio>
+
+## The times table grid
+
+The table of all the times tables is called the **multiplication grid** (in Italy, the “Pythagorean table”): where the row of 3 meets the column of 4 you find $12$.
+Try exploring it: the numbers along the diagonal ($1, 4, 9, 16, 25, \dots$) are the **square numbers**.
+
+<Interattivo tipo="tabelline" titolo="The magic chessboard" didascalia="Hover over (or tap) a square: you see the multiplication and the rectangle of squares that represents it." altezza={420} />
+
+## Tricks to remember them
+
+- **Order doesn’t matter**: $3 \times 4 = 4 \times 3$ (commutative property). So there are half as many tables to learn!
+- **×10**: add a zero. $7 \times 10 = 70$.
+- **×5**: it’s half of ×10. $8 \times 5 = 80 \div 2 = 40$.
+- **×9**: $9 \times 7 = 70 - 7 = 63$. And the digits of the answer always add up to 9 ($6 + 3 = 9$).
+- **×2**: it’s double. **×4**: double the double.
+
+<Attenzione distrattore="sirena">
+“Times tables? You’ll learn them all tomorrow, in one go!” Sadly memory doesn’t work like that: it works best **a little and often**.
+Five minutes a day beat an hour a week. The <a href="/en/palestra/">Training Ground</a> is made just for that.
+</Attenzione>
+
+<Applicazioni voci={[
+  { ambito: "informatica", titolo: "Screen pixels", testo: "A Full HD screen has 1920 columns and 1080 rows of pixels: 1920 × 1080 = 2,073,600 coloured dots." },
+  { ambito: "ingegneria", titolo: "Tiles and bricks", testo: "A wall of 12 rows of 25 bricks needs 12 × 25 = 300 bricks: rows times columns, just like the multiplication grid." },
+  { ambito: "quotidiano", titolo: "Shopping", testo: "4 packs of yoghurt at €2 each: 4 × 2 = €8. Every receipt is full of times tables." }
+]} />
+
+<Sfida titolo="The Chessboard Challenge" domande={[
+  { testo: "What is 7 × 8?", risposta: 56, spiegazione: "7 × 8 = 56. A trick: 5, 6, 7, 8 → 56 = 7 × 8." },
+  { testo: "What is 9 × 6?", risposta: 54, spiegazione: "9 × 6 = 60 − 6 = 54." },
+  { testo: "4 groups of 5 are the same as…", opzioni: ["5 groups of 4", "4 groups of 4", "9 groups of 1"], risposta: 0, spiegazione: "4 × 5 = 5 × 4 = 20: changing the order of the factors doesn’t change the product." }
+]} />

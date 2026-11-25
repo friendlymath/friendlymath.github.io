@@ -1,0 +1,77 @@
+---
+titolo: "Percentages: discounts, marks and interest"
+descrizione: "25% is just a fancy way of saying 25 out of 100. With one trick, you can work out discounts in your head."
+macroargomento: numeri
+sottoargomento: "Ratios and proportions"
+grado: 2
+regione: 2
+stanza: 3
+nomeStanza: "The Coin Market"
+distrattore: mercante
+prerequisiti:
+  - numeri/proporzioni
+scenaStanza:
+  ambiente: mercato
+  loci:
+    - { oggetto: forziere, concetto: "Per cent = out of a hundred", ancora: "per-cent-means-out-of-a-hundred" }
+    - { oggetto: bilancia, concetto: "Working out p% of a number", ancora: "working-out-a-percentage" }
+    - { oggetto: pergamena, concetto: "Discounts and increases: multiply by 0.8 or 1.2", ancora: "discounts-and-increases-in-one-go" }
+    - { oggetto: clessidra, concetto: "Two 50% discounts don’t make 100%", ancora: "errore-tipico" }
+ispirazione:
+  - "https://www.youmath.it"
+  - "https://matepratica.it"
+essenziale:
+  idee:
+    - '**Per cent** means “out of a hundred”: $25\%$ is $\tfrac{25}{100}$.'
+    - 'To work out $p\%$ of a number: multiply the number by $p$ and divide by $100$.'
+    - 'A $20\%$ **discount** means paying $80\%$ of the price.'
+    - 'A $10\%$ **increase** means multiplying by $1.10$.'
+  esempio: 'A €$40$ T-shirt with $25\%$ off: the discount is $40 \times 25 \div 100 = 10$ €, so you pay €$30$.'
+---
+
+<Scena personaggio="narratore">
+At the Coin Market every stall shouts an offer: “−20%!”, “+10% extra free!”, “Two discounts for the price of one!”.
+The Shortcut Merchant rubs his hands: it’s his favourite place.
+</Scena>
+
+## Per cent means out of a hundred
+
+The symbol **%** is read “per cent”: $25\% = \tfrac{25}{100} = 0.25$. 100% is the whole, 50% is half, 10% is a tenth.
+
+## Working out a percentage
+
+$p\%$ of a number $N$ is:
+
+$$
+\frac{p}{100} \cdot N
+$$
+
+20% of 80: $\tfrac{20}{100} \cdot 80 = 16$. Mental trick: you get 10% by moving the decimal point one place ($80 \to 8$); 20% is double that: 16.
+
+<Interattivo tipo="sconto" titolo="The discount bar" didascalia="Move the price and the discount: the 100 little squares are the “hundred” in per cent. The green ones are what you save." altezza={300} />
+
+<Esempio titolo="Worked example: the test">
+You answered **18** questions out of **24** correctly. What percentage is that? $\tfrac{18}{24} = 0.75 = 75\%$.
+</Esempio>
+
+## Discounts and increases in one go
+
+- A **20% discount** leaves 80% of the price: multiply by $0.8$. A pair of €60 shoes costs $60 \cdot 0.8 = 48$ €.
+- A **20% increase** takes you to 120%: multiply by $1.2$.
+
+<Attenzione distrattore="mercante">
+“50% off and then another 50% off: it’s free!” Wrong: the second discount applies to the **already discounted** price.
+$100 \cdot 0.5 \cdot 0.5 = 25$: you still pay €25. The total discount is 75%, not 100%. And a 10% increase followed by a 10% discount does **not** bring you back to the starting price: $100 \cdot 1.1 \cdot 0.9 = 99$.
+</Attenzione>
+
+<Applicazioni voci={[
+  { ambito: "quotidiano", titolo: "VAT on the receipt", testo: "In Italy the standard VAT rate is 22%: a product costing €100 before VAT costs €122." },
+  { ambito: "ingegneria", titolo: "The gradient of a road", testo: "A “10% gradient” sign means you climb 10 m for every 100 m travelled horizontally." },
+  { ambito: "informatica", titolo: "Your phone battery", testo: "35% battery means 35 parts out of 100 of a full charge: it’s the percentage you look at most often." }
+]} />
+
+<Sfida titolo="The Market Challenge" domande={[
+  { testo: "What is 15% of 200?", risposta: 30, spiegazione: "10% of 200 = 20; 5% = 10; total 30." },
+  { testo: "An €80 jacket has 25% off. How much do you pay (in euros)?", risposta: 60, spiegazione: "80 · 0.75 = €60." },
+  { testo: "A price goes up by 10% and then down by 10%. Compared with the start it is…", opzioni: ["the same", "lower", "higher"], risposta: 1, spiegazione: "1.1 × 0.9 = 0.99: it is 1% lower." }
+]} />

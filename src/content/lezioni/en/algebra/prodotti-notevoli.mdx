@@ -1,0 +1,77 @@
+---
+titolo: "Special products: the square of a binomial, seen with shapes"
+descrizione: "(a + b)² is not a² + b². A square cut into four pieces shows you why."
+macroargomento: algebra
+sottoargomento: "Algebraic expressions"
+grado: 3
+regione: 3
+stanza: 2
+nomeStanza: "The Hall of Mirrors"
+distrattore: mercante
+prerequisiti:
+  - numeri/potenze
+scenaStanza:
+  ambiente: biblioteca
+  loci:
+    - { oggetto: specchio, concetto: "(a + b)² = a² + 2ab + b²", ancora: "the-square-of-a-binomial" }
+    - { oggetto: scacchiera, concetto: "The square split into four pieces", ancora: "the-proof-with-shapes" }
+    - { oggetto: bilancia, concetto: "Difference of two squares: (a + b)(a − b) = a² − b²", ancora: "difference-of-two-squares" }
+    - { oggetto: incudine, concetto: "Mental arithmetic with special products", ancora: "esempio" }
+ispirazione:
+  - "https://www.youmath.it"
+essenziale:
+  idee:
+    - 'They are multiplications that come up so often they have a ready-made formula.'
+    - '**Square of a binomial**: $(a+b)^2 = a^2 + 2ab + b^2$.'
+    - 'Careful: $(a+b)^2$ is **not** $a^2 + b^2$: the double product $2ab$ is missing.'
+    - '**Difference of two squares**: $(a+b)(a-b) = a^2 - b^2$.'
+  esempio: '$(x+3)^2 = x^2 + 2 \cdot 3 \cdot x + 9 = x^2 + 6x + 9$.'
+---
+
+<Scena personaggio="fabbro">
+Grrr. Every day someone turns up with the wrong hammer: “(a + b) squared is a² + b²!” And every day I show them the mirror.
+Look closely at the square. Count the pieces. Not two: **four**.
+</Scena>
+
+## The square of a binomial
+
+$$
+(a + b)^2 = a^2 + 2ab + b^2
+$$
+
+It reads: **the square of the first, plus twice the product, plus the square of the second**. With a minus: $(a - b)^2 = a^2 - 2ab + b^2$.
+
+## The proof with shapes
+
+Take a square with side $a + b$. Split it with two cuts: you get an $a \times a$ square, a $b \times b$ square and **two rectangles** $a \times b$.
+So the total area is $a^2 + b^2 + 2ab$. The two rectangles are exactly the pieces the Merchant “forgets”.
+
+<Interattivo tipo="binomio" titolo="The square of a binomial" didascalia="Move the sliders to change a and b: the areas of the four pieces always add up to (a + b)²." altezza={380} />
+
+## Difference of two squares
+
+$$
+(a + b)(a - b) = a^2 - b^2
+$$
+
+The “mixed” terms $+ab$ and $-ab$ cancel out. Very handy for mental arithmetic.
+
+<Esempio titolo="Example">
+$21^2 = (20 + 1)^2 = 400 + 40 + 1 = 441$. And $49 \cdot 51 = (50 - 1)(50 + 1) = 2500 - 1 = 2499$. All in your head!
+</Esempio>
+
+<Attenzione distrattore="mercante">
+“$(a + b)^2 = a^2 + b^2$, it’s shorter!” Try it with real numbers: $(3 + 4)^2 = 49$, while $3^2 + 4^2 = 25$. Exactly $2 \cdot 3 \cdot 4 = 24$ is missing.
+</Attenzione>
+
+<Applicazioni voci={[
+  { ambito: "informatica", titolo: "Multiplying fast", testo: "Some algorithms for multiplying huge numbers, such as Karatsuba’s, use similar algebraic tricks precisely to save multiplications." },
+  { ambito: "ingegneria", titolo: "The floor border", testo: "A square room with side a and a border of width b all round: the total area is (a + 2b)², and expanding it tells you at once how much the border weighs." },
+  { ambito: "quotidiano", titolo: "Mental arithmetic", testo: "49 × 51 = 50² − 1 = 2499. Special products are honest shortcuts, not the Merchant’s kind." }
+]} />
+
+<Sfida titolo="The Mirror Challenge" domande={[
+  { testo: "Expand (x + 3)². What is the coefficient of x?", risposta: 6, spiegazione: "(x + 3)² = x² + 6x + 9: the double product is 2 · 3 · x = 6x." },
+  { testo: "Work out 31² in your head.", risposta: 961, spiegazione: "(30 + 1)² = 900 + 60 + 1 = 961." },
+  { testo: "(x + 5)(x − 5) equals…", opzioni: ["x² − 25", "x² + 25", "x² − 10x − 25"], risposta: 0, spiegazione: "Difference of two squares: the square of the first minus the square of the second." }
+]} />

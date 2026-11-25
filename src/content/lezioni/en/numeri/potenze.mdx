@@ -1,0 +1,77 @@
+---
+titolo: "Powers: multiplications that grow fast"
+descrizione: "Base, exponent and the rules for calculating without effort. And why the legend of the chessboard is scary."
+macroargomento: numeri
+sottoargomento: "Operations"
+grado: 2
+scenaStanza:
+  ambiente: biblioteca
+  loci:
+    - { oggetto: torre, concetto: "Base and exponent: a tower of equal factors", ancora: "base-and-exponent" }
+    - { oggetto: scacchiera, concetto: "The explosive growth of powers of 2", ancora: "explosive-growth" }
+    - { oggetto: pergamena, concetto: "The properties of powers", ancora: "the-properties-of-powers" }
+    - { oggetto: sedia, concetto: "Exponent zero: a⁰ = 1", ancora: "exponent-zero-and-one" }
+ispirazione:
+  - "https://www.youmath.it"
+essenziale:
+  idee:
+    - 'A **power** is a repeated multiplication: $2^3 = 2 \times 2 \times 2 = 8$.'
+    - 'The number at the bottom is the **base**, the small one at the top is the **exponent** (how many times you repeat it).'
+    - 'Any number (except zero) to the power of zero is $1$; to the power of one, it is itself.'
+    - 'Same base: in a product the exponents **add up**, $a^m \cdot a^n = a^{m+n}$.'
+  esempio: '$10^3 = 1000$: three zeros, as many as the exponent says.'
+---
+
+## Base and exponent
+
+A **power** is a multiplication of factors that are all the same:
+
+$$
+2^5 = 2 \cdot 2 \cdot 2 \cdot 2 \cdot 2 = 32
+$$
+
+The number at the bottom is the **base** (the repeated factor), the one at the top is the **exponent** (how many times it repeats).
+
+## Exponent zero and one
+
+- $a^1 = a$: just one factor.
+- $a^0 = 1$ for every $a \neq 0$. It looks strange, but it’s needed so that the rules below always work: $\tfrac{a^3}{a^3} = a^{3-3} = a^0$, and we know that a number divided by itself is 1.
+
+## The properties of powers
+
+| Rule | Example |
+|---|---|
+| $a^m \cdot a^n = a^{m+n}$ | $2^3 \cdot 2^4 = 2^7$ |
+| $a^m \div a^n = a^{m-n}$ | $5^6 \div 5^2 = 5^4$ |
+| $(a^m)^n = a^{m \cdot n}$ | $(3^2)^3 = 3^6$ |
+| $a^n \cdot b^n = (a \cdot b)^n$ | $2^3 \cdot 5^3 = 10^3$ |
+
+## Explosive growth
+
+<Curiosita titolo="The legend of the chessboard">
+A legend tells of a wise man who asked, as his reward, for one grain of rice on the first square of a chessboard, 2 on the second, 4 on the third,
+and so on, doubling each time. The last square alone would need $2^{63}$ grains: about 9 billion billion. If a grain weighed 0.025 g, that would be about
+230 billion tonnes of rice, on the last square alone. It’s a legend, but the calculation is real: powers grow explosively.
+</Curiosita>
+
+<Interattivo tipo="potenze" titolo="Doubling versus multiplying by 2" didascalia="Orange: 2 · n grows by 2 at a time. Purple: 2ⁿ doubles at every step. Try taking n up to 20." altezza={320} />
+
+<Esempio titolo="Worked example: news that spreads">
+One person tells a piece of news to 3 friends, each of them tells 3 more, and so on. After 5 “rounds”, $3^5 = 243$ new people hear it in the last round.
+</Esempio>
+
+<Attenzione>
+Common mistake: confusing $2^3$ with $2 \cdot 3$. $2^3 = 8$, while $2 \cdot 3 = 6$. And also: $(-3)^2 = 9$, but $-3^2 = -9$, because the exponent applies only to the 3.
+</Attenzione>
+
+<Applicazioni voci={[
+  { ambito: "informatica", titolo: "Bits and passwords", testo: "Every extra bit doubles the combinations: with 8 bits there are 2⁸ = 256. That’s why a longer password is much harder to guess." },
+  { ambito: "ingegneria", titolo: "Scientific notation", testo: "The Earth–Moon distance is about 3.84 · 10⁸ m: powers of 10 let you write huge (or tiny) numbers without getting lost among the zeros." },
+  { ambito: "quotidiano", titolo: "Compound interest", testo: "Savings that grow by 2% a year are multiplied by 1.02ⁿ after n years: interest on the interest." }
+]} />
+
+<Sfida domande={[
+  { testo: "What is 3⁴?", risposta: 81, spiegazione: "3 · 3 · 3 · 3 = 81." },
+  { testo: "Simplify 2⁵ · 2³ = 2^? (write the exponent)", risposta: 8, spiegazione: "Same base: you add the exponents, 5 + 3 = 8." },
+  { testo: "What is 7⁰?", risposta: 1, spiegazione: "Any non-zero number raised to the power 0 is 1." }
+]} />

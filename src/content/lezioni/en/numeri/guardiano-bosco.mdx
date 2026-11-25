@@ -1,0 +1,62 @@
+---
+titolo: "The Guardian of the Forest: the Slice Witch"
+descrizione: "Review challenge for the Forest of Fractions: equivalence, comparison and simplification."
+macroargomento: numeri
+sottoargomento: "Fractions"
+grado: 2
+regione: 2
+stanza: 4
+guardiano: true
+nomeStanza: "The Slice Witch"
+distrattore: gnomo
+prerequisiti:
+  - numeri/frazioni-equivalenti
+scenaStanza:
+  ambiente: fortezza
+  loci:
+    - { oggetto: calderone, concetto: "The Witch: comparing fractions with the same denominator", ancora: "comparing-two-fractions" }
+    - { oggetto: bilancia, concetto: "Cross-multiplication decides which is bigger", ancora: "comparing-two-fractions" }
+    - { oggetto: forziere, concetto: "The better discount: 1/4 or 3/10?", ancora: "esempio" }
+    - { oggetto: mappa, concetto: "The Forest’s proportions and percentages", ancora: "sfida" }
+essenziale:
+  idee:
+    - 'Two fractions are **equivalent** if you can go from one to the other by multiplying or dividing top and bottom by the same number.'
+    - 'To **compare** $\tfrac{a}{b}$ and $\tfrac{c}{d}$: compare $a \times d$ with $b \times c$.'
+    - 'To **simplify**: divide top and bottom by their greatest common divisor (GCD).'
+    - '**Percentages and proportions**: $p\%$ of a number is number $\times p \div 100$; in a proportion, product of the means = product of the extremes.'
+  esempio: '$\tfrac{2}{3}$ or $\tfrac{3}{5}$? $2 \times 5 = 10$ and $3 \times 3 = 9$: $\tfrac{2}{3}$ is bigger.'
+---
+
+<Scena personaggio="narratore">
+In the middle of the forest, in a little cottage shaped like a cake, lives the Slice Witch. She isn’t wicked: she’s just tired of everyone asking her
+“is 3/4 bigger than 5/8?”. She’ll let you through if you show her you can answer on your own.
+</Scena>
+
+## Comparing two fractions
+
+To find out which fraction is bigger, bring them to the **same denominator** and compare the numerators:
+
+$$
+\frac{3}{4} = \frac{6}{8} \quad\text{and}\quad \frac{6}{8} > \frac{5}{8} \quad\Rightarrow\quad \frac{3}{4} > \frac{5}{8}
+$$
+
+Or use cross-multiplication: $3 \times 8 = 24$ against $4 \times 5 = 20$. The side with the bigger product wins.
+
+<Attenzione distrattore="gnomo">
+The Copycat Gnome slips you a note with all the answers: “Take it, nobody will know!” You will know.
+The Guardian exists precisely so you can discover that **you can do it**. And if you get it wrong, you can try again as many times as you like.
+</Attenzione>
+
+<Esempio titolo="Worked example: the better discount">
+Shop A: **1/4** off the price. Shop B: **3/10** off. Which is the better deal?
+Common denominator 20: $\tfrac{1}{4} = \tfrac{5}{20}$ and $\tfrac{3}{10} = \tfrac{6}{20}$. Shop B’s discount is bigger.
+</Esempio>
+
+<Sfida titolo="The Witch challenges you!" domande={[
+  { testo: "Which is bigger?", opzioni: ["2/3", "3/5", "They are equal"], risposta: 0, spiegazione: "2×5 = 10 against 3×3 = 9: 2/3 wins." },
+  { testo: "The fractions 6/9 and 10/15 are…", opzioni: ["equivalent", "different", "impossible to compare"], risposta: 0, spiegazione: "Both simplify to 2/3 (6×15 = 90 = 9×10)." },
+  { testo: "Simplify 24/36: what is the denominator in lowest terms?", risposta: 3, spiegazione: "GCD(24, 36) = 12: 24/36 = 2/3." },
+  { testo: "How many twelfths make 3/4? (write the numerator)", risposta: 9, spiegazione: "From 4 to 12 you multiply by 3: 3 × 3 = 9, that is 9/12." },
+  { testo: "What is 20% of 45?", risposta: 9, spiegazione: "10% of 45 = 4.5; 20% is double that: 9." },
+  { testo: "Find x: 3 : 4 = 9 : x", risposta: 12, spiegazione: "3 · x = 4 · 9 = 36, so x = 12." },
+]} />

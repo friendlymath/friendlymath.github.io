@@ -1,0 +1,67 @@
+---
+titolo: "The Guardian of the Mountains: the Yeti of Unknowns"
+descrizione: "Review challenge for the Algebra Mountains: equations with x on both sides, brackets and word problems."
+macroargomento: algebra
+sottoargomento: "Equations"
+grado: 3
+regione: 3
+stanza: 4
+guardiano: true
+nomeStanza: "The Yeti of Unknowns"
+distrattore: sirena
+prerequisiti:
+  - algebra/equazioni-primo-grado
+scenaStanza:
+  ambiente: fortezza
+  loci:
+    - { oggetto: trono, concetto: "The Yeti: gather the x’s on one side", ancora: "when-x-is-on-both-sides" }
+    - { oggetto: clessidra, concetto: "The Siren of Later: checking takes 10 seconds", ancora: "errore-tipico" }
+    - { oggetto: bilancia, concetto: "Two gyms: when do they cost the same?", ancora: "esempio" }
+    - { oggetto: catapulta, concetto: "Special products and quadratics", ancora: "sfida" }
+essenziale:
+  idee:
+    - 'If $x$ is on **both sides**, bring the $x$ terms to one side and the numbers to the other, **changing sign** when you cross the equals sign.'
+    - 'With **brackets**: first multiply the number by everything inside.'
+    - 'In **word problems**: call the number you don’t know $x$ and translate the words into an equation.'
+    - 'In quadratic equations the **discriminant** $\Delta = b^2 - 4ac$ tells you how many solutions there are.'
+  esempio: '$7x - 4 = 3x + 8$: move terms, $7x - 3x = 8 + 4$, that is $4x = 12$, so $x = 3$.'
+---
+
+<Scena personaggio="narratore">
+On the summit, among the clouds, a shaggy Yeti writes equations in the snow with one finger. When it sees you it smiles (too many teeth) and points
+at its latest creation: there’s an **x on the left and an x on the right**. “Only those who can gather the x’s may pass,” it says. Then it sneezes.
+</Scena>
+
+## When x is on both sides
+
+Same rule as always: the scales. First **gather the x’s** on one side, then the numbers on the other:
+
+$$
+5x + 1 = 2x + 13 \;\Rightarrow\; 5x - 2x = 13 - 1 \;\Rightarrow\; 3x = 12 \;\Rightarrow\; x = 4
+$$
+
+With **brackets**, first expand them with the distributive property: $2(x + 3) = 2x + 6$.
+
+<Attenzione distrattore="sirena">
+The Siren of Later sings sweetly: “Checking? Oh, you can do it tomorrow…” Checking takes ten seconds and saves you from almost every mistake:
+put the value you found back in place of $x$ and check that both sides are equal. $5\cdot4+1 = 21$ and $2\cdot4+13 = 21$. ✔️
+</Attenzione>
+
+<Esempio titolo="Worked example: two memberships">
+Gym A: **€20** joining fee + **€5** per visit. Gym B: no joining fee, **€9** per visit.
+After how many visits do you spend the same? $20 + 5x = 9x \Rightarrow 20 = 4x \Rightarrow x = 5$. From the sixth visit on, gym A is cheaper.
+</Esempio>
+
+<Sfida titolo="The Yeti challenges you!" domande={[
+  { testo: "Solve: 7x − 4 = 3x + 8", risposta: 3, spiegazione: "7x − 3x = 8 + 4, so 4x = 12 and x = 3." },
+  { testo: "Solve: 3(x − 2) = 15", risposta: 7, spiegazione: "3x − 6 = 15, 3x = 21, x = 7." },
+  { testo: "Solve: x/2 + 5 = 9", risposta: 8, spiegazione: "x/2 = 4, so x = 8." },
+  { testo: "A number plus its double is 27. What is the number?", risposta: 9, spiegazione: "x + 2x = 27, 3x = 27, x = 9." },
+  { testo: "How many real solutions does x² − 6x + 9 = 0 have?", opzioni: ["Two", "One", "None"], risposta: 1, spiegazione: "Δ = 36 − 36 = 0: just one solution, x = 3. It is the square (x − 3)²." },
+]} />
+
+<Scena personaggio="civetta">
+Up there, with the Fog at your feet, Ottavia settles beside you and lowers her voice: “Can I tell you a secret? I never really guided you.
+Every time you asked yourself *why*, that was me. Every time you got it wrong and tried again, that was Brontolo. We are made of your curiosity and your patience.
+You can take us anywhere: you don’t need perfect teachers, you just need to keep asking questions.” Then she turns, heads the wrong way, and laughs.
+</Scena>

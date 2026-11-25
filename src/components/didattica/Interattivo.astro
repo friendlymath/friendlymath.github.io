@@ -2,23 +2,26 @@
 /** Monta un'animazione o un grafico interattivo definito in src/scripts/interattivi/<tipo>.ts */
 interface Props { tipo: string; titolo: string; didascalia?: string; altezza?: number; }
 const { tipo, titolo, didascalia, altezza = 340 } = Astro.props;
+import { linguaDa, traduttore } from '../../lib/lingua';
+const t = traduttore(linguaDa(Astro.url));
 ---
 <figure class="interattivo scheda" data-interattivo={tipo}>
   <figcaption class="box-titolo"><span aria-hidden="true">🎮</span> {titolo}</figcaption>
   <div class="area" style={`min-height:${altezza}px`} data-area>
-    <noscript><p class="tenue">Questo esperimento interattivo ha bisogno di JavaScript.</p></noscript>
+    <noscript><p class="tenue">{t('Questo esperimento interattivo ha bisogno di JavaScript.', 'This interactive experiment needs JavaScript.')}</p></noscript>
   </div>
   {didascalia && <p class="tenue didascalia">{didascalia}</p>}
   <slot />
 </figure>
 <script>
   const moduli = import.meta.glob('../../scripts/interattivi/*.ts');
+  const en = document.documentElement.lang === 'en';
   for (const fig of document.querySelectorAll<HTMLElement>('[data-interattivo]')) {
     const tipo = fig.dataset.interattivo;
     const carica = moduli[`../../scripts/interattivi/${tipo}.ts`];
     const area = fig.querySelector<HTMLElement>('[data-area]')!;
-    if (!carica) { area.textContent = `Interattivo “${tipo}” non trovato.`; continue; }
-    carica().then((m: any) => m.monta(area)).catch(() => { area.textContent = 'Non sono riuscito a caricare l’esperimento.'; });
+    if (!carica) { area.textContent = en ? `Interactive “${tipo}” not found.` : `Interattivo “${tipo}” non trovato.`; continue; }
+    carica().then((m: any) => m.monta(area)).catch(() => { area.textContent = en ? 'Could not load the experiment.' : 'Non sono riuscito a caricare l’esperimento.'; });
   }
 </script>
 <style>

@@ -1,0 +1,92 @@
+---
+titolo: "Place value: why 23 and 32 are not the same thing"
+descrizione: "Ones, tens, hundreds: the same digit is worth more or less depending on where it sits."
+macroargomento: numeri
+sottoargomento: "Counting and writing numbers"
+grado: 1
+regione: 1
+stanza: 1
+nomeStanza: "The Brick Workshop"
+distrattore: mercante
+fonti:
+  - titolo: "Leonardo Pisano Fibonacci"
+    url: "https://mathshistory.st-andrews.ac.uk/Biographies/Fibonacci/"
+    editore: "MacTutor History of Mathematics, University of St Andrews"
+    autore: "J J O'Connor, E F Robertson"
+    consultato: "2026-11-22"
+ispirazione:
+  - "https://www.youmath.it"
+  - "https://matepratica.it"
+scenaStanza:
+  ambiente: bottega
+  loci:
+    - { oggetto: scaffale, concetto: "Ones, tens, hundreds: each shelf is worth 10 times the one below", ancora: "ten-digits-infinitely-many-numbers" }
+    - { oggetto: abaco, concetto: "Ten ones merge into a ten", ancora: "interattivo" }
+    - { oggetto: sedia, concetto: "Zero keeps the empty place", ancora: "zero-the-guardian-of-empty-places" }
+    - { oggetto: forziere, concetto: "The Merchant: 199 is less than 200", ancora: "errore-tipico" }
+essenziale:
+  idee:
+    - 'We use only **ten digits**: from 0 to 9.'
+    - 'A digit is worth more or less depending on the **place** it sits in: ones, tens, hundreds…'
+    - 'Each place is worth **10 times** the one to its right.'
+    - '**Zero** keeps the place when there is nothing there: 205 is not 25.'
+  esempio: 'In $352$: the 3 is worth $300$, the 5 is worth $50$, the 2 is worth $2$. So $352 = 3 \times 100 + 5 \times 10 + 2$.'
+---
+
+<Scena personaggio="narratore">
+The Village of Digits is in uproar. The baker delivered **32** loaves instead of **23**, and the miller paid
+**100** coins instead of **10**. Blame the Fog: it made everyone forget that **where you put a digit matters**.
+Ottavia the Owl lands on your stick (missing it twice first) and whispers: “Let’s go to the Brick Workshop.”
+</Scena>
+
+## Ten digits, infinitely many numbers
+
+To write any number at all we use just **ten digits**: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9.
+The brilliant trick is that **position changes value**:
+
+- the rightmost digit counts the **ones**;
+- the one just to its left counts the **tens**, that is, groups of 10;
+- then come the **hundreds**, groups of 100, and so on.
+
+Every time you move one place to the left, the value becomes **ten times bigger**.
+
+$$
+347 = 3 \times 100 + 4 \times 10 + 7 \times 1
+$$
+
+<Esempio titolo="Worked example: the bricks">
+Imagine some bricks: the small ones are worth **1**, the ten-bars are worth **10**, the flat plates are worth **100**.
+With **2** bars and **3** small bricks you have **23**. With **3** bars and **2** small bricks you have **32**.
+Same digits, different bricks: the baker had simply swapped the places!
+</Esempio>
+
+<Interattivo tipo="abaco" titolo="The Brick Workshop" didascalia="Add bricks: when you reach 10 ones, they merge into a ten-bar. When you reach 10 bars, they become a hundred-plate." altezza={260} />
+
+## Zero, the guardian of empty places
+
+And what if you have no tens? You write **0**. In **305** the zero says: “here, in the tens place, there is nothing, but the place exists.”
+Without zero, 305 and 35 would look the same.
+
+<Attenzione distrattore="mercante">
+“Zero is worth nothing, so you can just drop it!” Wrong: zero adds no quantity, but it **keeps the place**.
+Remove the zero from 305 and you get 35, almost ten times less. The Merchant also sells the idea that “more big digits = bigger number”:
+but 199 is smaller than 200, because the leftmost place is compared first.
+</Attenzione>
+
+<Curiosita>
+Our system is called the **decimal place-value system**. It reached Europe from India by way of the Arab world; the person who spread it in Italy was
+Leonardo of Pisa, known as **Fibonacci**, with his *Liber abaci* of 1202. Before that, people used Roman numerals: fine for gravestones, terrible for sums.
+You’ll find the story on the page <a href="/en/storia/al-khwarizmi/">al-Khwarizmi and the birth of algebra</a>.
+</Curiosita>
+
+<Applicazioni voci={[
+  { ambito: "informatica", titolo: "Computers and binary", testo: "Computers use the same trick, but in <b>base 2</b>: only the digits 0 and 1, and each place is worth double the previous one. 1011 in binary is 8 + 0 + 2 + 1 = 11." },
+  { ambito: "ingegneria", titolo: "Kilo, mega, giga", testo: "In technical measurements, prefixes shift digits from one place to another: 1 km = 1000 m, 1 kW = 1000 W. It’s place value applied to units." },
+  { ambito: "quotidiano", titolo: "The odometer", testo: "When the ones go from 9 back to 0, the tens wheel turns too: that’s carrying, right before your eyes." }
+]} />
+
+<Sfida titolo="The Workshop Challenge" domande={[
+  { testo: "In the number 472, what is the digit 7 worth?", opzioni: ["7", "70", "700"], risposta: 1, spiegazione: "The 7 is in the tens place: it is worth 7 × 10 = 70." },
+  { testo: "Write the number made of 3 hundreds, 0 tens and 5 ones.", risposta: 305, spiegazione: "3 × 100 + 0 × 10 + 5 = 305. The zero keeps the tens place." },
+  { testo: "Which number is bigger?", opzioni: ["199", "201", "They are equal"], risposta: 1, spiegazione: "You compare the leftmost place first: 2 hundreds beat 1 hundred." }
+]} />

@@ -1,17 +1,20 @@
 ---
 /** «Dove la trovi»: applicazioni dell'argomento in informatica, ingegneria e vita quotidiana. */
 export type Applicazione = { ambito: 'informatica' | 'ingegneria' | 'quotidiano' | 'natura'; titolo: string; testo: string };
+import { linguaDa, traduttore, href } from '../../lib/lingua';
 interface Props { voci: Applicazione[] }
 const { voci } = Astro.props;
+const l = linguaDa(Astro.url);
+const t = traduttore(l);
 const stile = {
-  informatica: { icona: '💻', nome: 'Informatica', c: 'var(--fiducia)' },
-  ingegneria: { icona: '🏗️', nome: 'Ingegneria', c: 'var(--gioco)' },
-  quotidiano: { icona: '🛒', nome: 'Tutti i giorni', c: 'var(--successo)' },
-  natura: { icona: '🌿', nome: 'Natura', c: 'var(--magia)' },
+  informatica: { icona: '💻', nome: t('Informatica', 'Computing'), c: 'var(--fiducia)' },
+  ingegneria: { icona: '🏗️', nome: t('Ingegneria', 'Engineering'), c: 'var(--gioco)' },
+  quotidiano: { icona: '🛒', nome: t('Tutti i giorni', 'Everyday life'), c: 'var(--successo)' },
+  natura: { icona: '🌿', nome: t('Natura', 'Nature'), c: 'var(--magia)' },
 };
 ---
-<section class="applicazioni" aria-label="Dove la trovi nel mondo reale">
-  <p class="app-titolo">🌍 Dove la trovi nel mondo reale</p>
+<section class="applicazioni" aria-label={t('Dove la trovi nel mondo reale', 'Where you find it in the real world')}>
+  <p class="app-titolo">🌍 {t('Dove la trovi nel mondo reale', 'Where you find it in the real world')}</p>
   <div class="app-griglia">
     {voci.map((v) => (
       <article class="app" style={`--c:${stile[v.ambito].c}`}>
@@ -21,7 +24,7 @@ const stile = {
       </article>
     ))}
   </div>
-  <p class="app-piede"><a href="/matematica-ovunque/">Tutto è matematica: scopri altri esempi →</a></p>
+  <p class="app-piede"><a href={href(l, '/matematica-ovunque/')}>{t('Tutto è matematica: scopri altri esempi →', 'Everything is maths: discover more examples →')}</a></p>
 </section>
 <style>
   .applicazioni { margin: 2rem 0; padding: 1rem 1.1rem; border-radius: var(--raggio); background: linear-gradient(135deg, var(--fiducia-chiaro), var(--superficie)); border: 2px solid var(--bordo); }

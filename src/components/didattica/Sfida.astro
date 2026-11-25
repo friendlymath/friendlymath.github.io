@@ -6,16 +6,18 @@
 export type Domanda = { testo: string; opzioni?: string[]; risposta: string | number; spiegazione: string; tolleranza?: number };
 interface Props { domande: Domanda[]; titolo?: string; }
 const { domande, titolo } = Astro.props;
+import { linguaDa, traduttore } from '../../lib/lingua';
+const t = traduttore(linguaDa(Astro.url));
 // slug e guardiano arrivano dalla pagina (data-lezione / data-guardiano sull'articolo)
 const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
 ---
 <section class="box sfida" data-sfida>
   <p class="box-titolo">
     <span aria-hidden="true">⚔️</span>
-    <span class="solo-cammino">{titolo ?? 'La sfida della stanza'}</span>
-    <span class="solo-libro">Mettiti alla prova</span>
+    <span class="solo-cammino">{titolo ?? t('La sfida della stanza', 'The room’s challenge')}</span>
+    <span class="solo-libro">{t('Mettiti alla prova', 'Test yourself')}</span>
   </p>
-  <noscript><p>Per giocare la sfida serve JavaScript attivo.</p></noscript>
+  <noscript><p>{t('Per giocare la sfida serve JavaScript attivo.', 'You need JavaScript turned on to play the challenge.')}</p></noscript>
   <form>
     <ol class="domande">
       {domande.map((d, i) => (
@@ -29,7 +31,7 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
                 ))}
               </div>
             ) : (
-              <label class="numero">La tua risposta: <input type="text" inputmode="decimal" name={`${id}-d${i}`} autocomplete="off" /></label>
+              <label class="numero">{t('La tua risposta:', 'Your answer:')} <input type="text" inputmode="decimal" name={`${id}-d${i}`} autocomplete="off" /></label>
             )}
             <p class="esito" aria-live="polite" hidden></p>
             <p class="spiegazione" hidden set:html={d.spiegazione} />
@@ -41,7 +43,7 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
     <div class="abilita" data-abilita hidden></div>
     <div class="aiuto-abilita" data-aiuto aria-live="polite" hidden></div>
     <div class="riga-azioni">
-      <button class="btn" type="submit">Verifica</button>
+      <button class="btn" type="submit">{t('Verifica', 'Check')}</button>
       <p class="risultato" aria-live="polite"></p>
     </div>
   </form>
@@ -51,7 +53,12 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
   import { carica, salva, completa, battiGuardiano, gradoAttuale, assegnaStelle } from '../../lib/progresso';
   import { ha } from '../../lib/studio';
   import { aggiungiTastierino } from '../../scripts/tastierino';
-  import { caricaEroe, cariche, dono, ABILITA, DONI } from '../../lib/eroe';
+  import { caricaEroe, cariche, dono, abilitaL, doniL } from '../../lib/eroe';
+  import { gradoL } from '../../lib/mondo';
+  const EN = document.documentElement.lang === 'en';
+  const T = (it: string, en: string) => (EN ? en : it);
+  const ABILITA = abilitaL(EN ? 'en' : 'it');
+  const DONI = doniL(EN ? 'en' : 'it');
 
   const eroe = caricaEroe();
   /** la prima frase di un elemento, conservando le formule */
@@ -93,7 +100,6 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
       t.replaceWith(f);
     }
   };
-  import { grado } from '../../lib/mondo';
   import { coriandoli } from '../../scripts/coriandoli';
 
   const numero = (s: string) => Number(s.trim().replace(/\s/g, '').replace(',', '.'));
@@ -117,7 +123,7 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
       tutte.slice(tieni).forEach((d) => { d.hidden = true; d.classList.add('dispensata'); });
       const nota = box.querySelector<HTMLElement>('.nota-breve')!;
       nota.hidden = false;
-      nota.innerHTML = `✂️ Sfida breve: ${tieni} domande su ${tutte.length}. <a href="/studio/">Cambia in «Il tuo modo di studiare»</a>`;
+      nota.innerHTML = EN ? `✂️ Short challenge: ${tieni} questions out of ${tutte.length}. <a href="/en/studio/">Change it in “Your way of learning”</a>` : `✂️ Sfida breve: ${tieni} domande su ${tutte.length}. <a href="/studio/">Cambia in «Il tuo modo di studiare»</a>`;
     }
 
     // Tastierino grande per le risposte numeriche
@@ -138,29 +144,29 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
       barra.hidden = false;
       barra.innerHTML = `<button type="button" class="btn vuoto btn-abilita"></button><span class="tenue"></span>`;
       const btn = barra.querySelector('button')!;
-      barra.querySelector('span')!.textContent = `${ab.spiega}${donoEroe ? ` · Dono: ${DONI[donoEroe].nome}` : ''}`;
+      barra.querySelector('span')!.textContent = `${ab.spiega}${donoEroe ? ` · ${T('Dono', 'Gift')}: ${DONI[donoEroe].nome}` : ''}`;
       const etichetta = () => { btn.textContent = `${ab.icona} ${ab.nome} (${n})`; btn.disabled = n <= 0; };
       etichetta();
       btn.addEventListener('click', () => {
         if (n <= 0) return;
         const bersaglio = [...box.querySelectorAll<HTMLElement>('.domanda:not(.dispensata):not(.giusta)')][0];
-        if (!bersaglio && eroe.classe !== 'guerriero') { mostraAiuto('Tutto risolto!', 'Non serve aiuto: premi Verifica.'); return; }
+        if (!bersaglio && eroe.classe !== 'guerriero') { mostraAiuto(T('Tutto risolto!', 'All solved!'), T('Non serve aiuto: premi Verifica.', 'No help needed: press Check.')); return; }
         const atteso = Number(bersaglio?.dataset.risposta);
         const scelta = bersaglio?.dataset.tipo === 'scelta';
         switch (eroe.classe) {
-          case 'guerriero': gratis = true; form.requestSubmit(); mostraAiuto('🛡️ Secondo assalto:', 'hai controllato senza consumare un tentativo.'); break;
-          case 'mago': mostraAiuto('✨ Indizio arcano:', maschera(primaFrase(bersaglio.querySelector<HTMLElement>('.spiegazione')!), bersaglio)); break;
+          case 'guerriero': gratis = true; form.requestSubmit(); mostraAiuto(`🛡️ ${ABILITA.guerriero.nome}:`, T('hai controllato senza consumare un tentativo.', 'you checked without using up an attempt.')); break;
+          case 'mago': mostraAiuto(`✨ ${ABILITA.mago.nome}:`, maschera(primaFrase(bersaglio.querySelector<HTMLElement>('.spiegazione')!), bersaglio)); break;
           case 'bardo': {
             const es = document.querySelector<HTMLElement>('.esempio-ess');
-            mostraAiuto('🎶 Racconta di nuovo:', es ? es.cloneNode(true) : maschera(primaFrase(bersaglio.querySelector<HTMLElement>('.spiegazione')!), bersaglio)); break;
+            mostraAiuto(`🎶 ${ABILITA.bardo.nome}:`, es ? es.cloneNode(true) : maschera(primaFrase(bersaglio.querySelector<HTMLElement>('.spiegazione')!), bersaglio)); break;
           }
           case 'esploratore': {
             const idee = document.querySelector<HTMLElement>('[data-box-essenziale] .idee');
-            if (idee) mostraAiuto('🗺️ Mappa del sapere:', idee.cloneNode(true));
+            if (idee) mostraAiuto(`🗺️ ${ABILITA.esploratore.nome}:`, idee.cloneNode(true));
             else {
               const ul = document.createElement('ul');
               document.querySelectorAll<HTMLElement>('.prosa > h2').forEach((h) => { const li = document.createElement('li'); const a = document.createElement('a'); a.href = `#${h.id}`; a.textContent = h.textContent!; li.append(a); ul.append(li); });
-              mostraAiuto('🗺️ Mappa del sapere: rileggi', ul);
+              mostraAiuto(`🗺️ ${ABILITA.esploratore.nome}: ${T('rileggi', 'reread')}`, ul);
             }
             break;
           }
@@ -168,12 +174,12 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
             if (scelta) {
               const sbagliate = [...bersaglio.querySelectorAll<HTMLInputElement>('input')].filter((i) => i.value !== bersaglio.dataset.risposta && !i.disabled);
               if (sbagliate.length) { const x = sbagliate[Math.floor(Math.random() * sbagliate.length)]; x.disabled = true; x.checked = false; x.closest('label')!.classList.add('scartata'); }
-              mostraAiuto('🔮 Sguardo del caso:', 'una risposta sbagliata è stata scartata.');
+              mostraAiuto(`🔮 ${ABILITA.veggente.nome}:`, T('una risposta sbagliata è stata scartata.', 'a wrong answer has been removed.'));
             } else {
               const v = numero(bersaglio.querySelector<HTMLInputElement>('input')!.value);
-              if (Number.isFinite(v) && bersaglio.querySelector<HTMLInputElement>('input')!.value.trim()) mostraAiuto('🔮 Sguardo del caso:', v > atteso ? 'il tuo numero è troppo alto.' : v < atteso ? 'il tuo numero è troppo basso.' : 'il tuo numero è giusto!');
+              if (Number.isFinite(v) && bersaglio.querySelector<HTMLInputElement>('input')!.value.trim()) mostraAiuto(`🔮 ${ABILITA.veggente.nome}:`, v > atteso ? T('il tuo numero è troppo alto.', 'your number is too high.') : v < atteso ? T('il tuo numero è troppo basso.', 'your number is too low.') : T('il tuo numero è giusto!', 'your number is right!'));
               else { const a = Math.abs(atteso), lo = Math.floor(a * 0.5), hi = Math.ceil(a * 1.5) || 1;
-                mostraAiuto('🔮 Sguardo del caso:', atteso >= 0 ? `la risposta è tra ${lo} e ${hi}.` : `la risposta è negativa, tra −${hi} e −${lo}.`); }
+                mostraAiuto(`🔮 ${ABILITA.veggente.nome}:`, atteso >= 0 ? T(`la risposta è tra ${lo} e ${hi}.`, `the answer is between ${lo} and ${hi}.`) : T(`la risposta è negativa, tra −${hi} e −${lo}.`, `the answer is negative, between −${hi} and −${lo}.`)); }
             }
             break;
           }
@@ -184,10 +190,13 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
               const altre = tutte.filter((i) => i !== giusta);
               const coppia = [giusta, altre[Math.floor(Math.random() * altre.length)]].sort((a, b) => Number(a.value) - Number(b.value));
               coppia.forEach((i) => i.closest('label')!.classList.add('candidata'));
-              mostraAiuto('🗝️ Scorciatoia onesta:', 'la risposta giusta è una delle due evidenziate.');
+              mostraAiuto(`🗝️ ${ABILITA.scaltro.nome}:`, T('la risposta giusta è una delle due evidenziate.', 'the right answer is one of the two highlighted.'));
             } else {
               const a = Math.abs(atteso); const intera = String(Math.trunc(a));
-              mostraAiuto('🗝️ Scorciatoia onesta:', `${atteso < 0 ? 'è un numero negativo; ' : ''}comincia con la cifra ${String(a).replace(/^0\.0*/, '')[0]} e ha ${a < 1 ? 'parte intera zero' : `${intera.length} cifr${intera.length === 1 ? 'a' : 'e'} prima della virgola`}${Number.isInteger(a) ? '' : ' (non è un numero intero)'}.`);
+              const prima = String(a).replace(/^0\.0*/, '')[0];
+              mostraAiuto(`🗝️ ${ABILITA.scaltro.nome}:`, EN
+                ? `${atteso < 0 ? 'it is a negative number; ' : ''}it starts with the digit ${prima} and has ${a < 1 ? 'a whole part of zero' : `${intera.length} digit${intera.length === 1 ? '' : 's'} before the decimal point`}${Number.isInteger(a) ? '' : ' (it is not a whole number)'}.`
+                : `${atteso < 0 ? 'è un numero negativo; ' : ''}comincia con la cifra ${prima} e ha ${a < 1 ? 'parte intera zero' : `${intera.length} cifr${intera.length === 1 ? 'a' : 'e'} prima della virgola`}${Number.isInteger(a) ? '' : ' (non è un numero intero)'}.`);
             }
             break;
           }
@@ -214,7 +223,7 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
         }
         const esito = d.querySelector<HTMLElement>('.esito')!;
         esito.hidden = false;
-        esito.textContent = ok ? '✅ Esatto!' : '❌ Non ancora. Riprova: ogni errore è un indizio.';
+        esito.textContent = ok ? T('✅ Esatto!', '✅ Correct!') : T('❌ Non ancora. Riprova: ogni errore è un indizio.', '❌ Not yet. Try again: every mistake is a clue.');
         esito.className = 'esito ' + (ok ? 'ok' : 'no');
         d.querySelector<HTMLElement>('.spiegazione')!.hidden = !ok;
         d.classList.toggle('giusta', ok);
@@ -234,20 +243,20 @@ const id = `sfida-${Math.random().toString(36).slice(2, 8)}`;
         coriandoli(box);
         const gradoDopo = gradoAttuale(p);
         const stelle = 4 - Math.min(3, Math.max(1, tentativi));
-        let msg = `🏆 Sfida superata! ${'⭐'.repeat(stelle)} La Nebbia si dirada.`;
+        let msg = T(`🏆 Sfida superata! ${'⭐'.repeat(stelle)} La Nebbia si dirada.`, `🏆 Challenge complete! ${'⭐'.repeat(stelle)} The Fog is lifting.`);
         if (gradoDopo > gradoPrima) {
-          msg = `🎉 Guardiano sconfitto! Ora sei ${grado(gradoDopo).nome}.`;
+          msg = T(`🎉 Guardiano sconfitto! Ora sei ${gradoL(gradoDopo, 'it').nome}.`, `🎉 Guardian defeated! You are now a ${gradoL(gradoDopo, 'en').nome}.`);
           document.dispatchEvent(new CustomEvent('friendlymath:grado', { detail: { grado: gradoDopo } }));
         } else if (guardiano && !inCammino) {
-          msg += ' Per salire di grado affronta il Guardiano nel Cammino.';
+          msg += T(' Per salire di grado affronta il Guardiano nel Cammino.', ' To rise in grade, face the Guardian in the Quest.');
         }
-        if (donoEroe === 'nano' && tentativi > 1) msg += ' ⛏️ Tenacia: non ti sei arreso!';
-        if (!salvato) msg += ' (Il tuo browser non permette di salvare: scarica la Pergamena dallo Zaino.)';
+        if (donoEroe === 'nano' && tentativi > 1) msg += T(' ⛏️ Tenacia: non ti sei arreso!', ' ⛏️ Tenacity: you didn’t give up!');
+        if (!salvato) msg += T(' (Il tuo browser non permette di salvare: scarica la Pergamena dallo Zaino.)', ' (Your browser does not allow saving: download your Scroll from the Backpack.)');
         ris.textContent = msg;
         document.dispatchEvent(new CustomEvent('friendlymath:progresso'));
       } else {
-        ris.textContent = `${giuste} su ${domande.length}. Coraggio, la Civetta crede in te.`;
-        if (donoEroe === 'halfling' && !fortunaUsata && tentativi > 0) { fortunaUsata = true; tentativi--; ris.textContent += ' 🍀 Fortuna: questo errore non ti costa stelle.'; }
+        ris.textContent = T(`${giuste} su ${domande.length}. Coraggio, la Civetta crede in te.`, `${giuste} out of ${domande.length}. Courage: the Owl believes in you.`);
+        if (donoEroe === 'halfling' && !fortunaUsata && tentativi > 0) { fortunaUsata = true; tentativi--; ris.textContent += T(' 🍀 Fortuna: questo errore non ti costa stelle.', ' 🍀 Luck: this mistake costs you no stars.'); }
       }
     });
   }
